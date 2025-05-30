@@ -93,100 +93,100 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   Container(
                     height: 30,
-                    width: 80,
+                    width: 100,
                     decoration: BoxDecoration(
                       color: Colors.black,
                       borderRadius: BorderRadius.circular(200)
                     ),
                     child: Center(
-                      child: const Text('Work'),
+                      child: const Text('Work', style: TextStyle(color: Colors.white),),
                     ),
                   ),
                   const SizedBox(width: 20,),
                   Container(
                     height: 30,
-                    width: 80,
+                    width: 100,
                     decoration: BoxDecoration(
                       color: Colors.black,
                       borderRadius: BorderRadius.circular(200)
                     ),
                     child: Center(
-                      child: const Text('School'),
+                      child: const Text('School', style: TextStyle(color: Colors.white),),
                     ),
                   ),
                   const SizedBox(width: 20,),
                   Container(
                     height: 30,
-                    width: 80,
+                    width: 100,
                     decoration: BoxDecoration(
                       color: Colors.black,
                       borderRadius: BorderRadius.circular(200)
                     ),
                     child: Center(
-                      child: const Text('Friends'),
+                      child: const Text('Friends', style: TextStyle(color: Colors.white),),
                     ),
                   ),
                   const SizedBox(width: 20,),
                   Container(
                     height: 30,
-                    width: 80,
+                    width: 100,
                     decoration: BoxDecoration(
                       color: Colors.black,
                       borderRadius: BorderRadius.circular(200)
                     ),
                     child: Center(
-                      child: const Text('Family'),
+                      child: const Text('Family', style: TextStyle(color: Colors.white),),
                     ),
                   ),
                   const SizedBox(width: 20,),
                   Container(
                     height: 30,
-                    width: 80,
+                    width: 100,
                     decoration: BoxDecoration(
                       color: Colors.black,
                       borderRadius: BorderRadius.circular(200)
                     ),
                     child: Center(
-                      child: const Text('Work'),
+                      child: const Text('Hobby', style: TextStyle(color: Colors.white),),
                     ),
                   ),
                   SizedBox(width: 20,),
                   Container(
                     height: 30,
-                    width: 80,
+                    width: 100,
                     decoration: BoxDecoration(
                       color: Colors.black,
                       borderRadius: BorderRadius.circular(200)
                     ),
                     child: Center(
-                      child: const Text('Health'),
+                      child: const Text('Health', style: TextStyle(color: Colors.white),),
                     ),
                   ),
                   SizedBox(width: 20,),
                   Container(
                     height: 30,
-                    width: 80,
+                    width: 100,
                     decoration: BoxDecoration(
                       color: Colors.black,
                       borderRadius: BorderRadius.circular(200)
                     ),
                     child: Center(
-                      child: const Text('Relationship'),
+                      child: const Text('Relationship', style: TextStyle(color: Colors.white),),
                     ),
                   ),
                   SizedBox(width: 20,),
                   Container(
                     height: 30,
-                    width: 80,
+                    width: 100,
                     decoration: BoxDecoration(
                       color: Colors.black,
                       borderRadius: BorderRadius.circular(200)
                     ),
                     child: Center(
-                      child: const Text('Money'),
+                      child: const Text('Money', style: TextStyle(color: Colors.white),),
                     ),
                   ),
-                  SizedBox(width: 20,),
+                  SizedBox(width: 5,),
                 ],
               ),
             )

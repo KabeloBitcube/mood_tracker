@@ -24,173 +24,232 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Text(
-              'How Are You Feeling Today?',
-              style: TextStyle(
-                fontSize: 50,
-                fontWeight: FontWeight.bold,
-                wordSpacing: 5,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Text(
+                'How Are You Feeling Today?',
+                style: TextStyle(
+                  fontSize: 50,
+                  fontWeight: FontWeight.bold,
+                  wordSpacing: 5,
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            CarouselSlider(
-              options: CarouselOptions(height: 250.0),
-              items: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  decoration: BoxDecoration(
-                    color: Colors.amber,
-                    borderRadius: BorderRadius.circular(250),
-                  ),
-                  child: Center(
-                    child: Image.asset('assets/images/Happy.webp', width: 170, height: 170,),
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  decoration: BoxDecoration(
-                    color: Colors.lightBlueAccent,
-                    borderRadius: BorderRadius.circular(250),
-                  ),
-                   child: Center(
-                    child: Image.asset('assets/images/Sad.webp', width: 170, height: 170,),
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(250),
-                  ),
-                   child: Center(
-                    child: Image.asset('assets/images/Angry.png', width: 150, height: 150,),
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.circular(250),
-                  ),
-                   child: Center(
-                    child: Image.asset('assets/images/Positive.webp', width: 220, height: 220,),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 50),
-            const Text('What\'s the reason?'),
-            const SizedBox(height: 30,),
-            SizedBox(
-              height: 50,
-              width: MediaQuery.of(context).size.width,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
+              const SizedBox(height: 10),
+              CarouselSlider(
+                options: CarouselOptions(height: 250.0),
+                items: [
                   Container(
-                    height: 30,
-                    width: 100,
+                    width: MediaQuery.of(context).size.width * 0.6,
                     decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(200)
+                      color: Colors.amber,
+                      borderRadius: BorderRadius.circular(250),
                     ),
                     child: Center(
-                      child: const Text('Work', style: TextStyle(color: Colors.white),),
+                      child: Image.asset(
+                        'assets/images/Happy.webp',
+                        width: 170,
+                        height: 170,
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 20,),
                   Container(
-                    height: 30,
-                    width: 100,
+                    width: MediaQuery.of(context).size.width * 0.6,
                     decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(200)
+                      color: Colors.lightBlueAccent,
+                      borderRadius: BorderRadius.circular(250),
                     ),
                     child: Center(
-                      child: const Text('School', style: TextStyle(color: Colors.white),),
+                      child: Image.asset(
+                        'assets/images/Sad.webp',
+                        width: 170,
+                        height: 170,
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 20,),
                   Container(
-                    height: 30,
-                    width: 100,
+                    width: MediaQuery.of(context).size.width * 0.6,
                     decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(200)
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(250),
                     ),
                     child: Center(
-                      child: const Text('Friends', style: TextStyle(color: Colors.white),),
+                      child: Image.asset(
+                        'assets/images/Angry.png',
+                        width: 150,
+                        height: 150,
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 20,),
                   Container(
-                    height: 30,
-                    width: 100,
+                    width: MediaQuery.of(context).size.width * 0.6,
                     decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(200)
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(250),
                     ),
                     child: Center(
-                      child: const Text('Family', style: TextStyle(color: Colors.white),),
+                      child: Image.asset(
+                        'assets/images/Positive.webp',
+                        width: 220,
+                        height: 220,
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 20,),
-                  Container(
-                    height: 30,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(200)
-                    ),
-                    child: Center(
-                      child: const Text('Hobby', style: TextStyle(color: Colors.white),),
-                    ),
-                  ),
-                  SizedBox(width: 20,),
-                  Container(
-                    height: 30,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(200)
-                    ),
-                    child: Center(
-                      child: const Text('Health', style: TextStyle(color: Colors.white),),
-                    ),
-                  ),
-                  SizedBox(width: 20,),
-                  Container(
-                    height: 30,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(200)
-                    ),
-                    child: Center(
-                      child: const Text('Relationship', style: TextStyle(color: Colors.white),),
-                    ),
-                  ),
-                  SizedBox(width: 20,),
-                  Container(
-                    height: 30,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(200)
-                    ),
-                    child: Center(
-                      child: const Text('Money', style: TextStyle(color: Colors.white),),
-                    ),
-                  ),
-                  SizedBox(width: 5,),
                 ],
               ),
-            )
-          ],
+              const SizedBox(height: 50),
+              const Text('What\'s the reason?'),
+              const SizedBox(height: 20),
+              SizedBox(
+                height: 50,
+                width: MediaQuery.of(context).size.width,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    Container(
+                      height: 30,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(200),
+                      ),
+                      child: Center(
+                        child: const Text(
+                          'Work',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Container(
+                      height: 30,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(200),
+                      ),
+                      child: Center(
+                        child: const Text(
+                          'School',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Container(
+                      height: 30,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(200),
+                      ),
+                      child: Center(
+                        child: const Text(
+                          'Friends',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Container(
+                      height: 30,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(200),
+                      ),
+                      child: Center(
+                        child: const Text(
+                          'Family',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Container(
+                      height: 30,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(200),
+                      ),
+                      child: Center(
+                        child: const Text(
+                          'Hobby',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    Container(
+                      height: 30,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(200),
+                      ),
+                      child: Center(
+                        child: const Text(
+                          'Health',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    Container(
+                      height: 30,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(200),
+                      ),
+                      child: Center(
+                        child: const Text(
+                          'Relationship',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    Container(
+                      height: 30,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(200),
+                      ),
+                      child: Center(
+                        child: const Text(
+                          'Money',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 5),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 30),
+              const Text('Wanna write about it?'),
+              const SizedBox(height: 20),
+              TextField(
+                keyboardType: TextInputType.text,
+                decoration: InputDecoration(
+                  hintText: 'Describe how you feel...',
+                  hintStyle: TextStyle(fontSize: 16),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(width: 0, style: BorderStyle.none),
+                  ),
+                  filled: true,
+                  contentPadding: EdgeInsets.all(16),
+                  fillColor: Colors.grey,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

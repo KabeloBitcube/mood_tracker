@@ -43,8 +43,11 @@ class HomeScreen extends StatelessWidget {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.6,
                   decoration: BoxDecoration(
-                    color: Colors.blue,
+                    color: Colors.lightBlueAccent,
                     borderRadius: BorderRadius.circular(250),
+                  ),
+                   child: Center(
+                    child: Image.asset('assets/images/Sad.webp', width: 150, height: 150,),
                   ),
                 ),
                 Container(
@@ -52,6 +55,9 @@ class HomeScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.red,
                     borderRadius: BorderRadius.circular(250),
+                  ),
+                   child: Center(
+                    child: Image.asset('assets/images/Angry.png', width: 150, height: 150,),
                   ),
                 ),
                 Container(
@@ -61,6 +67,7 @@ class HomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(250),
                   ),
                   child: Center(
+                    child: Image.asset('assets/images/Happy.webp', width: 150, height: 150,),
                   ),
                 ),
                 Container(
@@ -68,6 +75,9 @@ class HomeScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.green,
                     borderRadius: BorderRadius.circular(250),
+                  ),
+                   child: Center(
+                    child: Image.asset('assets/images/Positive.webp', width: 200, height: 200,),
                   ),
                 ),
               ],

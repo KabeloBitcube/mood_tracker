@@ -7,6 +7,36 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future<void> showMyDialog() async {
+      return showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Center(child: const Text('Enter Time of Day')),
+            content: const SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(left: 50, right: 50,),
+                    child: Divider(color: Colors.black,),
+                  ),
+                  SizedBox(height: 10,),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Save'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -99,7 +129,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 35),
               const Text('What\'s the reason?'),
               const SizedBox(height: 20),
               SizedBox(
@@ -248,29 +278,62 @@ class HomeScreen extends StatelessWidget {
                   fillColor: Colors.grey,
                 ),
               ),
-              const SizedBox(height: 30,),
+              const SizedBox(height: 20),
+              GestureDetector(
+                onTap: () {
+                  showMyDialog();
+                },
+                child: Container(
+                  height: 30,
+                  width: 150,
+                  decoration: BoxDecoration(
+                    color: Colors.blueGrey,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: Center(
+                    child: const Text(
+                      'Add to calendar',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.only(left: 50, right: 50),
-                child: const Divider(color: Colors.black,),
+                child: const Divider(color: Color.fromARGB(255, 7, 7, 7)),
               ),
               Stack(
+                clipBehavior: Clip.none,
                 children: [
-                  Image.asset('assets/images/MoodTracker.jpg', height: 80, width: 80,),
+                  Image.asset(
+                    'assets/images/MoodTracker.jpg',
+                    height: 60,
+                    width: 60,
+                  ),
                   Positioned(
-                    top: 50,
-                    left: 40,
+                    top: 35,
+                    left: 30,
                     child: Container(
-                      height: 25,
-                      width: 25,
+                      height: 20,
+                      width: 20,
                       decoration: BoxDecoration(
                         color: Colors.red,
-                        borderRadius: BorderRadius.circular(100)
+                        borderRadius: BorderRadius.circular(100),
                       ),
-                      child: Center(child: const Text('1', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),)),
+                      child: Center(
+                        child: const Text(
+                          '1',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
-                  )
-                  ]
                   ),
+                ],
+              ),
             ],
           ),
         ),

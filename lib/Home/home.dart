@@ -248,6 +248,29 @@ class HomeScreen extends StatelessWidget {
                   fillColor: Colors.grey,
                 ),
               ),
+              const SizedBox(height: 30,),
+              Padding(
+                padding: const EdgeInsets.only(left: 50, right: 50),
+                child: const Divider(color: Colors.black,),
+              ),
+              Stack(
+                children: [
+                  Image.asset('assets/images/MoodTracker.jpg', height: 80, width: 80,),
+                  Positioned(
+                    top: 50,
+                    left: 40,
+                    child: Container(
+                      height: 25,
+                      width: 25,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(100)
+                      ),
+                      child: Center(child: const Text('1', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),)),
+                    ),
+                  )
+                  ]
+                  ),
             ],
           ),
         ),

@@ -43,11 +43,21 @@ class HomeScreen extends StatelessWidget {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.6,
                   decoration: BoxDecoration(
+                    color: Colors.amber,
+                    borderRadius: BorderRadius.circular(250),
+                  ),
+                  child: Center(
+                    child: Image.asset('assets/images/Happy.webp', width: 170, height: 170,),
+                  ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  decoration: BoxDecoration(
                     color: Colors.lightBlueAccent,
                     borderRadius: BorderRadius.circular(250),
                   ),
                    child: Center(
-                    child: Image.asset('assets/images/Sad.webp', width: 150, height: 150,),
+                    child: Image.asset('assets/images/Sad.webp', width: 170, height: 170,),
                   ),
                 ),
                 Container(
@@ -63,25 +73,123 @@ class HomeScreen extends StatelessWidget {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.6,
                   decoration: BoxDecoration(
-                    color: Colors.amber,
-                    borderRadius: BorderRadius.circular(250),
-                  ),
-                  child: Center(
-                    child: Image.asset('assets/images/Happy.webp', width: 150, height: 150,),
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  decoration: BoxDecoration(
                     color: Colors.green,
                     borderRadius: BorderRadius.circular(250),
                   ),
                    child: Center(
-                    child: Image.asset('assets/images/Positive.webp', width: 200, height: 200,),
+                    child: Image.asset('assets/images/Positive.webp', width: 220, height: 220,),
                   ),
                 ),
               ],
             ),
+            const SizedBox(height: 50),
+            const Text('What\'s the reason?'),
+            const SizedBox(height: 30,),
+            SizedBox(
+              height: 50,
+              width: MediaQuery.of(context).size.width,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  Container(
+                    height: 30,
+                    width: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(200)
+                    ),
+                    child: Center(
+                      child: const Text('Work'),
+                    ),
+                  ),
+                  const SizedBox(width: 20,),
+                  Container(
+                    height: 30,
+                    width: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(200)
+                    ),
+                    child: Center(
+                      child: const Text('School'),
+                    ),
+                  ),
+                  const SizedBox(width: 20,),
+                  Container(
+                    height: 30,
+                    width: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(200)
+                    ),
+                    child: Center(
+                      child: const Text('Friends'),
+                    ),
+                  ),
+                  const SizedBox(width: 20,),
+                  Container(
+                    height: 30,
+                    width: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(200)
+                    ),
+                    child: Center(
+                      child: const Text('Family'),
+                    ),
+                  ),
+                  const SizedBox(width: 20,),
+                  Container(
+                    height: 30,
+                    width: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(200)
+                    ),
+                    child: Center(
+                      child: const Text('Work'),
+                    ),
+                  ),
+                  SizedBox(width: 20,),
+                  Container(
+                    height: 30,
+                    width: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(200)
+                    ),
+                    child: Center(
+                      child: const Text('Health'),
+                    ),
+                  ),
+                  SizedBox(width: 20,),
+                  Container(
+                    height: 30,
+                    width: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(200)
+                    ),
+                    child: Center(
+                      child: const Text('Relationship'),
+                    ),
+                  ),
+                  SizedBox(width: 20,),
+                  Container(
+                    height: 30,
+                    width: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(200)
+                    ),
+                    child: Center(
+                      child: const Text('Money'),
+                    ),
+                  ),
+                  SizedBox(width: 20,),
+                ],
+              ),
+            )
           ],
         ),
       ),

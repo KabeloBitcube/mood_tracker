@@ -2,8 +2,15 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int? selectedOption = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -13,14 +20,50 @@ class HomeScreen extends StatelessWidget {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Center(child: const Text('Enter Time of Day')),
-            content: const SingleChildScrollView(
+            content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(left: 50, right: 50,),
-                    child: Divider(color: Colors.black,),
+                    padding: EdgeInsets.only(left: 50, right: 50),
+                    child: Divider(color: Colors.black),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(height: 10),
+                  ListTile(
+                    title: const Text('Morning'),
+                    leading: Radio<int>(
+                      value: 1,
+                      groupValue: selectedOption,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedOption = value;
+                        });
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: const Text('Afternoon'),
+                    leading: Radio<int>(
+                      value: 2,
+                      groupValue: selectedOption,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedOption = value;
+                        });
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: const Text('Night'),
+                    leading: Radio<int>(
+                      value: 3,
+                      groupValue: selectedOption,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedOption = value;
+                        });
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),

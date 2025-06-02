@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -92,8 +93,13 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text(getCurrentDate(), style: TextStyle(fontSize: 15)),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: Icon(Icons.calendar_month_outlined),
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              onPressed: () {
+                 context.push('/calendar');
+              },
+              icon: Icon(Icons.calendar_month_outlined),
+              ),
           ),
         ],
       ),

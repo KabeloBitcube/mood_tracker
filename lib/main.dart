@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mood_tracker/Calendar/calendar.dart';
 import 'package:mood_tracker/Home/home.dart';
 
 void main() {
@@ -12,6 +13,10 @@ final _router = GoRouter(
     GoRoute(
       path: '/',
       builder: (context, state) => HomeScreen()
+    ),
+    GoRoute(
+      path: '/calendar',
+      builder: (context, state) => CalendarScreen()
     ),
   ]
 );

@@ -2,6 +2,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:mood_tracker/Mode/mode.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,6 +17,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final modeController = Provider.of<ModeController>(context);
+
     Future<void> showMyDialog() async {
       return showDialog<void>(
         context: context,
@@ -85,11 +89,13 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         centerTitle: true,
         leading: IconButton(
-          onPressed: () {
-            // Light/Dark mode toggle
-          },
-          icon: Icon(Icons.dark_mode_outlined),
-        ),
+            onPressed: () {
+              modeController.toggleMode();
+            },
+            icon: Icon(
+              modeController.isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+            ),
+          ),
         title: Text(getCurrentDate(), style: TextStyle(fontSize: 15)),
         actions: [
           Padding(

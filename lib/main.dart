@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mood_tracker/Calendar/calendar.dart';
 import 'package:mood_tracker/Home/home.dart';
+import 'package:mood_tracker/Mode/mode.dart';
 import 'package:mood_tracker/Stats%20&%20Notis/stats_notis.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => ModeController(),
+    child: const MyApp()));
 }
 
 // Go router navigation
@@ -32,7 +36,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // Access the mode controller to determine the app's theme
+    final modeController = Provider.of<ModeController>(context);
+
+    
+
     return MaterialApp.router(
+      theme: ThemeData(
+        // Dynamically applies light or dark theme based on user preference
+        brightness: modeController.isDarkMode ? Brightness.dark : Brightness.light,
+      ),
       debugShowCheckedModeBanner: false,
       routerConfig: _router,
     );

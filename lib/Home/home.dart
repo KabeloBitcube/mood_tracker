@@ -355,10 +355,15 @@ class _HomeScreenState extends State<HomeScreen> {
               Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  Image.asset(
-                    'assets/images/MoodTracker.jpg',
-                    height: 60,
-                    width: 60,
+                  GestureDetector(
+                    onTap: (){
+                      context.push('/stats_notis');
+                    },
+                    child: Image.asset(
+                      'assets/images/MoodTracker.jpg',
+                      height: 60,
+                      width: 60,
+                    ),
                   ),
                   Positioned(
                     top: 35,

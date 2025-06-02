@@ -30,8 +30,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
             decoration: BoxDecoration(
               color: Colors.blueGrey,
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(100),
-                topRight: Radius.circular(100),
+                topLeft: Radius.circular(50),
+                topRight: Radius.circular(50),
               ),
             ),
             child: Padding(

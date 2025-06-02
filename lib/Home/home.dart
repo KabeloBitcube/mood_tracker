@@ -366,17 +366,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       context.push('/stats_notis');
                     },
                     child: Image.asset(
-                      'assets/images/MoodTracker.jpg',
-                      height: 60,
-                      width: 60,
+                      'assets/images/Moods.webp',
+                      height: 50,
+                      width: 50,
                     ),
                   ),
                   Positioned(
                     top: 35,
                     left: 30,
                     child: Container(
-                      height: 20,
-                      width: 20,
+                      height: 15,
+                      width: 15,
                       decoration: BoxDecoration(
                         color: Colors.red,
                         borderRadius: BorderRadius.circular(100),
@@ -387,6 +387,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
+                            fontSize: 10
                           ),
                         ),
                       ),

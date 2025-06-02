@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ModeController extends ChangeNotifier {
   // Tracks whether the app is in dark mode or light mode
-  bool _isDarkMode = true;
+  bool _isDarkMode = false;
 
   // Getter to check the current mode (dark or light)
   bool get isDarkMode => _isDarkMode;

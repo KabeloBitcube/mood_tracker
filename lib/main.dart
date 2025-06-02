@@ -3,10 +3,18 @@ import 'package:go_router/go_router.dart';
 import 'package:mood_tracker/Calendar/calendar.dart';
 import 'package:mood_tracker/Home/home.dart';
 import 'package:mood_tracker/Mode/mode.dart';
+import 'package:mood_tracker/Notifications/noti_service.dart';
 import 'package:mood_tracker/Stats%20&%20Notis/stats_notis.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  //init notifications
+  NotiService().initNotification().then((_){
+    NotiService().showNotification(title: 'Welcome', body: 'Remember to track your mood today.');
+  });
+
   runApp(ChangeNotifierProvider(
     create: (context) => ModeController(),
     child: const MyApp()));

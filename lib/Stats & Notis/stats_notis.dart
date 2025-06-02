@@ -11,7 +11,7 @@ class StatsNotis extends StatelessWidget {
       body: Column(
         children: [
           Center(child: Text('Average mood this week')),
-          SizedBox(height: 80,),
+          SizedBox(height: 80),
           SizedBox(
             height: 150,
             width: 150,
@@ -49,7 +49,7 @@ class StatsNotis extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 80,),
+          SizedBox(height: 80),
           Padding(
             padding: const EdgeInsets.only(left: 40, right: 40),
             child: Row(
@@ -62,7 +62,7 @@ class StatsNotis extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 5,),
+          SizedBox(height: 5),
           Padding(
             padding: const EdgeInsets.only(left: 35, right: 35),
             child: Row(
@@ -71,32 +71,83 @@ class StatsNotis extends StatelessWidget {
                 Container(
                   height: 2,
                   width: 65,
-                  decoration: BoxDecoration(
-                    color: Colors.red
-                  ),
+                  decoration: BoxDecoration(color: Colors.red),
                 ),
                 Container(
                   height: 2,
                   width: 65,
-                  decoration: BoxDecoration(
-                    color: Colors.lightBlue
-                  ),
+                  decoration: BoxDecoration(color: Colors.lightBlue),
                 ),
                 Container(
                   height: 2,
                   width: 65,
-                  decoration: BoxDecoration(
-                    color: Colors.amber
-                  ),
+                  decoration: BoxDecoration(color: Colors.amber),
                 ),
                 Container(
                   height: 2,
                   width: 65,
-                  decoration: BoxDecoration(
-                    color: Colors.lightGreen
-                  ),
+                  decoration: BoxDecoration(color: Colors.lightGreen),
                 ),
               ],
+            ),
+          ),
+          SizedBox(height: 30),
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: Text(
+              'Seems like a good week!',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(20),
+            child: Container(
+              height: 250,
+              width: 500,
+              decoration: BoxDecoration(
+                color: Colors.grey,
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Notifications',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 10,
+                          width: 10,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          'Remember to track your mood today.',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 100,),
+                  IconButton(
+                    onPressed: () {}, 
+                    icon: Icon(Icons.delete_outline),
+                    ),
+                ],
+              ),
             ),
           ),
         ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mood_tracker/Calendar/calendar.dart';
 import 'package:mood_tracker/Home/home.dart';
+import 'package:mood_tracker/Stats%20&%20Notis/stats_notis.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,6 +18,10 @@ final _router = GoRouter(
     GoRoute(
       path: '/calendar',
       builder: (context, state) => CalendarScreen()
+    ),
+    GoRoute(
+      path: '/stats_notis',
+      builder: (context, state) => StatsNotis()
     ),
   ]
 );

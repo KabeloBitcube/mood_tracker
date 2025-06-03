@@ -49,8 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _moods.add(moodEntry);
     });
 
-    //Navigate to calendar passing in data
-    Navigator.of(context).pop();
+    CalendarScreen(moodEntries: _moods);
   }
 
   @override
@@ -114,27 +113,30 @@ class _HomeScreenState extends State<HomeScreen> {
               TextButton(
                 child: const Text('Save'),
                 onPressed: () {
-                  log('Selected mood: $_selectedMood');
-                  log('Selected reason: $_selectedReason');
-                  log('Description: ${_descriptionController.text}');
-                  log('Selected time: $_selectedTime');
                   _onSave();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CalendarScreen(moodEntries: _moods),
-                    ),
-                  );
-                  NotiService().initNotification().then((_) {
-                    Future.delayed(const Duration(seconds: 5), () {
-                      NotiService().showNotification(
-                        title: "Title",
-                        body: "Body",
-                      );
-                    });
-                  });
 
-                  Navigator.of(context).pop();
+                  if (_selectedMood != null &&
+                      _selectedReason != null &&
+                      _descriptionController.text.isNotEmpty &&
+                      _selectedTime != null) {
+                    log('Selected mood: $_selectedMood');
+                    log('Selected reason: $_selectedReason');
+                    log('Description: ${_descriptionController.text}');
+                    log('Selected time: $_selectedTime');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Mood added to calendar')),
+                    );
+                    NotiService().initNotification().then((_) {
+                      Future.delayed(const Duration(seconds: 5), () {
+                        NotiService().showNotification(
+                          title: "Title",
+                          body: "Body",
+                        );
+                      });
+                    });
+                    _descriptionController.clear();
+                    Navigator.of(context).pop();
+                  }
                 },
               ),
             ],

@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:mood_tracker/Calendar/calendar.dart';
 import 'package:mood_tracker/Mode/mode.dart';
+import 'package:mood_tracker/Mood%20Model/moodentry.dart';
 import 'package:mood_tracker/Notifications/noti_service.dart';
+import 'package:mood_tracker/Stats%20&%20Notis/stats_notis.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,6 +19,38 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int? selectedOption = 1;
+
+  //
+  String? _selectedMood;
+  int? _selectedTime = 1;
+  String? _selectedReason;
+  final _descriptionController = TextEditingController();
+  final List<MoodEntry> _moods = [];
+
+  void _onSave() {
+    if (_selectedMood == null ||
+        _selectedReason == null ||
+        _descriptionController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please fill in al fields and select a mood')),
+      );
+      return;
+    }
+
+    final moodEntry = MoodEntry(
+      mood: _selectedMood!,
+      reason: _selectedReason!,
+      description: _descriptionController.text,
+      timeOfDay: _selectedTime,
+      date: DateTime.now(),
+    );
+
+    setState(() {
+      _moods.add(moodEntry);
+    });
+
+    CalendarScreen(moodEntries: _moods);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,40 +70,46 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Divider(color: Colors.black),
                   ),
                   SizedBox(height: 10),
-                  ListTile(
-                    title: const Text('Morning'),
-                    leading: Radio<int>(
-                      value: 1,
-                      groupValue: selectedOption,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedOption = value;
-                        });
-                      },
-                    ),
-                  ),
-                  ListTile(
-                    title: const Text('Afternoon'),
-                    leading: Radio<int>(
-                      value: 2,
-                      groupValue: selectedOption,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedOption = value;
-                        });
-                      },
-                    ),
-                  ),
-                  ListTile(
-                    title: const Text('Night'),
-                    leading: Radio<int>(
-                      value: 3,
-                      groupValue: selectedOption,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedOption = value;
-                        });
-                      },
+                  StatefulBuilder(
+                    builder: (context, setState) => Column(
+                      children: [
+                        ListTile(
+                          title: const Text('Morning'),
+                          leading: Radio<int>(
+                            value: 1,
+                            groupValue: _selectedTime,
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedTime = value;
+                              });
+                            },
+                          ),
+                        ),
+                        ListTile(
+                          title: const Text('Afternoon'),
+                          leading: Radio<int>(
+                            value: 2,
+                            groupValue: _selectedTime,
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedTime = value;
+                              });
+                            },
+                          ),
+                        ),
+                        ListTile(
+                          title: const Text('Night'),
+                          leading: Radio<int>(
+                            value: 3,
+                            groupValue: _selectedTime,
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedTime = value;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -77,16 +119,30 @@ class _HomeScreenState extends State<HomeScreen> {
               TextButton(
                 child: const Text('Save'),
                 onPressed: () {
-                  NotiService().initNotification().then((_) {
-                    Future.delayed(const Duration(seconds: 5), () {
-                      NotiService().showNotification(
-                        title: "Title",
-                        body: "Body",
-                      );
-                    });
-                  });
+                  _onSave();
 
-                  Navigator.of(context).pop();
+                  if (_selectedMood != null &&
+                      _selectedReason != null &&
+                      _descriptionController.text.isNotEmpty &&
+                      _selectedTime != null) {
+                    log('Selected mood: $_selectedMood');
+                    log('Selected reason: $_selectedReason');
+                    log('Description: ${_descriptionController.text}');
+                    log('Selected time: $_selectedTime');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Mood added to calendar')),
+                    );
+                    NotiService().initNotification().then((_) {
+                      Future.delayed(const Duration(seconds: 5), () {
+                        NotiService().showNotification(
+                          title: "Title",
+                          body: "Body",
+                        );
+                      });
+                    });
+                    _descriptionController.clear();
+                    Navigator.of(context).pop();
+                  }
                 },
               ),
             ],
@@ -114,7 +170,13 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
               onPressed: () {
-                context.push('/calendar');
+                // context.push('/calendar');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CalendarScreen(moodEntries: _moods),
+                  ),
+                );
               },
               icon: Icon(Icons.calendar_month_outlined),
             ),
@@ -138,59 +200,79 @@ class _HomeScreenState extends State<HomeScreen> {
               CarouselSlider(
                 options: CarouselOptions(height: 250.0),
                 items: [
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    decoration: BoxDecoration(
-                      color: Colors.amber,
-                      borderRadius: BorderRadius.circular(250),
-                    ),
-                    child: Center(
-                      child: Image.asset(
-                        'assets/images/Happy.webp',
-                        width: 170,
-                        height: 170,
+                  GestureDetector(
+                    onTap: () {
+                      _selectedMood = "Happy";
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      decoration: BoxDecoration(
+                        color: Colors.amber,
+                        borderRadius: BorderRadius.circular(250),
+                      ),
+                      child: Center(
+                        child: Image.asset(
+                          'assets/images/Happy.webp',
+                          width: 170,
+                          height: 170,
+                        ),
                       ),
                     ),
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    decoration: BoxDecoration(
-                      color: Colors.lightBlueAccent,
-                      borderRadius: BorderRadius.circular(250),
-                    ),
-                    child: Center(
-                      child: Image.asset(
-                        'assets/images/Sad.webp',
-                        width: 170,
-                        height: 170,
+                  GestureDetector(
+                    onTap: () {
+                      _selectedMood = "Sad";
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      decoration: BoxDecoration(
+                        color: Colors.lightBlueAccent,
+                        borderRadius: BorderRadius.circular(250),
+                      ),
+                      child: Center(
+                        child: Image.asset(
+                          'assets/images/Sad.webp',
+                          width: 170,
+                          height: 170,
+                        ),
                       ),
                     ),
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(250),
-                    ),
-                    child: Center(
-                      child: Image.asset(
-                        'assets/images/Angry.png',
-                        width: 150,
-                        height: 150,
+                  GestureDetector(
+                    onTap: () {
+                      _selectedMood = "Angry";
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(250),
+                      ),
+                      child: Center(
+                        child: Image.asset(
+                          'assets/images/Angry.png',
+                          width: 150,
+                          height: 150,
+                        ),
                       ),
                     ),
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(250),
-                    ),
-                    child: Center(
-                      child: Image.asset(
-                        'assets/images/Positive.webp',
-                        width: 220,
-                        height: 220,
+                  GestureDetector(
+                    onTap: () {
+                      _selectedMood = " Calm";
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(250),
+                      ),
+                      child: Center(
+                        child: Image.asset(
+                          'assets/images/Positive.webp',
+                          width: 220,
+                          height: 220,
+                        ),
                       ),
                     ),
                   ),
@@ -205,122 +287,162 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
-                    Container(
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(200),
-                      ),
-                      child: Center(
-                        child: const Text(
-                          'Work',
-                          style: TextStyle(color: Colors.white),
+                    GestureDetector(
+                      onTap: () {
+                        _selectedReason = "Work";
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(200),
+                        ),
+                        child: Center(
+                          child: const Text(
+                            'Work',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(width: 20),
-                    Container(
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(200),
-                      ),
-                      child: Center(
-                        child: const Text(
-                          'School',
-                          style: TextStyle(color: Colors.white),
+                    GestureDetector(
+                      onTap: () {
+                        _selectedReason = "School";
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(200),
+                        ),
+                        child: Center(
+                          child: const Text(
+                            'School',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(width: 20),
-                    Container(
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(200),
-                      ),
-                      child: Center(
-                        child: const Text(
-                          'Friends',
-                          style: TextStyle(color: Colors.white),
+                    GestureDetector(
+                      onTap: () {
+                        _selectedReason = "Friends";
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(200),
+                        ),
+                        child: Center(
+                          child: const Text(
+                            'Friends',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(width: 20),
-                    Container(
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(200),
-                      ),
-                      child: Center(
-                        child: const Text(
-                          'Family',
-                          style: TextStyle(color: Colors.white),
+                    GestureDetector(
+                      onTap: () {
+                        _selectedReason = "Family";
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(200),
+                        ),
+                        child: Center(
+                          child: const Text(
+                            'Family',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(width: 20),
-                    Container(
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(200),
-                      ),
-                      child: Center(
-                        child: const Text(
-                          'Hobby',
-                          style: TextStyle(color: Colors.white),
+                    GestureDetector(
+                      onTap: () {
+                        _selectedReason = "Hobby";
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(200),
+                        ),
+                        child: Center(
+                          child: const Text(
+                            'Hobby',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
                     SizedBox(width: 20),
-                    Container(
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(200),
-                      ),
-                      child: Center(
-                        child: const Text(
-                          'Health',
-                          style: TextStyle(color: Colors.white),
+                    GestureDetector(
+                      onTap: () {
+                        _selectedReason = "Health";
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(200),
+                        ),
+                        child: Center(
+                          child: const Text(
+                            'Health',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
                     SizedBox(width: 20),
-                    Container(
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(200),
-                      ),
-                      child: Center(
-                        child: const Text(
-                          'Relationship',
-                          style: TextStyle(color: Colors.white),
+                    GestureDetector(
+                      onTap: () {
+                        _selectedReason = "Relationship";
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(200),
+                        ),
+                        child: Center(
+                          child: const Text(
+                            'Relationship',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
                     SizedBox(width: 20),
-                    Container(
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(200),
-                      ),
-                      child: Center(
-                        child: const Text(
-                          'Money',
-                          style: TextStyle(color: Colors.white),
+                    GestureDetector(
+                      onTap: () {
+                        _selectedReason = "Money";
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(200),
+                        ),
+                        child: Center(
+                          child: const Text(
+                            'Money',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
@@ -332,6 +454,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const Text('Wanna write about it?'),
               const SizedBox(height: 20),
               TextField(
+                controller: _descriptionController,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   hintText: 'Describe how you feel...',
@@ -342,7 +465,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   filled: true,
                   contentPadding: EdgeInsets.all(16),
-                  fillColor: Colors.grey,
+                  fillColor: Colors.grey[450],
                 ),
               ),
               const SizedBox(height: 20),
@@ -375,7 +498,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      context.push('/stats_notis');
+                      // context.push('/stats_notis');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => StatsNotis()),
+                      );
                     },
                     child: Image.asset(
                       'assets/images/Moods.webp',

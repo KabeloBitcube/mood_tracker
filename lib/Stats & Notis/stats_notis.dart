@@ -58,7 +58,7 @@ class StatsNotis extends StatelessWidget {
                 Text('Angry'),
                 Text('Sad'),
                 Text('Happy'),
-                Text('Positive'),
+                Text('Calm'),
               ],
             ),
           ),

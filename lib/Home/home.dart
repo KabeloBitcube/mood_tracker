@@ -1,9 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:mood_tracker/Calendar/calendar.dart';
 import 'package:mood_tracker/Mode/mode.dart';
+import 'package:mood_tracker/Mood%20Model/moodentry.dart';
 import 'package:mood_tracker/Notifications/noti_service.dart';
+import 'package:mood_tracker/Stats%20&%20Notis/stats_notis.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,6 +17,44 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int? selectedOption = 1;
+
+  //
+  String? _selectedMood;
+  String _selectedTime = 'Morning';
+  final _reasonController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final List<MoodEntry> _moods = [];
+
+  void _onSave() {
+    if (_selectedMood == null ||
+        _reasonController.text.isEmpty ||
+        _descriptionController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please fill in al fields and select a mood')),
+      );
+      return;
+    }
+
+    final moodEntry = MoodEntry(
+      mood: _selectedMood!,
+      reason: _reasonController.text,
+      description: _descriptionController.text,
+      timeOfDay: _selectedTime,
+      date: DateTime.now(),
+    );
+
+    setState(() {
+      _moods.add(moodEntry);
+    });
+
+    //Navigate to calendar passing in data
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CalendarScreen(moodEntries: _moods),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +154,13 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
               onPressed: () {
-                context.push('/calendar');
+                // context.push('/calendar');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CalendarScreen(moodEntries: _moods),
+                  ),
+                );
               },
               icon: Icon(Icons.calendar_month_outlined),
             ),
@@ -138,59 +184,79 @@ class _HomeScreenState extends State<HomeScreen> {
               CarouselSlider(
                 options: CarouselOptions(height: 250.0),
                 items: [
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    decoration: BoxDecoration(
-                      color: Colors.amber,
-                      borderRadius: BorderRadius.circular(250),
-                    ),
-                    child: Center(
-                      child: Image.asset(
-                        'assets/images/Happy.webp',
-                        width: 170,
-                        height: 170,
+                  GestureDetector(
+                    onTap: () {
+                      _selectedMood = "Happy";
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      decoration: BoxDecoration(
+                        color: Colors.amber,
+                        borderRadius: BorderRadius.circular(250),
+                      ),
+                      child: Center(
+                        child: Image.asset(
+                          'assets/images/Happy.webp',
+                          width: 170,
+                          height: 170,
+                        ),
                       ),
                     ),
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    decoration: BoxDecoration(
-                      color: Colors.lightBlueAccent,
-                      borderRadius: BorderRadius.circular(250),
-                    ),
-                    child: Center(
-                      child: Image.asset(
-                        'assets/images/Sad.webp',
-                        width: 170,
-                        height: 170,
+                  GestureDetector(
+                    onTap: () {
+                      _selectedMood = "Sad";
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      decoration: BoxDecoration(
+                        color: Colors.lightBlueAccent,
+                        borderRadius: BorderRadius.circular(250),
+                      ),
+                      child: Center(
+                        child: Image.asset(
+                          'assets/images/Sad.webp',
+                          width: 170,
+                          height: 170,
+                        ),
                       ),
                     ),
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(250),
-                    ),
-                    child: Center(
-                      child: Image.asset(
-                        'assets/images/Angry.png',
-                        width: 150,
-                        height: 150,
+                  GestureDetector(
+                    onTap: () {
+                      _selectedMood = "Angry";
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(250),
+                      ),
+                      child: Center(
+                        child: Image.asset(
+                          'assets/images/Angry.png',
+                          width: 150,
+                          height: 150,
+                        ),
                       ),
                     ),
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(250),
-                    ),
-                    child: Center(
-                      child: Image.asset(
-                        'assets/images/Positive.webp',
-                        width: 220,
-                        height: 220,
+                  GestureDetector(
+                    onTap: () {
+                      _selectedMood = " Calm";
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(250),
+                      ),
+                      child: Center(
+                        child: Image.asset(
+                          'assets/images/Positive.webp',
+                          width: 220,
+                          height: 220,
+                        ),
                       ),
                     ),
                   ),
@@ -375,7 +441,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      context.push('/stats_notis');
+                      // context.push('/stats_notis');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => StatsNotis()),
+                      );
                     },
                     child: Image.asset(
                       'assets/images/Moods.webp',

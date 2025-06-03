@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mood_tracker/Mood%20Model/moodentry.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarScreen extends StatefulWidget {
-  const CalendarScreen({super.key});
+
+  final List<MoodEntry> moodEntries;
+
+  const CalendarScreen({super.key, required this.moodEntries});
 
   @override
   State<CalendarScreen> createState() => _CalendarScreenState();

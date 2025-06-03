@@ -39,7 +39,7 @@ class NotiService {
         'daily_channel_id',
         'Daily Notifications',
         channelDescription: 'Daily Notification Channel',
-        icon: '@mipmap/logo',
+        icon: '@mipmap/ic_launcher',
         importance: Importance.max,
         priority: Priority.high,
       ),

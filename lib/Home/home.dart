@@ -77,12 +77,15 @@ class _HomeScreenState extends State<HomeScreen> {
               TextButton(
                 child: const Text('Save'),
                 onPressed: () {
-                  Future.delayed(const Duration(seconds: 5), () {
-                    NotiService().showNotification(
-                      title: "Title",
-                      body: "Body",
-                    );
+                  NotiService().initNotification().then((_) {
+                    Future.delayed(const Duration(seconds: 5), () {
+                      NotiService().showNotification(
+                        title: "Title",
+                        body: "Body",
+                      );
+                    });
                   });
+
                   Navigator.of(context).pop();
                 },
               ),

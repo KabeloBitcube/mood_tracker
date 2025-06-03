@@ -105,7 +105,7 @@ class StatsNotis extends StatelessWidget {
               height: 250,
               width: 500,
               decoration: BoxDecoration(
-                color: Colors.grey,
+                color: Colors.grey[500],
                 borderRadius: BorderRadius.circular(50),
               ),
               child: Column(

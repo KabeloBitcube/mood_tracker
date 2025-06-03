@@ -342,7 +342,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   filled: true,
                   contentPadding: EdgeInsets.all(16),
-                  fillColor: Colors.grey,
+                  fillColor: Colors.grey[450],
                 ),
               ),
               const SizedBox(height: 20),

@@ -120,12 +120,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         color: getCardColor(mood.mood),
                         margin: EdgeInsets.all(8),
                         child: ListTile(
-                          title: Text(time, style: TextStyle(fontWeight: FontWeight.bold, color: modeController.isDarkMode ? Colors.white : Colors.black),),
+                          title: Text(time, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: modeController.isDarkMode ? Colors.white : Colors.black),),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Reason : ${mood.reason}', style: TextStyle(fontWeight: FontWeight.bold, color: modeController.isDarkMode ? Colors.white : Colors.black,),),
-                              Text('Description : ${mood.description}', style: TextStyle(fontWeight: FontWeight.bold, color: modeController.isDarkMode ? Colors.white : Colors.black,)),
+                              Text(mood.reason, style: TextStyle(fontWeight: FontWeight.bold, color: modeController.isDarkMode ? Colors.white : Colors.black,),),
+                              Text(mood.description, style: TextStyle(fontWeight: FontWeight.bold, color: modeController.isDarkMode ? Colors.white : Colors.black,)),
                             ],
                           ),
                           trailing: Image.asset(getMoodImage(mood.mood)),

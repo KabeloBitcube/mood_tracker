@@ -8,13 +8,19 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   //init notifications
-  NotiService().initNotification().then((_){
-    NotiService().showNotification(title: 'Welcome', body: 'Remember to track your mood today.');
+  NotiService().initNotification().then((_) {
+    NotiService().showNotification(
+      title: 'Welcome',
+      body: 'Ready to track your mood today?',
+    );
   });
 
-  runApp(ChangeNotifierProvider(
-    create: (context) => ModeController(),
-    child: const MyApp()));
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ModeController(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 // Go router navigation
@@ -44,16 +50,16 @@ class MyApp extends StatelessWidget {
     // Access the mode controller to determine the app's theme
     final modeController = Provider.of<ModeController>(context);
 
-    
 
     return MaterialApp(
       theme: ThemeData(
         // Dynamically applies light or dark theme based on user preference
-        brightness: modeController.isDarkMode ? Brightness.dark : Brightness.light,
+        brightness: modeController.isDarkMode
+            ? Brightness.dark
+            : Brightness.light,
       ),
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: HomeScreen(notificationCount: 0,),
     );
   }
 }
-

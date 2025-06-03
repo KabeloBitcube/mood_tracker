@@ -11,13 +11,16 @@ import 'package:mood_tracker/Stats%20&%20Notis/stats_notis.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final int notificationCount;
+
+  const HomeScreen({super.key, required this.notificationCount});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int notificationCount = 0;
 
   String? _selectedMood;
   int? _selectedTime = 1;
@@ -130,14 +133,40 @@ class _HomeScreenState extends State<HomeScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Mood added to calendar')),
                     );
-                    NotiService().initNotification().then((_) {
-                      Future.delayed(const Duration(seconds: 5), () {
-                        NotiService().showNotification(
-                          title: "Reminder",
-                          body: "Remember to track your mood again today.",
-                        );
+                    if (_selectedTime == 1) {
+                      NotiService().initNotification().then((_) {
+                        Future.delayed(const Duration(seconds: 5), () {
+                          NotiService().showNotification(
+                            title: "Reminder",
+                            body:
+                                "Remember to track your mood in the afternoon.",
+                          );
+                        });
                       });
-                    });
+                    }
+                    if (_selectedTime == 2) {
+                      NotiService().initNotification().then((_) {
+                        Future.delayed(const Duration(seconds: 5), () {
+                          NotiService().showNotification(
+                            title: "Reminder",
+                            body:
+                                "Remember to track your mood tonight.",
+                          );
+                        });
+                      });
+                    }
+                    if (_selectedTime == 3) {
+                      NotiService().initNotification().then((_) {
+                        Future.delayed(const Duration(seconds: 5), () {
+                          NotiService().showNotification(
+                            title: "Reminder",
+                            body:
+                                "Remember to track your mood in the morning.",
+                          );
+                        });
+                      });
+                    }
+                    notificationCount++;
                     _descriptionController.clear();
                     Navigator.of(context).pop();
                   }
@@ -520,8 +549,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(100),
                       ),
                       child: Center(
-                        child: const Text(
-                          '1',
+                        child: Text(
+                          '$notificationCount',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,

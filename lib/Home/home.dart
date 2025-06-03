@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -20,14 +22,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   //
   String? _selectedMood;
-  String _selectedTime = 'Morning';
-  final _reasonController = TextEditingController();
+  int? _selectedTime = 1;
+  String? _selectedReason;
   final _descriptionController = TextEditingController();
   final List<MoodEntry> _moods = [];
 
   void _onSave() {
     if (_selectedMood == null ||
-        _reasonController.text.isEmpty ||
+        _selectedReason == null ||
         _descriptionController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please fill in al fields and select a mood')),
@@ -37,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final moodEntry = MoodEntry(
       mood: _selectedMood!,
-      reason: _reasonController.text,
+      reason: _selectedReason!,
       description: _descriptionController.text,
       timeOfDay: _selectedTime,
       date: DateTime.now(),
@@ -48,12 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     //Navigate to calendar passing in data
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CalendarScreen(moodEntries: _moods),
-      ),
-    );
+    Navigator.of(context).pop();
   }
 
   @override
@@ -78,10 +75,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     title: const Text('Morning'),
                     leading: Radio<int>(
                       value: 1,
-                      groupValue: selectedOption,
+                      groupValue: _selectedTime,
                       onChanged: (value) {
                         setState(() {
-                          selectedOption = value;
+                          _selectedTime = value;
                         });
                       },
                     ),
@@ -90,10 +87,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     title: const Text('Afternoon'),
                     leading: Radio<int>(
                       value: 2,
-                      groupValue: selectedOption,
+                      groupValue: _selectedTime,
                       onChanged: (value) {
                         setState(() {
-                          selectedOption = value;
+                          _selectedTime = value;
                         });
                       },
                     ),
@@ -102,10 +99,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     title: const Text('Night'),
                     leading: Radio<int>(
                       value: 3,
-                      groupValue: selectedOption,
+                      groupValue: _selectedTime,
                       onChanged: (value) {
                         setState(() {
-                          selectedOption = value;
+                          _selectedTime = value;
                         });
                       },
                     ),
@@ -117,6 +114,17 @@ class _HomeScreenState extends State<HomeScreen> {
               TextButton(
                 child: const Text('Save'),
                 onPressed: () {
+                  log('Selected mood: $_selectedMood');
+                  log('Selected reason: $_selectedReason');
+                  log('Description: ${_descriptionController.text}');
+                  log('Selected time: $_selectedTime');
+                  _onSave();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CalendarScreen(moodEntries: _moods),
+                    ),
+                  );
                   NotiService().initNotification().then((_) {
                     Future.delayed(const Duration(seconds: 5), () {
                       NotiService().showNotification(
@@ -271,122 +279,162 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
-                    Container(
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(200),
-                      ),
-                      child: Center(
-                        child: const Text(
-                          'Work',
-                          style: TextStyle(color: Colors.white),
+                    GestureDetector(
+                      onTap: () {
+                        _selectedReason = "Work";
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(200),
+                        ),
+                        child: Center(
+                          child: const Text(
+                            'Work',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(width: 20),
-                    Container(
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(200),
-                      ),
-                      child: Center(
-                        child: const Text(
-                          'School',
-                          style: TextStyle(color: Colors.white),
+                    GestureDetector(
+                      onTap: () {
+                        _selectedReason = "School";
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(200),
+                        ),
+                        child: Center(
+                          child: const Text(
+                            'School',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(width: 20),
-                    Container(
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(200),
-                      ),
-                      child: Center(
-                        child: const Text(
-                          'Friends',
-                          style: TextStyle(color: Colors.white),
+                    GestureDetector(
+                      onTap: () {
+                        _selectedReason = "Friends";
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(200),
+                        ),
+                        child: Center(
+                          child: const Text(
+                            'Friends',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(width: 20),
-                    Container(
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(200),
-                      ),
-                      child: Center(
-                        child: const Text(
-                          'Family',
-                          style: TextStyle(color: Colors.white),
+                    GestureDetector(
+                      onTap: () {
+                        _selectedReason = "Family";
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(200),
+                        ),
+                        child: Center(
+                          child: const Text(
+                            'Family',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(width: 20),
-                    Container(
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(200),
-                      ),
-                      child: Center(
-                        child: const Text(
-                          'Hobby',
-                          style: TextStyle(color: Colors.white),
+                    GestureDetector(
+                      onTap: () {
+                        _selectedReason = "Hobby";
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(200),
+                        ),
+                        child: Center(
+                          child: const Text(
+                            'Hobby',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
                     SizedBox(width: 20),
-                    Container(
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(200),
-                      ),
-                      child: Center(
-                        child: const Text(
-                          'Health',
-                          style: TextStyle(color: Colors.white),
+                    GestureDetector(
+                      onTap: () {
+                        _selectedReason = "Health";
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(200),
+                        ),
+                        child: Center(
+                          child: const Text(
+                            'Health',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
                     SizedBox(width: 20),
-                    Container(
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(200),
-                      ),
-                      child: Center(
-                        child: const Text(
-                          'Relationship',
-                          style: TextStyle(color: Colors.white),
+                    GestureDetector(
+                      onTap: () {
+                        _selectedReason = "Relationship";
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(200),
+                        ),
+                        child: Center(
+                          child: const Text(
+                            'Relationship',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
                     SizedBox(width: 20),
-                    Container(
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(200),
-                      ),
-                      child: Center(
-                        child: const Text(
-                          'Money',
-                          style: TextStyle(color: Colors.white),
+                    GestureDetector(
+                      onTap: () {
+                        _selectedReason = "Money";
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(200),
+                        ),
+                        child: Center(
+                          child: const Text(
+                            'Money',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
@@ -398,6 +446,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const Text('Wanna write about it?'),
               const SizedBox(height: 20),
               TextField(
+                controller: _descriptionController,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   hintText: 'Describe how you feel...',

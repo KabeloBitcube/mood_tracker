@@ -69,7 +69,6 @@ flutter:
   assets:
     - assets/images/Angry.png
     - assets/images/Happy.webp
-    - assets/images/Positive.webp
     - assets/images/Sad.webp
     - assets/images/Calm.webp
     - assets/images/Moods.webp

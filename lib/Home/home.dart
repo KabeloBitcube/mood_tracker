@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:mood_tracker/Mode/mode.dart';
+import 'package:mood_tracker/Notifications/noti_service.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -76,6 +77,15 @@ class _HomeScreenState extends State<HomeScreen> {
               TextButton(
                 child: const Text('Save'),
                 onPressed: () {
+                  NotiService().initNotification().then((_) {
+                    Future.delayed(const Duration(seconds: 5), () {
+                      NotiService().showNotification(
+                        title: "Title",
+                        body: "Body",
+                      );
+                    });
+                  });
+
                   Navigator.of(context).pop();
                 },
               ),
@@ -89,23 +99,25 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         centerTitle: true,
         leading: IconButton(
-            onPressed: () {
-              modeController.toggleMode();
-            },
-            icon: Icon(
-              modeController.isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
-            ),
+          onPressed: () {
+            modeController.toggleMode();
+          },
+          icon: Icon(
+            modeController.isDarkMode
+                ? Icons.light_mode_outlined
+                : Icons.dark_mode_outlined,
           ),
+        ),
         title: Text(getCurrentDate(), style: TextStyle(fontSize: 15)),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
               onPressed: () {
-                 context.push('/calendar');
+                context.push('/calendar');
               },
               icon: Icon(Icons.calendar_month_outlined),
-              ),
+            ),
           ),
         ],
       ),
@@ -362,7 +374,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 clipBehavior: Clip.none,
                 children: [
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       context.push('/stats_notis');
                     },
                     child: Image.asset(
@@ -387,7 +399,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
-                            fontSize: 10
+                            fontSize: 10,
                           ),
                         ),
                       ),

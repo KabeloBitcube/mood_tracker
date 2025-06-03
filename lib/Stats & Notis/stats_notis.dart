@@ -1,11 +1,16 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:mood_tracker/Mode/mode.dart';
+import 'package:provider/provider.dart';
 
 class StatsNotis extends StatelessWidget {
   const StatsNotis({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final modeController = Provider.of<ModeController>(context);
+
+
     return Scaffold(
       appBar: AppBar(),
       body: Column(
@@ -105,7 +110,7 @@ class StatsNotis extends StatelessWidget {
               height: 250,
               width: 500,
               decoration: BoxDecoration(
-                color: Colors.grey[500],
+                color: modeController.isDarkMode ? Colors.grey[900] : Colors.grey[350],
                 borderRadius: BorderRadius.circular(50),
               ),
               child: Column(

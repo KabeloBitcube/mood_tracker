@@ -18,9 +18,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int? selectedOption = 1;
 
-  //
   String? _selectedMood;
   int? _selectedTime = 1;
   String? _selectedReason;
@@ -135,8 +133,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     NotiService().initNotification().then((_) {
                       Future.delayed(const Duration(seconds: 5), () {
                         NotiService().showNotification(
-                          title: "Title",
-                          body: "Body",
+                          title: "Reminder",
+                          body: "Remember to track your mood again today.",
                         );
                       });
                     });

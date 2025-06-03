@@ -259,7 +259,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      _selectedMood = " Calm";
+                      _selectedMood = "Calm";
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.6,
@@ -269,9 +269,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       child: Center(
                         child: Image.asset(
-                          'assets/images/Positive.webp',
-                          width: 220,
-                          height: 220,
+                          'assets/images/Calm.webp',
+                          width: 160,
+                          height: 160,
+                          color: Colors.black,
                         ),
                       ),
                     ),

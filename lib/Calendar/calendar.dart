@@ -61,197 +61,74 @@ class _CalendarScreenState extends State<CalendarScreen> {
               formatButtonVisible: false,
             ),
           ),
-          const SizedBox(height: 20,),
+          const SizedBox(height: 20),
           Expanded(
-            child: _selectedMoods.isEmpty 
-            ? Center(
-              child: const Text('No mood entries for this day.'),
-            ) : ListView.builder(
-              itemCount: _selectedMoods.length,
-              itemBuilder: (context, index) {
-                final mood = _selectedMoods[index];
-                final String? time;
+            child: _selectedMoods.isEmpty
+                ? Center(child: const Text('No mood entries for this day.'))
+                : ListView.builder(
+                    itemCount: _selectedMoods.length,
+                    itemBuilder: (context, index) {
+                      final mood = _selectedMoods[index];
+                      final String? time;
 
-                if (mood.timeOfDay == 1){
-                  time = "Morning";
-                }
-                else if (mood.timeOfDay == 2){
-                  time = "Afternoon";
-                }
-                else{
-                  time = "Night";
-                }
+                      if (mood.timeOfDay == 1) {
+                        time = "Morning";
+                      } else if (mood.timeOfDay == 2) {
+                        time = "Afternoon";
+                      } else {
+                        time = "Night";
+                      }
 
-                return Card(
-                  margin: EdgeInsets.all(8),
-                  child: ListTile(
-                    title: Text('Mood: ${mood.mood} - $time'),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Reason: ${mood.reason}'),
-                        Text('Description: ${mood.description}')
-                      ],
-                    ),
+                      Color getCardColor(String mood) {
+                        if (mood == "Sad") {
+                          return Colors.lightBlue;
+                        }
+                        if (mood == "Happy") {
+                          return Colors.amber;
+                        }
+                        if (mood == "Angry") {
+                          return Colors.red;
+                        }
+                        if (mood == "Calm") {
+                          return Colors.lightGreen;
+                        }
+                        return Colors.grey;
+                      }
+
+                      String getMoodImage(String mood) {
+                        if (mood == "Sad") {
+                          return 'assets/images/Sad.webp';
+                        }
+                        if (mood == "Happy") {
+                          return 'assets/images/Happy.webp';
+                        }
+                        if (mood == "Angry") {
+                          return 'assets/images/Angry.png';
+                        }
+                        if (mood == "Calm") {
+                          return 'assets/images/Calm.webp';
+                        }
+                        return 'assets/images/Happy.webp';
+                      }
+
+                      return Card(
+                        color: getCardColor(mood.mood),
+                        margin: EdgeInsets.all(8),
+                        child: ListTile(
+                          title: Text('Mood: ${mood.mood} - $time'),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Reason: ${mood.reason}'),
+                              Text('Description: ${mood.description}'),
+                            ],
+                          ),
+                          trailing: Image.asset(getMoodImage(mood.mood)),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
-          )
-          // Container(
-          //   height: 494.2,
-          //   width: MediaQuery.of(context).size.width,
-          //   decoration: BoxDecoration(
-          //     color: Colors.blueGrey,
-          //     borderRadius: BorderRadius.only(
-          //       topLeft: Radius.circular(50),
-          //       topRight: Radius.circular(50),
-          //     ),
-          //   ),
-          //   child: Padding(
-          //     padding: const EdgeInsets.all(8.0),
-          //     child: Column(
-          //       crossAxisAlignment: CrossAxisAlignment.center,
-          //       children: [
-          //         Padding(
-          //           padding: const EdgeInsets.only(
-          //             top: 20,
-          //             right: 150,
-          //             left: 150,
-          //           ),
-          //           child: Divider(thickness: 2),
-          //         ),
-          //         Text(
-          //           'Tuesday, 2 June',
-          //           style: TextStyle(color: Colors.white),
-          //         ),
-          //         SizedBox(height: 20),
-          //         Padding(
-          //           padding: const EdgeInsets.only(
-          //             left: 30,
-          //             right: 45,
-          //             top: 10,
-          //           ),
-          //           child: Row(
-          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //             children: [
-          //               Text('Morning', style: TextStyle(color: Colors.white)),
-          //               Text(
-          //                 'Afternoon',
-          //                 style: TextStyle(color: Colors.white),
-          //               ),
-          //               Text('Night', style: TextStyle(color: Colors.white)),
-          //             ],
-          //           ),
-          //         ),
-          //         Padding(
-          //           padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
-          //           child: Row(
-          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //             children: [
-          //               Container(
-          //                 height: 30,
-          //                 width: 100,
-          //                 decoration: BoxDecoration(
-          //                   color: Colors.lightBlue,
-          //                   borderRadius: BorderRadius.circular(200),
-          //                 ),
-          //                 child: Center(
-          //                   child: Image.asset('assets/images/Sad.webp'),
-          //                 ),
-          //               ),
-          //               Container(
-          //                 height: 30,
-          //                 width: 100,
-          //                 decoration: BoxDecoration(
-          //                   color: Colors.amber,
-          //                   borderRadius: BorderRadius.circular(200),
-          //                 ),
-          //                 child: Center(
-          //                   child: Image.asset('assets/images/Happy.webp'),
-          //                 ),
-          //               ),
-          //               Container(
-          //                 height: 30,
-          //                 width: 100,
-          //                 decoration: BoxDecoration(
-          //                   color: Colors.red,
-          //                   borderRadius: BorderRadius.circular(200),
-          //                 ),
-          //                 child: Center(
-          //                   child: Image.asset('assets/images/Angry.png'),
-          //                 ),
-          //               ),
-          //             ],
-          //           ),
-          //         ),
-          //         SizedBox(height: 5),
-          //         Divider(thickness: 1),
-          //         SizedBox(height: 10),
-          //         Row(
-          //           mainAxisAlignment: MainAxisAlignment.start,
-          //           children: [
-          //             Text(
-          //               'Reason',
-          //               style: TextStyle(
-          //                 color: Colors.white,
-          //                 fontSize: 20,
-          //                 fontWeight: FontWeight.bold,
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //         TextField(
-          //           keyboardType: TextInputType.text,
-          //           decoration: InputDecoration(
-          //             hintStyle: TextStyle(fontSize: 16),
-          //             border: OutlineInputBorder(
-          //               borderRadius: BorderRadius.circular(8),
-          //               borderSide: BorderSide(
-          //                 width: 0,
-          //                 style: BorderStyle.none,
-          //               ),
-          //             ),
-          //             filled: true,
-          //             contentPadding: EdgeInsets.all(16),
-          //             fillColor: Colors.black54,
-          //           ),
-          //         ),
-          //         SizedBox(height: 20,),
-          //         Row(
-          //           mainAxisAlignment: MainAxisAlignment.start,
-          //           children: [
-          //             Text(
-          //               'Description',
-          //               style: TextStyle(
-          //                 color: Colors.white,
-          //                 fontSize: 20,
-          //                 fontWeight: FontWeight.bold,
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //         TextField(
-          //           keyboardType: TextInputType.text,
-          //           maxLines: 4,
-          //           decoration: InputDecoration(
-          //             hintStyle: TextStyle(fontSize: 16),
-          //             border: OutlineInputBorder(
-          //               borderRadius: BorderRadius.circular(8),
-          //               borderSide: BorderSide(
-          //                 width: 0,
-          //                 style: BorderStyle.none,
-          //               ),
-          //             ),
-          //             filled: true,
-          //             contentPadding: EdgeInsets.all(16),
-          //             fillColor: Colors.black54,
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
+          ),
         ],
       ),
     );

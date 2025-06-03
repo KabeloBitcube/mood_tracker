@@ -71,6 +71,7 @@ flutter:
     - assets/images/Happy.webp
     - assets/images/Positive.webp
     - assets/images/Sad.webp
+    - assets/images/Calm.webp
     - assets/images/Moods.webp
 
   # An image asset can refer to one or more resolution-specific "variants", see

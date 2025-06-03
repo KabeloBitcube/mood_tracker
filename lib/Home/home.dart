@@ -70,40 +70,46 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Divider(color: Colors.black),
                   ),
                   SizedBox(height: 10),
-                  ListTile(
-                    title: const Text('Morning'),
-                    leading: Radio<int>(
-                      value: 1,
-                      groupValue: _selectedTime,
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedTime = value;
-                        });
-                      },
-                    ),
-                  ),
-                  ListTile(
-                    title: const Text('Afternoon'),
-                    leading: Radio<int>(
-                      value: 2,
-                      groupValue: _selectedTime,
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedTime = value;
-                        });
-                      },
-                    ),
-                  ),
-                  ListTile(
-                    title: const Text('Night'),
-                    leading: Radio<int>(
-                      value: 3,
-                      groupValue: _selectedTime,
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedTime = value;
-                        });
-                      },
+                  StatefulBuilder(
+                    builder: (context, setState) => Column(
+                      children: [
+                        ListTile(
+                          title: const Text('Morning'),
+                          leading: Radio<int>(
+                            value: 1,
+                            groupValue: _selectedTime,
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedTime = value;
+                              });
+                            },
+                          ),
+                        ),
+                        ListTile(
+                          title: const Text('Afternoon'),
+                          leading: Radio<int>(
+                            value: 2,
+                            groupValue: _selectedTime,
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedTime = value;
+                              });
+                            },
+                          ),
+                        ),
+                        ListTile(
+                          title: const Text('Night'),
+                          leading: Radio<int>(
+                            value: 3,
+                            groupValue: _selectedTime,
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedTime = value;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],

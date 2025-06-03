@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mood_tracker/Mode/mode.dart';
 import 'package:mood_tracker/Mood%20Model/moodentry.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarScreen extends StatefulWidget {
@@ -38,6 +40,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     });
   }
 
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,16 +114,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         return 'assets/images/Happy.webp';
                       }
 
+                      final modeController = Provider.of<ModeController>(context);
+
                       return Card(
                         color: getCardColor(mood.mood),
                         margin: EdgeInsets.all(8),
                         child: ListTile(
-                          title: Text('Mood: ${mood.mood} - $time'),
+                          title: Text(time, style: TextStyle(fontWeight: FontWeight.bold, color: modeController.isDarkMode ? Colors.white : Colors.black),),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Reason: ${mood.reason}'),
-                              Text('Description: ${mood.description}'),
+                              Text('Reason : ${mood.reason}', style: TextStyle(fontWeight: FontWeight.bold, color: modeController.isDarkMode ? Colors.white : Colors.black,),),
+                              Text('Description : ${mood.description}', style: TextStyle(fontWeight: FontWeight.bold, color: modeController.isDarkMode ? Colors.white : Colors.black,)),
                             ],
                           ),
                           trailing: Image.asset(getMoodImage(mood.mood)),

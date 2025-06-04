@@ -1,15 +1,39 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:mood_tracker/Mode/mode.dart';
+import 'package:mood_tracker/Mood%20Model/moodentry.dart';
 import 'package:provider/provider.dart';
 
 class StatsNotis extends StatelessWidget {
-  const StatsNotis({super.key});
+  final List<MoodEntry> moodEntries;
+
+  const StatsNotis({super.key, required this.moodEntries});
 
   @override
   Widget build(BuildContext context) {
     final modeController = Provider.of<ModeController>(context);
 
+    final Map<String, Color> moodColorMap = {
+      'Happy' : Colors.amber,
+      'Sad' : Colors.lightBlue,
+      'Angry' : Colors.red,
+      'Calm' : Colors.lightGreen
+    };
+
+    final Map<String, int> moodCount = {};
+
+    for (var entry in moodEntries){
+      moodCount[entry.mood] = (moodCount[entry.mood] ?? 0) + 1;
+    }
+
+    final sections = moodCount.entries.map((entry) {
+        return PieChartSectionData(
+          value: entry.value.toDouble(),
+          color: moodColorMap[entry.key] ?? Colors.grey,
+          showTitle: false,
+          radius: 42
+        );
+    }).toList();
 
     return Scaffold(
       appBar: AppBar(),
@@ -25,32 +49,33 @@ class StatsNotis extends StatelessWidget {
               curve: Curves.easeInQuint,
               PieChartData(
                 centerSpaceRadius: 85.0,
-                sections: [
-                  PieChartSectionData(
-                    value: 5,
-                    color: Colors.red,
-                    showTitle: false,
-                    radius: 42,
-                  ),
-                  PieChartSectionData(
-                    value: 4,
-                    color: Colors.lightBlue,
-                    showTitle: false,
-                    radius: 42,
-                  ),
-                  PieChartSectionData(
-                    value: 3,
-                    color: Colors.yellow,
-                    showTitle: false,
-                    radius: 42,
-                  ),
-                  PieChartSectionData(
-                    value: 10,
-                    color: Colors.green,
-                    showTitle: false,
-                    radius: 42,
-                  ),
-                ],
+                sections: sections
+                // [
+                //   PieChartSectionData(
+                //     value: 5,
+                //     color: Colors.red,
+                //     showTitle: false,
+                //     radius: 42,
+                //   ),
+                //   PieChartSectionData(
+                //     value: 4,
+                //     color: Colors.lightBlue,
+                //     showTitle: false,
+                //     radius: 42,
+                //   ),
+                //   PieChartSectionData(
+                //     value: 3,
+                //     color: Colors.yellow,
+                //     showTitle: false,
+                //     radius: 42,
+                //   ),
+                //   PieChartSectionData(
+                //     value: 10,
+                //     color: Colors.green,
+                //     showTitle: false,
+                //     radius: 42,
+                //   ),
+                // ],
               ),
             ),
           ),

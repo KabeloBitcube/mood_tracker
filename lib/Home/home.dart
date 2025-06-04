@@ -529,7 +529,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       // context.push('/stats_notis');
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => StatsNotis()),
+                        MaterialPageRoute(builder: (context) => StatsNotis(moodEntries: _moods,)),
                       );
                     },
                     child: Image.asset(

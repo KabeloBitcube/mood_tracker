@@ -14,25 +14,25 @@ class StatsNotis extends StatelessWidget {
     final modeController = Provider.of<ModeController>(context);
 
     final Map<String, Color> moodColorMap = {
-      'Happy' : Colors.amber,
-      'Sad' : Colors.lightBlue,
-      'Angry' : Colors.red,
-      'Calm' : Colors.lightGreen
+      'Happy': Colors.amber,
+      'Sad': Colors.lightBlue,
+      'Angry': Colors.red,
+      'Calm': Colors.lightGreen,
     };
 
     final Map<String, int> moodCount = {};
 
-    for (var entry in moodEntries){
+    for (var entry in moodEntries) {
       moodCount[entry.mood] = (moodCount[entry.mood] ?? 0) + 1;
     }
 
     final sections = moodCount.entries.map((entry) {
-        return PieChartSectionData(
-          value: entry.value.toDouble(),
-          color: moodColorMap[entry.key] ?? Colors.grey,
-          showTitle: false,
-          radius: 42
-        );
+      return PieChartSectionData(
+        value: entry.value.toDouble(),
+        color: moodColorMap[entry.key] ?? Colors.grey,
+        showTitle: false,
+        radius: 40,
+      );
     }).toList();
 
     return Scaffold(
@@ -47,41 +47,24 @@ class StatsNotis extends StatelessWidget {
             child: PieChart(
               duration: const Duration(milliseconds: 750),
               curve: Curves.easeInQuint,
-              PieChartData(
-                centerSpaceRadius: 85.0,
-                sections: sections
-                // [
-                //   PieChartSectionData(
-                //     value: 5,
-                //     color: Colors.red,
-                //     showTitle: false,
-                //     radius: 42,
-                //   ),
-                //   PieChartSectionData(
-                //     value: 4,
-                //     color: Colors.lightBlue,
-                //     showTitle: false,
-                //     radius: 42,
-                //   ),
-                //   PieChartSectionData(
-                //     value: 3,
-                //     color: Colors.yellow,
-                //     showTitle: false,
-                //     radius: 42,
-                //   ),
-                //   PieChartSectionData(
-                //     value: 10,
-                //     color: Colors.green,
-                //     showTitle: false,
-                //     radius: 42,
-                //   ),
-                // ],
-              ),
+              moodCount.isNotEmpty
+                  ? PieChartData(centerSpaceRadius: 80, sections: sections)
+                  : PieChartData(
+                      centerSpaceRadius: 80,
+                      sections: [
+                        PieChartSectionData(
+                          value: 10,
+                          color: Colors.grey[350],
+                          showTitle: false,
+                          radius: 40,
+                        ),
+                      ],
+                    ),
             ),
           ),
           SizedBox(height: 80),
           Padding(
-            padding: const EdgeInsets.only(left: 40, right: 40),
+            padding: const EdgeInsets.only(left: 40, right: 45),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -135,7 +118,9 @@ class StatsNotis extends StatelessWidget {
               height: 250,
               width: 500,
               decoration: BoxDecoration(
-                color: modeController.isDarkMode ? Colors.grey[900] : Colors.grey[350],
+                color: modeController.isDarkMode
+                    ? Colors.grey[900]
+                    : Colors.grey[350],
                 borderRadius: BorderRadius.circular(50),
               ),
               child: Column(
@@ -171,11 +156,11 @@ class StatsNotis extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(height: 100,),
+                  SizedBox(height: 100),
                   IconButton(
-                    onPressed: () {}, 
+                    onPressed: () {},
                     icon: Icon(Icons.delete_outline),
-                    ),
+                  ),
                 ],
               ),
             ),

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
 import 'package:mood_tracker/Calendar/calendar.dart';
 import 'package:mood_tracker/Mode/mode.dart';
@@ -570,7 +571,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-      ),
+      ).animate()
+                .fadeIn(duration: 200.ms)
+                .slideY(begin: 0.2, duration: 1000.ms, curve: Curves.easeOut),
     );
   }
 }

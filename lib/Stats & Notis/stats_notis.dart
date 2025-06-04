@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mood_tracker/Home/home.dart';
 import 'package:mood_tracker/Mode/mode.dart';
 import 'package:mood_tracker/Mood%20Model/moodentry.dart';
@@ -107,13 +108,13 @@ class StatsNotis extends StatelessWidget {
       }
       if (highestValue == "Sad") {
         return Text(
-          'I\'m sorry. You\'ll have a better week next time.',
+          'That sucks. Hope you feel better soon.',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
         );
       }
       if (highestValue == "Angry") {
         return Text(
-          'Seems rough. Try taking a walk to calm down.',
+          'Seems rough. Try taking a walk to relax.',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
         );
       }
@@ -320,7 +321,9 @@ class StatsNotis extends StatelessWidget {
             ),
           ],
         ),
-      ),
+      ).animate()
+            .fadeIn(duration: 200.ms)
+            .slideX(begin: 0.2, duration: 1000.ms, curve: Curves.easeOut),
     );
   }
 }

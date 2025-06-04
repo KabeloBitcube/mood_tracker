@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
         _selectedReason == null ||
         _descriptionController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please fill in al fields and select a mood')),
+        SnackBar(content: Text('Please fill in all fields and select a mood')),
       );
       return;
     }

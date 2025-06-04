@@ -11,7 +11,7 @@ void main() {
   NotiService().initNotification().then((_) {
     NotiService().showNotification(
       title: 'Welcome',
-      body: 'Ready to track your mood today?',
+      body: 'Ready to track your mood?',
     );
   });
 

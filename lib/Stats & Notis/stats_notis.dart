@@ -8,8 +8,13 @@ import 'package:provider/provider.dart';
 
 class StatsNotis extends StatelessWidget {
   final List<MoodEntry> moodEntries;
+  final List<String> notifications;
 
-  const StatsNotis({super.key, required this.moodEntries});
+  const StatsNotis({
+    super.key,
+    required this.moodEntries,
+    required this.notifications,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +42,6 @@ class StatsNotis extends StatelessWidget {
       );
     }).toList();
 
-
     //Calculating highest mood selected
     int happyCounter = 0;
     int sadCounter = 0;
@@ -58,7 +62,7 @@ class StatsNotis extends StatelessWidget {
       if (mood.mood == "Calm") {
         calmCounter++;
       }
-      if (mood.mood.isEmpty){
+      if (mood.mood.isEmpty) {
         noMood;
       }
     }
@@ -70,7 +74,7 @@ class StatsNotis extends StatelessWidget {
       "Sad": sadCounter,
       "Angry": angryCounter,
       "Calm": calmCounter,
-      "No Mood" : noMood
+      "No Mood": noMood,
     };
 
     highestValue =
@@ -94,20 +98,35 @@ class StatsNotis extends StatelessWidget {
 
     //Mood message
     Text getMoodMessage() {
-      if(highestValue == "Happy"){
-        return Text('Seems like a good week!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40));
+      if (highestValue == "Happy") {
+        return Text(
+          'Seems like a good week!',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+        );
       }
-      if(highestValue == "Sad"){
-        return Text('I\'m sorry. You\'ll have a better week next time.', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40));
+      if (highestValue == "Sad") {
+        return Text(
+          'I\'m sorry. You\'ll have a better week next time.',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+        );
       }
-      if(highestValue == "Angry"){
-        return Text('Seems rough. Try taking a walk to calm down.', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40));
+      if (highestValue == "Angry") {
+        return Text(
+          'Seems rough. Try taking a walk to calm down.',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+        );
       }
-      if(highestValue == "Calm"){
-        return Text('That\'s great! Keep enjoying yourself.', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40));
+      if (highestValue == "Calm") {
+        return Text(
+          'That\'s great! Keep enjoying yourself.',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+        );
       }
-      if(highestValue == "No Mood"){
-        return Text('Start tracking your mood.', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40));
+      if (highestValue == "No Mood") {
+        return Text(
+          'Start tracking your mood.',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+        );
       }
 
       return Text('Start tracking your mood!');
@@ -186,11 +205,7 @@ class StatsNotis extends StatelessWidget {
             SizedBox(height: 30),
             Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
-              child: getMoodMessage()
-              // child: Text(
-              //   'Seems like a good week!',
-              //   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
-              // ),
+              child: getMoodMessage(),
             ),
             Padding(
               padding: EdgeInsets.all(20),
@@ -213,29 +228,49 @@ class StatsNotis extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          Container(
-                            height: 10,
-                            width: 10,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(100),
+                    Expanded(
+                      child: notifications.isEmpty
+                          ? Center(
+                              child: const Text(
+                                'No notifications',
+                                style: TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: notifications.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        height: 10,
+                                        width: 10,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(
+                                            100,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        notifications[index],
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            'Remember to track your mood today.',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
+
                     SizedBox(height: 100),
                     IconButton(
                       onPressed: () {},

@@ -53,6 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
     CalendarScreen(moodEntries: _moods);
   }
 
+  List<String> notifications = [];
+
   @override
   Widget build(BuildContext context) {
     final modeController = Provider.of<ModeController>(context);
@@ -143,6 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         });
                       });
+                      notifications.add("Remember to track your mood in the afternoon.");
                     }
                     if (_selectedTime == 2) {
                       NotiService().initNotification().then((_) {
@@ -154,6 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         });
                       });
+                      notifications.add("Remember to track your mood tonight.");
                     }
                     if (_selectedTime == 3) {
                       NotiService().initNotification().then((_) {
@@ -165,6 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         });
                       });
+                      notifications.add("Remember to track your mood in the morning.");
                     }
                     notificationCount++;
                     _descriptionController.clear();
@@ -529,7 +534,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       // context.push('/stats_notis');
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => StatsNotis(moodEntries: _moods,)),
+                        MaterialPageRoute(builder: (context) => StatsNotis(moodEntries: _moods, notifications: notifications)),
                       );
                     },
                     child: Image.asset(

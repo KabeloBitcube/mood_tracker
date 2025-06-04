@@ -209,7 +209,7 @@ class StatsNotis extends StatelessWidget {
             SizedBox(height: 30),
             Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
-              child: getMoodMessage(),
+              child: getMoodMessage().animate().fade(duration: Duration(seconds: 2)).scale(),
             ),
             Padding(
               padding: EdgeInsets.all(20),

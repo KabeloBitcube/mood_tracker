@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:mood_tracker/Home/home.dart';
 import 'package:mood_tracker/Mode/mode.dart';
 import 'package:mood_tracker/Mood%20Model/moodentry.dart';
 import 'package:provider/provider.dart';
@@ -238,11 +239,14 @@ class StatsNotis extends StatelessWidget {
                       width: 350,
                       child: notifications.isEmpty
                           ? Center(
-                              child: const Text(
-                                'No notifications',
-                                style: TextStyle(
-                                  fontStyle: FontStyle.italic,
-                                  fontSize: 12,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 15),
+                                child: const Text(
+                                  'No notifications at the moment.',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                    fontSize: 12,
+                                  ),
                                 ),
                               ),
                             )
@@ -280,16 +284,35 @@ class StatsNotis extends StatelessWidget {
 
                     SizedBox(height: 10),
                     Center(
-                      child: IconButton(
-                        onPressed: () {
-                          notifications.clear();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Notifications deleted.')),
-                          );
-                          Navigator.of(context).pop();
-                        },
-                        icon: Icon(Icons.delete_outline),
-                      ),
+                      child: notifications.isEmpty
+                          ? IconButton(
+                              onPressed: () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('No notifications.'),
+                                  ),
+                                );
+                              },
+                              icon: Icon(Icons.delete_outline),
+                            )
+                          : IconButton(
+                              onPressed: () {
+                                notifications.clear();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Notifications deleted.'),
+                                  ),
+                                );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        HomeScreen(notificationCount: 0),
+                                  ),
+                                );
+                              },
+                              icon: Icon(Icons.delete_outline),
+                            ),
                     ),
                   ],
                 ),

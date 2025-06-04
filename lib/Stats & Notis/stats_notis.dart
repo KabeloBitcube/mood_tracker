@@ -132,6 +132,8 @@ class StatsNotis extends StatelessWidget {
       return Text('Start tracking your mood!');
     }
 
+    log("Notification length: ${notifications.length}");
+
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
@@ -219,16 +221,21 @@ class StatsNotis extends StatelessWidget {
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Notifications',
-                        style: TextStyle(fontSize: 15),
+                      child: Center(
+                        child: Text(
+                          'Notifications',
+                          style: TextStyle(fontSize: 15),
+                        ),
                       ),
                     ),
                     SizedBox(height: 20),
-                    Expanded(
+                    SizedBox(
+                      height: 100,
+                      width: 350,
                       child: notifications.isEmpty
                           ? Center(
                               child: const Text(
@@ -271,10 +278,18 @@ class StatsNotis extends StatelessWidget {
                             ),
                     ),
 
-                    SizedBox(height: 100),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.delete_outline),
+                    SizedBox(height: 10),
+                    Center(
+                      child: IconButton(
+                        onPressed: () {
+                          notifications.clear();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Notifications deleted.')),
+                          );
+                          Navigator.of(context).pop();
+                        },
+                        icon: Icon(Icons.delete_outline),
+                      ),
                     ),
                   ],
                 ),

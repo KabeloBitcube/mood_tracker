@@ -555,7 +555,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       child: Center(
                         child: Text(
-                          '$notificationCount',
+                          '${notifications.length}',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,

@@ -5,7 +5,7 @@ class CountProvider extends ChangeNotifier{
   int count = 0;
 
 
-  
+  //Gets the current notification count and notifies listeners
   void getNotificationCount (int currentCount){
     count = currentCount;
     notifyListeners();

@@ -9,6 +9,7 @@ import 'package:mood_tracker/Mood%20Model/moodentry.dart';
 import 'package:provider/provider.dart';
 
 class StatsNotis extends StatelessWidget {
+  //Mood entries and notifications parameters to pass to the Stats and notfications screen 
   final List<MoodEntry> moodEntries;
   final List<String> notifications;
 
@@ -20,8 +21,9 @@ class StatsNotis extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final modeController = Provider.of<ModeController>(context);
+    final modeController = Provider.of<ModeController>(context); //Mode provider controller that controls colors based on dark/light mode
 
+    //Mood colors to map on chart
     final Map<String, Color> moodColorMap = {
       'Happy': Colors.amber,
       'Sad': Colors.lightBlue,
@@ -29,12 +31,18 @@ class StatsNotis extends StatelessWidget {
       'Calm': Colors.lightGreen,
     };
 
+    //Stores the number of times a mood was selected 
     final Map<String, int> moodCount = {};
 
+
+    //Increment a mood count by 1 each time it is selected
+    //Keep mood count at 0 if not selected
     for (var entry in moodEntries) {
       moodCount[entry.mood] = (moodCount[entry.mood] ?? 0) + 1;
     }
 
+
+    //Setting pie chart data sections
     final sections = moodCount.entries.map((entry) {
       return PieChartSectionData(
         value: entry.value.toDouble(),
@@ -98,7 +106,7 @@ class StatsNotis extends StatelessWidget {
 
     log('$highestValue');
 
-    //Mood message
+    //Setting mood message based on highest mood selected
     Text getMoodMessage() {
       if (highestValue == "Happy") {
         return Text(
@@ -147,6 +155,8 @@ class StatsNotis extends StatelessWidget {
                     SizedBox(
                       height: 150,
                       width: 150,
+                      //Pie chart
+                      //Display blank pie chart if there are no mood entries
                       child: PieChart(
                         duration: const Duration(milliseconds: 750),
                         curve: Curves.easeInQuint,
@@ -171,6 +181,7 @@ class StatsNotis extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 80),
+                    //Mood color indicators 
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 45),
                       child: Row(
@@ -213,6 +224,7 @@ class StatsNotis extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 30),
+                    //Display mood message
                     Padding(
                       padding: const EdgeInsets.only(left: 20, right: 20),
                       child: getMoodMessage()
@@ -220,6 +232,7 @@ class StatsNotis extends StatelessWidget {
                           .fade(duration: Duration(seconds: 2))
                           .scale(),
                     ),
+                    //Notification container
                     Padding(
                       padding: EdgeInsets.all(20),
                       child: Container(
@@ -244,6 +257,8 @@ class StatsNotis extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: 20),
+                            //Display notifications
+                            //Display message if there are no notifications
                             SizedBox(
                               height: 100,
                               width: 350,
@@ -296,6 +311,8 @@ class StatsNotis extends StatelessWidget {
                             ),
 
                             SizedBox(height: 10),
+                            //Delete notifications and display success snackbar
+                            //Show no notifications snackbar if there are no notifications to delte
                             Center(
                               child: notifications.isEmpty
                                   ? IconButton(
@@ -343,7 +360,7 @@ class StatsNotis extends StatelessWidget {
               )
               .animate()
               .fadeIn(duration: 200.ms)
-              .slideX(begin: 0.2, duration: 1000.ms, curve: Curves.easeOut),
+              .slideX(begin: 0.2, duration: 1000.ms, curve: Curves.easeOut), //Right fade in animation
     );
   }
 }

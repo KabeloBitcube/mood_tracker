@@ -13,6 +13,7 @@ import 'package:mood_tracker/Stats%20&%20Notis/stats_notis.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
+  //Notification count parameter to pass the number of notifications to the home screen 
   final int notificationCount;
 
   const HomeScreen({super.key, required this.notificationCount});
@@ -22,15 +23,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  //Stores incremented number of notifications
   int notificationCount = 0;
 
+  //Stores mood entry data
   String? _selectedMood;
   int? _selectedTime = 1;
   String? _selectedReason;
   final _descriptionController = TextEditingController();
+
+  //List to store the user's mood entry
   final List<MoodEntry> _moods = [];
 
+  //Function called when user submits mood entry
   void _onSave() {
+
+    //Mood entry validation
     if (_selectedMood == null ||
         _selectedReason == null ||
         _descriptionController.text.isEmpty) {
@@ -40,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
+    //Initializing MoodEntry with user mood entry data
     final moodEntry = MoodEntry(
       mood: _selectedMood!,
       reason: _selectedReason!,
@@ -48,20 +57,25 @@ class _HomeScreenState extends State<HomeScreen> {
       date: DateTime.now(),
     );
 
+    //Adding user mood entry to _moods list
     setState(() {
       _moods.add(moodEntry);
     });
 
+    //Passing updated _moods list to the calendar screen
     CalendarScreen(moodEntries: _moods);
   }
 
+  //Notification list to store notifications 
   List<String> notifications = [];
 
   @override
   Widget build(BuildContext context) {
-    final modeController = Provider.of<ModeController>(context);
-    final borderController = Provider.of<BorderController>(context);
+    //Mood and border provider controllers 
+    final modeController = Provider.of<ModeController>(context);  //Controls colors based on dark/light mode
+    final borderController = Provider.of<BorderController>(context); //Controls container borders when clicked
 
+    //Dialog for mood entry time of day radio button selection 
     Future<void> showMyDialog() async {
       return showDialog<void>(
         context: context,
@@ -122,11 +136,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             actions: <Widget>[
+              //Save button for submitting mood entry
               TextButton(
                 child: const Text('Save'),
                 onPressed: () {
+                  //Function for handling submission
                   _onSave();
 
+                  //If statement to log data, and display success snackbar when mood entry submission is successful
                   if (_selectedMood != null &&
                       _selectedReason != null &&
                       _descriptionController.text.isNotEmpty &&
@@ -138,6 +155,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Mood added to calendar')),
                     );
+
+                    //If statements to set and display notifications based on time of day selected
                     if (_selectedTime == 1) {
                       NotiService().initNotification().then((_) {
                         Future.delayed(const Duration(seconds: 5), () {
@@ -176,8 +195,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         "Remember to track your mood in the morning.",
                       );
                     }
+                    //Increment notification count
                     notificationCount++;
+
+                    //Clear description text field 
                     _descriptionController.clear();
+
+                    //Pop out of dialog 
                     Navigator.of(context).pop();
                   }
                 },
@@ -188,11 +212,13 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
 
+    //Logging selected mood 
     log('Selected mood: $_selectedMood');
 
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        //Light/dark mode toggle
         leading: IconButton(
           onPressed: () {
             modeController.toggleMode();
@@ -203,13 +229,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 : Icons.dark_mode_outlined,
           ),
         ),
+        //Displaying current date
         title: Text(getCurrentDate(), style: TextStyle(fontSize: 15)),
+        //Calendar navigation button
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
               onPressed: () {
-                // context.push('/calendar');
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -235,10 +262,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.bold,
                           wordSpacing: 5,
                         ),
-                      ).animate().fade(duration: Duration(seconds: 5)).scale(),
+                      ).animate().fade(duration: Duration(seconds: 3)).scale(), //Scaling animation for home message on app launch
                       const SizedBox(height: 10),
                       Wrap(
                         children: [
+                          //Carousel slider for mood containers 
+                          //Each container has a gesture detector to set mood and highlight mood when selected
                           CarouselSlider(
                             options: CarouselOptions(height: 250.0),
                             items: [
@@ -337,6 +366,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         height: 50,
                         width: MediaQuery.of(context).size.width,
+                        //Horizontal list view for reason containers
+                        //Each container has a gesture detector that sets the reason and highlights to selected reason
                         child: ListView(
                           scrollDirection: Axis.horizontal,
                           children: [
@@ -522,6 +553,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(height: 30),
                       const Text('Wanna write about it?'),
                       const SizedBox(height: 20),
+                      //,Mood description text field 
                       TextField(
                         controller: _descriptionController,
                         keyboardType: TextInputType.text,
@@ -541,6 +573,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(height: 20),
+                      //Add to calendar button that displays a dialog to select time of day and save button submit mood entry
                       GestureDetector(
                         onTap: () {
                           showMyDialog();
@@ -567,12 +600,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: Color.fromARGB(255, 7, 7, 7),
                         ),
                       ),
+                      //Bottom stats and notifications nav image button with notification count
                       Stack(
                         clipBehavior: Clip.none,
                         children: [
                           GestureDetector(
                             onTap: () {
-                              // context.push('/stats_notis');
+                              //Navigate to stats and notifications
+                              //Pass moods and notification parameters
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -619,20 +654,20 @@ class _HomeScreenState extends State<HomeScreen> {
               )
               .animate()
               .fadeIn(duration: 200.ms)
-              .slideY(begin: 0.2, duration: 1000.ms, curve: Curves.easeOut),
+              .slideY(begin: 0.2, duration: 1000.ms, curve: Curves.easeOut), //Bottom fade in animation 
     );
   }
 }
 
+
+//Function to get the current date 
 getCurrentDate() {
   var date = DateTime.now().toString();
 
   var dateParse = DateTime.parse(date);
 
-  //Day
   String day = DateFormat('EEEE').format(DateTime.now());
 
-  //Months
   String? month;
 
   if (dateParse.month == 5) {

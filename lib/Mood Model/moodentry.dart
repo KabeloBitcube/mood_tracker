@@ -1,3 +1,5 @@
+//Mood entry class
+
 class MoodEntry {
   final String mood;
   final String reason;

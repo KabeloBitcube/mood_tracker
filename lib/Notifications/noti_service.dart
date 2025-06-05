@@ -20,15 +20,13 @@ class NotiService {
   Future<void> initNotification() async {
     if (_isInitialized) return; // prevent re-selection
 
-    // prepare android init setings
+    //Prepare android init setings
     const initSettingsAndroid = AndroidInitializationSettings(
       '@mipmap/ic_launcher',
     );
 
-    // init Settings
-    // const initSettings = InitializationSettings(android: initSettingsAndroid);
 
-    // finally, initialize plugin
+    //Initialize plugin
     await notificationsPlugin.initialize(InitializationSettings(android: initSettingsAndroid));
   }
 
@@ -46,7 +44,7 @@ class NotiService {
     );
   }
 
-  // SHOW NOTIFICATION
+  //SHOW NOTIFICATION
   Future<void> showNotification({
     int id = 0,
     String? title,

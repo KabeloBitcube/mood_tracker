@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:mood_tracker/Calendar/calendar.dart';
 import 'package:mood_tracker/Mode/mode.dart';
 import 'package:mood_tracker/Mood%20Model/moodentry.dart';
+import 'package:mood_tracker/Mood/mood_border.dart';
 import 'package:mood_tracker/Notifications/noti_service.dart';
 import 'package:mood_tracker/Stats%20&%20Notis/stats_notis.dart';
 import 'package:provider/provider.dart';
@@ -59,6 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final modeController = Provider.of<ModeController>(context);
+    final borderController = Provider.of<BorderController>(context);
 
     Future<void> showMyDialog() async {
       return showDialog<void>(
@@ -186,6 +188,8 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
 
+    log('Selected mood: $_selectedMood');
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -233,85 +237,97 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ).animate().fade(duration: Duration(seconds: 5)).scale(),
                       const SizedBox(height: 10),
-                      CarouselSlider(
-                        options: CarouselOptions(height: 250.0),
-                        items: [
-                          GestureDetector(
-                            onTap: () {
-                              _selectedMood = "Happy";
-                            },
-                            child: Container(
-                              width: MediaQuery.of(context).size.width * 0.6,
-                              decoration: BoxDecoration(
-                                color: Colors.amber,
-                                borderRadius: BorderRadius.circular(250),
-                              ),
-                              child: Center(
-                                child: Image.asset(
-                                  'assets/images/Happy.webp',
-                                  width: 170,
-                                  height: 170,
+                      Wrap(
+                        children: [
+                          CarouselSlider(
+                            options: CarouselOptions(height: 250.0),
+                            items: [
+                              GestureDetector(
+                                onTap: () {
+                                  _selectedMood = "Happy";
+                                  borderController.toggleMode();
+                                },
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width * 0.6,
+                                  decoration: BoxDecoration(
+                                    color: Colors.amber,
+                                    borderRadius: BorderRadius.circular(250),
+                                    border: borderController.isSelected && _selectedMood == "Happy" ? Border.all(width: 10, color: Colors.grey) : null
+                                  ),
+                                  child: Center(
+                                    child: Image.asset(
+                                      'assets/images/Happy.webp',
+                                      width: 170,
+                                      height: 170,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              _selectedMood = "Sad";
-                            },
-                            child: Container(
-                              width: MediaQuery.of(context).size.width * 0.6,
-                              decoration: BoxDecoration(
-                                color: Colors.lightBlueAccent,
-                                borderRadius: BorderRadius.circular(250),
-                              ),
-                              child: Center(
-                                child: Image.asset(
-                                  'assets/images/Sad.webp',
-                                  width: 170,
-                                  height: 170,
+                              GestureDetector(
+                                onTap: () {
+                                  _selectedMood = "Sad";
+                                  borderController.toggleMode();
+                                },
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width * 0.6,
+                                  decoration: BoxDecoration(
+                                    color: Colors.lightBlueAccent,
+                                    borderRadius: BorderRadius.circular(250),
+                                    border: borderController.isSelected && _selectedMood == "Sad" ? Border.all(width: 10, color: Colors.grey) : null
+                                  ),
+                                  child: Center(
+                                    child: Image.asset(
+                                      'assets/images/Sad.webp',
+                                      width: 170,
+                                      height: 170,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              _selectedMood = "Angry";
-                            },
-                            child: Container(
-                              width: MediaQuery.of(context).size.width * 0.6,
-                              decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.circular(250),
-                              ),
-                              child: Center(
-                                child: Image.asset(
-                                  'assets/images/Angry.png',
-                                  width: 150,
-                                  height: 150,
+                              GestureDetector(
+                                onTap: () {
+                                  _selectedMood = "Angry";
+                                  borderController.toggleMode();
+                                },
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width * 0.6,
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(250),
+                                    border: borderController.isSelected && _selectedMood == "Angry"  ? Border.all(width: 10, color: Colors.grey) : null
+                                  ),
+                                  child: Center(
+                                    child: Image.asset(
+                                      'assets/images/Angry.png',
+                                      width: 150,
+                                      height: 150,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              _selectedMood = "Calm";
-                            },
-                            child: Container(
-                              width: MediaQuery.of(context).size.width * 0.6,
-                              decoration: BoxDecoration(
-                                color: Colors.green,
-                                borderRadius: BorderRadius.circular(250),
-                              ),
-                              child: Center(
-                                child: Image.asset(
-                                  'assets/images/Calm.webp',
-                                  width: 160,
-                                  height: 160,
-                                  color: Colors.black,
+                              GestureDetector(
+                                onTap: () {
+                                  _selectedMood = "Calm";
+                                  borderController.toggleMode();
+                                },
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width * 0.6,
+                                  decoration: BoxDecoration(
+                                    color: Colors.green,
+                                    borderRadius: BorderRadius.circular(250),
+                                    border: borderController.isSelected && _selectedMood == "Calm" ? Border.all(width: 10, color: Colors.grey) : null
+                                  ),
+                                  child: Center(
+                                    child: Image.asset(
+                                      'assets/images/Calm.webp',
+                                      width: 160,
+                                      height: 160,
+                                      color: Colors.black,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
                         ],
                       ),
@@ -327,6 +343,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             GestureDetector(
                               onTap: () {
                                 _selectedReason = "Work";
+                                borderController.toggleMode();
                               },
                               child: Container(
                                 height: 30,
@@ -334,6 +351,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 decoration: BoxDecoration(
                                   color: Colors.black,
                                   borderRadius: BorderRadius.circular(200),
+                                  border: borderController.isSelected && _selectedReason == "Work" ? Border.all(width: 5, color: Colors.grey) : null
                                 ),
                                 child: Center(
                                   child: const Text(
@@ -347,6 +365,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             GestureDetector(
                               onTap: () {
                                 _selectedReason = "School";
+                                borderController.toggleMode();
                               },
                               child: Container(
                                 height: 30,
@@ -354,6 +373,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 decoration: BoxDecoration(
                                   color: Colors.black,
                                   borderRadius: BorderRadius.circular(200),
+                                  border: borderController.isSelected && _selectedReason == "School" ? Border.all(width: 5, color: Colors.grey) : null
                                 ),
                                 child: Center(
                                   child: const Text(
@@ -367,6 +387,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             GestureDetector(
                               onTap: () {
                                 _selectedReason = "Friends";
+                                borderController.toggleMode();
                               },
                               child: Container(
                                 height: 30,
@@ -374,6 +395,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 decoration: BoxDecoration(
                                   color: Colors.black,
                                   borderRadius: BorderRadius.circular(200),
+                                  border: borderController.isSelected && _selectedReason == "Friends" ? Border.all(width: 5, color: Colors.grey) : null
                                 ),
                                 child: Center(
                                   child: const Text(
@@ -387,6 +409,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             GestureDetector(
                               onTap: () {
                                 _selectedReason = "Family";
+                                borderController.toggleMode();
                               },
                               child: Container(
                                 height: 30,
@@ -394,6 +417,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 decoration: BoxDecoration(
                                   color: Colors.black,
                                   borderRadius: BorderRadius.circular(200),
+                                  border: borderController.isSelected && _selectedReason == "Family" ? Border.all(width: 5, color: Colors.grey) : null
                                 ),
                                 child: Center(
                                   child: const Text(
@@ -407,6 +431,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             GestureDetector(
                               onTap: () {
                                 _selectedReason = "Hobby";
+                                borderController.toggleMode();
                               },
                               child: Container(
                                 height: 30,
@@ -414,6 +439,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 decoration: BoxDecoration(
                                   color: Colors.black,
                                   borderRadius: BorderRadius.circular(200),
+                                  border: borderController.isSelected && _selectedReason == "Hobby" ? Border.all(width: 5, color: Colors.grey) : null
                                 ),
                                 child: Center(
                                   child: const Text(
@@ -427,6 +453,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             GestureDetector(
                               onTap: () {
                                 _selectedReason = "Health";
+                                borderController.toggleMode();
                               },
                               child: Container(
                                 height: 30,
@@ -434,6 +461,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 decoration: BoxDecoration(
                                   color: Colors.black,
                                   borderRadius: BorderRadius.circular(200),
+                                  border: borderController.isSelected && _selectedReason == "Health" ? Border.all(width: 5, color: Colors.grey) : null
                                 ),
                                 child: Center(
                                   child: const Text(
@@ -447,6 +475,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             GestureDetector(
                               onTap: () {
                                 _selectedReason = "Relationship";
+                                borderController.toggleMode();
                               },
                               child: Container(
                                 height: 30,
@@ -454,6 +483,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 decoration: BoxDecoration(
                                   color: Colors.black,
                                   borderRadius: BorderRadius.circular(200),
+                                  border: borderController.isSelected && _selectedReason == "Relationship" ? Border.all(width: 5, color: Colors.grey) : null
                                 ),
                                 child: Center(
                                   child: const Text(
@@ -467,6 +497,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             GestureDetector(
                               onTap: () {
                                 _selectedReason = "Money";
+                                borderController.toggleMode();
                               },
                               child: Container(
                                 height: 30,
@@ -474,6 +505,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 decoration: BoxDecoration(
                                   color: Colors.black,
                                   borderRadius: BorderRadius.circular(200),
+                                  border: borderController.isSelected && _selectedReason == "Money" ? Border.all(width: 5, color: Colors.grey) : null
                                 ),
                                 child: Center(
                                   child: const Text(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mood_tracker/Home/home.dart';
 import 'package:mood_tracker/Mode/mode.dart';
+import 'package:mood_tracker/Mood/mood_border.dart';
 import 'package:mood_tracker/Notifications/noti_service.dart';
 import 'package:provider/provider.dart';
 
@@ -16,8 +17,11 @@ void main() {
   });
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ModeController(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ModeController()),
+        ChangeNotifierProvider(create: (context) => BorderController())
+      ],
       child: const MyApp(),
     ),
   );
@@ -50,7 +54,6 @@ class MyApp extends StatelessWidget {
     // Access the mode controller to determine the app's theme
     final modeController = Provider.of<ModeController>(context);
 
-
     return MaterialApp(
       theme: ThemeData(
         // Dynamically applies light or dark theme based on user preference
@@ -59,7 +62,7 @@ class MyApp extends StatelessWidget {
             : Brightness.light,
       ),
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(notificationCount: 0,),
+      home: HomeScreen(notificationCount: 0),
     );
   }
 }

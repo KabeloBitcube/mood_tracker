@@ -123,7 +123,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         return 'assets/images/Happy.webp';
                       }
 
-                      final modeController = Provider.of<ModeController>(context); //Mood provider controller that controls colors based on dark/light mode
+                      final modeController = Provider.of<ModeController>(context); //Mode provider controller that controls colors based on dark/light mode
 
                       //Returns card with mood entry details
                       return Card(

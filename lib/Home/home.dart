@@ -251,6 +251,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body:
+          //Consumer to update notification count state
           Consumer<CountProvider>(
             builder : (context, value, child) => SingleChildScrollView(
                   child: Padding(

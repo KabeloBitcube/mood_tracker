@@ -337,6 +337,7 @@ class _StatsNotisState extends State<StatsNotis> {
                                         setState(() {
                                           widget.notifications.clear();
                                         });
+                                        //Reading notificaton count using provider
                                         context.read<CountProvider>().getNotificationCount(widget.notifications.length);
                                         ScaffoldMessenger.of(
                                           context,

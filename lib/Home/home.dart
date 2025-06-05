@@ -2,10 +2,12 @@ import 'dart:developer';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
 import 'package:mood_tracker/Calendar/calendar.dart';
 import 'package:mood_tracker/Mode/mode.dart';
 import 'package:mood_tracker/Mood%20Model/moodentry.dart';
+import 'package:mood_tracker/Mood/mood_border.dart';
 import 'package:mood_tracker/Notifications/noti_service.dart';
 import 'package:mood_tracker/Stats%20&%20Notis/stats_notis.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
         _selectedReason == null ||
         _descriptionController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please fill in al fields and select a mood')),
+        SnackBar(content: Text('Please fill in all fields and select a mood')),
       );
       return;
     }
@@ -58,6 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final modeController = Provider.of<ModeController>(context);
+    final borderController = Provider.of<BorderController>(context);
 
     Future<void> showMyDialog() async {
       return showDialog<void>(
@@ -145,15 +148,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         });
                       });
-                      notifications.add("Remember to track your mood in the afternoon.");
+                      notifications.add(
+                        "Remember to track your mood in the afternoon.",
+                      );
                     }
                     if (_selectedTime == 2) {
                       NotiService().initNotification().then((_) {
                         Future.delayed(const Duration(seconds: 5), () {
                           NotiService().showNotification(
                             title: "Reminder",
-                            body:
-                                "Remember to track your mood tonight.",
+                            body: "Remember to track your mood tonight.",
                           );
                         });
                       });
@@ -164,12 +168,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         Future.delayed(const Duration(seconds: 5), () {
                           NotiService().showNotification(
                             title: "Reminder",
-                            body:
-                                "Remember to track your mood in the morning.",
+                            body: "Remember to track your mood in the morning.",
                           );
                         });
                       });
-                      notifications.add("Remember to track your mood in the morning.");
+                      notifications.add(
+                        "Remember to track your mood in the morning.",
+                      );
                     }
                     notificationCount++;
                     _descriptionController.clear();
@@ -182,6 +187,8 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       );
     }
+
+    log('Selected mood: $_selectedMood');
 
     return Scaffold(
       appBar: AppBar(
@@ -215,362 +222,404 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Text(
-                'How Are You Feeling Today?',
-                style: TextStyle(
-                  fontSize: 50,
-                  fontWeight: FontWeight.bold,
-                  wordSpacing: 5,
-                ),
-              ),
-              const SizedBox(height: 10),
-              CarouselSlider(
-                options: CarouselOptions(height: 250.0),
-                items: [
-                  GestureDetector(
-                    onTap: () {
-                      _selectedMood = "Happy";
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.6,
-                      decoration: BoxDecoration(
-                        color: Colors.amber,
-                        borderRadius: BorderRadius.circular(250),
+      body:
+          SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        'How Are You Feeling Today?',
+                        style: TextStyle(
+                          fontSize: 50,
+                          fontWeight: FontWeight.bold,
+                          wordSpacing: 5,
+                        ),
+                      ).animate().fade(duration: Duration(seconds: 5)).scale(),
+                      const SizedBox(height: 10),
+                      Wrap(
+                        children: [
+                          CarouselSlider(
+                            options: CarouselOptions(height: 250.0),
+                            items: [
+                              GestureDetector(
+                                onTap: () {
+                                  _selectedMood = "Happy";
+                                  borderController.toggleMode();
+                                },
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width * 0.6,
+                                  decoration: BoxDecoration(
+                                    color: Colors.amber,
+                                    borderRadius: BorderRadius.circular(250),
+                                    border: borderController.isSelected && _selectedMood == "Happy" ? Border.all(width: 10, color: Colors.grey) : null
+                                  ),
+                                  child: Center(
+                                    child: Image.asset(
+                                      'assets/images/Happy.webp',
+                                      width: 170,
+                                      height: 170,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  _selectedMood = "Sad";
+                                  borderController.toggleMode();
+                                },
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width * 0.6,
+                                  decoration: BoxDecoration(
+                                    color: Colors.lightBlueAccent,
+                                    borderRadius: BorderRadius.circular(250),
+                                    border: borderController.isSelected && _selectedMood == "Sad" ? Border.all(width: 10, color: Colors.grey) : null
+                                  ),
+                                  child: Center(
+                                    child: Image.asset(
+                                      'assets/images/Sad.webp',
+                                      width: 170,
+                                      height: 170,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  _selectedMood = "Angry";
+                                  borderController.toggleMode();
+                                },
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width * 0.6,
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(250),
+                                    border: borderController.isSelected && _selectedMood == "Angry"  ? Border.all(width: 10, color: Colors.grey) : null
+                                  ),
+                                  child: Center(
+                                    child: Image.asset(
+                                      'assets/images/Angry.png',
+                                      width: 150,
+                                      height: 150,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  _selectedMood = "Calm";
+                                  borderController.toggleMode();
+                                },
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width * 0.6,
+                                  decoration: BoxDecoration(
+                                    color: Colors.green,
+                                    borderRadius: BorderRadius.circular(250),
+                                    border: borderController.isSelected && _selectedMood == "Calm" ? Border.all(width: 10, color: Colors.grey) : null
+                                  ),
+                                  child: Center(
+                                    child: Image.asset(
+                                      'assets/images/Calm.webp',
+                                      width: 160,
+                                      height: 160,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                      child: Center(
-                        child: Image.asset(
-                          'assets/images/Happy.webp',
-                          width: 170,
-                          height: 170,
+                      const SizedBox(height: 35),
+                      const Text('What\'s the reason?'),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        height: 50,
+                        width: MediaQuery.of(context).size.width,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                _selectedReason = "Work";
+                                borderController.toggleMode();
+                              },
+                              child: Container(
+                                height: 30,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(200),
+                                  border: borderController.isSelected && _selectedReason == "Work" ? Border.all(width: 5, color: Colors.grey) : null
+                                ),
+                                child: Center(
+                                  child: const Text(
+                                    'Work',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            GestureDetector(
+                              onTap: () {
+                                _selectedReason = "School";
+                                borderController.toggleMode();
+                              },
+                              child: Container(
+                                height: 30,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(200),
+                                  border: borderController.isSelected && _selectedReason == "School" ? Border.all(width: 5, color: Colors.grey) : null
+                                ),
+                                child: Center(
+                                  child: const Text(
+                                    'School',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            GestureDetector(
+                              onTap: () {
+                                _selectedReason = "Friends";
+                                borderController.toggleMode();
+                              },
+                              child: Container(
+                                height: 30,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(200),
+                                  border: borderController.isSelected && _selectedReason == "Friends" ? Border.all(width: 5, color: Colors.grey) : null
+                                ),
+                                child: Center(
+                                  child: const Text(
+                                    'Friends',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            GestureDetector(
+                              onTap: () {
+                                _selectedReason = "Family";
+                                borderController.toggleMode();
+                              },
+                              child: Container(
+                                height: 30,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(200),
+                                  border: borderController.isSelected && _selectedReason == "Family" ? Border.all(width: 5, color: Colors.grey) : null
+                                ),
+                                child: Center(
+                                  child: const Text(
+                                    'Family',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            GestureDetector(
+                              onTap: () {
+                                _selectedReason = "Hobby";
+                                borderController.toggleMode();
+                              },
+                              child: Container(
+                                height: 30,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(200),
+                                  border: borderController.isSelected && _selectedReason == "Hobby" ? Border.all(width: 5, color: Colors.grey) : null
+                                ),
+                                child: Center(
+                                  child: const Text(
+                                    'Hobby',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 20),
+                            GestureDetector(
+                              onTap: () {
+                                _selectedReason = "Health";
+                                borderController.toggleMode();
+                              },
+                              child: Container(
+                                height: 30,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(200),
+                                  border: borderController.isSelected && _selectedReason == "Health" ? Border.all(width: 5, color: Colors.grey) : null
+                                ),
+                                child: Center(
+                                  child: const Text(
+                                    'Health',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 20),
+                            GestureDetector(
+                              onTap: () {
+                                _selectedReason = "Relationship";
+                                borderController.toggleMode();
+                              },
+                              child: Container(
+                                height: 30,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(200),
+                                  border: borderController.isSelected && _selectedReason == "Relationship" ? Border.all(width: 5, color: Colors.grey) : null
+                                ),
+                                child: Center(
+                                  child: const Text(
+                                    'Relationship',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 20),
+                            GestureDetector(
+                              onTap: () {
+                                _selectedReason = "Money";
+                                borderController.toggleMode();
+                              },
+                              child: Container(
+                                height: 30,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(200),
+                                  border: borderController.isSelected && _selectedReason == "Money" ? Border.all(width: 5, color: Colors.grey) : null
+                                ),
+                                child: Center(
+                                  child: const Text(
+                                    'Money',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 5),
+                          ],
                         ),
                       ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      _selectedMood = "Sad";
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.6,
-                      decoration: BoxDecoration(
-                        color: Colors.lightBlueAccent,
-                        borderRadius: BorderRadius.circular(250),
-                      ),
-                      child: Center(
-                        child: Image.asset(
-                          'assets/images/Sad.webp',
-                          width: 170,
-                          height: 170,
+                      const SizedBox(height: 30),
+                      const Text('Wanna write about it?'),
+                      const SizedBox(height: 20),
+                      TextField(
+                        controller: _descriptionController,
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                          hintText: 'Describe how you feel...',
+                          hintStyle: TextStyle(fontSize: 16),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(
+                              width: 0,
+                              style: BorderStyle.none,
+                            ),
+                          ),
+                          filled: true,
+                          contentPadding: EdgeInsets.all(16),
+                          fillColor: Colors.grey[450],
                         ),
                       ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      _selectedMood = "Angry";
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.6,
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(250),
-                      ),
-                      child: Center(
-                        child: Image.asset(
-                          'assets/images/Angry.png',
+                      const SizedBox(height: 20),
+                      GestureDetector(
+                        onTap: () {
+                          showMyDialog();
+                        },
+                        child: Container(
+                          height: 30,
                           width: 150,
-                          height: 150,
-                        ),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      _selectedMood = "Calm";
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.6,
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(250),
-                      ),
-                      child: Center(
-                        child: Image.asset(
-                          'assets/images/Calm.webp',
-                          width: 160,
-                          height: 160,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 35),
-              const Text('What\'s the reason?'),
-              const SizedBox(height: 20),
-              SizedBox(
-                height: 50,
-                width: MediaQuery.of(context).size.width,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        _selectedReason = "Work";
-                      },
-                      child: Container(
-                        height: 30,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(200),
-                        ),
-                        child: Center(
-                          child: const Text(
-                            'Work',
-                            style: TextStyle(color: Colors.white),
+                          decoration: BoxDecoration(
+                            color: Colors.blueGrey,
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Center(
+                            child: const Text(
+                              'Add to calendar',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 20),
-                    GestureDetector(
-                      onTap: () {
-                        _selectedReason = "School";
-                      },
-                      child: Container(
-                        height: 30,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(200),
-                        ),
-                        child: Center(
-                          child: const Text(
-                            'School',
-                            style: TextStyle(color: Colors.white),
-                          ),
+                      const SizedBox(height: 30),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 50, right: 50),
+                        child: const Divider(
+                          color: Color.fromARGB(255, 7, 7, 7),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 20),
-                    GestureDetector(
-                      onTap: () {
-                        _selectedReason = "Friends";
-                      },
-                      child: Container(
-                        height: 30,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(200),
-                        ),
-                        child: Center(
-                          child: const Text(
-                            'Friends',
-                            style: TextStyle(color: Colors.white),
+                      Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              // context.push('/stats_notis');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => StatsNotis(
+                                    moodEntries: _moods,
+                                    notifications: notifications,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Image.asset(
+                              'assets/images/Moods.webp',
+                              height: 50,
+                              width: 50,
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    GestureDetector(
-                      onTap: () {
-                        _selectedReason = "Family";
-                      },
-                      child: Container(
-                        height: 30,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(200),
-                        ),
-                        child: Center(
-                          child: const Text(
-                            'Family',
-                            style: TextStyle(color: Colors.white),
+                          Positioned(
+                            top: 35,
+                            left: 30,
+                            child: Container(
+                              height: 15,
+                              width: 15,
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '${notifications.length}',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(width: 20),
-                    GestureDetector(
-                      onTap: () {
-                        _selectedReason = "Hobby";
-                      },
-                      child: Container(
-                        height: 30,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(200),
-                        ),
-                        child: Center(
-                          child: const Text(
-                            'Hobby',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 20),
-                    GestureDetector(
-                      onTap: () {
-                        _selectedReason = "Health";
-                      },
-                      child: Container(
-                        height: 30,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(200),
-                        ),
-                        child: Center(
-                          child: const Text(
-                            'Health',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 20),
-                    GestureDetector(
-                      onTap: () {
-                        _selectedReason = "Relationship";
-                      },
-                      child: Container(
-                        height: 30,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(200),
-                        ),
-                        child: Center(
-                          child: const Text(
-                            'Relationship',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 20),
-                    GestureDetector(
-                      onTap: () {
-                        _selectedReason = "Money";
-                      },
-                      child: Container(
-                        height: 30,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(200),
-                        ),
-                        child: Center(
-                          child: const Text(
-                            'Money',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 5),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 30),
-              const Text('Wanna write about it?'),
-              const SizedBox(height: 20),
-              TextField(
-                controller: _descriptionController,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  hintText: 'Describe how you feel...',
-                  hintStyle: TextStyle(fontSize: 16),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(width: 0, style: BorderStyle.none),
-                  ),
-                  filled: true,
-                  contentPadding: EdgeInsets.all(16),
-                  fillColor: Colors.grey[450],
-                ),
-              ),
-              const SizedBox(height: 20),
-              GestureDetector(
-                onTap: () {
-                  showMyDialog();
-                },
-                child: Container(
-                  height: 30,
-                  width: 150,
-                  decoration: BoxDecoration(
-                    color: Colors.blueGrey,
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: Center(
-                    child: const Text(
-                      'Add to calendar',
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    ],
                   ),
                 ),
-              ),
-              const SizedBox(height: 30),
-              Padding(
-                padding: const EdgeInsets.only(left: 50, right: 50),
-                child: const Divider(color: Color.fromARGB(255, 7, 7, 7)),
-              ),
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      // context.push('/stats_notis');
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => StatsNotis(moodEntries: _moods, notifications: notifications)),
-                      );
-                    },
-                    child: Image.asset(
-                      'assets/images/Moods.webp',
-                      height: 50,
-                      width: 50,
-                    ),
-                  ),
-                  Positioned(
-                    top: 35,
-                    left: 30,
-                    child: Container(
-                      height: 15,
-                      width: 15,
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: Center(
-                        child: Text(
-                          '${notifications.length}',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 10,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+              )
+              .animate()
+              .fadeIn(duration: 200.ms)
+              .slideY(begin: 0.2, duration: 1000.ms, curve: Curves.easeOut),
     );
   }
 }

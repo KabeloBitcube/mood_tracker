@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mood_tracker/Count/count_provider.dart';
 import 'package:mood_tracker/Home/home.dart';
 import 'package:mood_tracker/Mode/mode.dart';
 import 'package:mood_tracker/Mood/mood_border.dart';
@@ -24,7 +25,10 @@ void main() {
         ChangeNotifierProvider(create: (context) => ModeController()),
 
         //Handles highlighting mood and reason selection 
-        ChangeNotifierProvider(create: (context) => BorderController())
+        ChangeNotifierProvider(create: (context) => BorderController()),
+
+        //Handles updating the notification count after they've been deleted
+        ChangeNotifierProvider(create: (context) => CountProvider())
       ],
       child: const MyApp(),
     ),

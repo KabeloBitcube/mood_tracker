@@ -3,12 +3,12 @@ import 'dart:developer';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:mood_tracker/Home/home.dart';
+import 'package:mood_tracker/Count/count_provider.dart';
 import 'package:mood_tracker/Mode/mode.dart';
 import 'package:mood_tracker/Mood%20Model/moodentry.dart';
 import 'package:provider/provider.dart';
 
-class StatsNotis extends StatelessWidget {
+class StatsNotis extends StatefulWidget {
   //Mood entries and notifications parameters to pass to the Stats and notfications screen 
   final List<MoodEntry> moodEntries;
   final List<String> notifications;
@@ -19,6 +19,11 @@ class StatsNotis extends StatelessWidget {
     required this.notifications,
   });
 
+  @override
+  State<StatsNotis> createState() => _StatsNotisState();
+}
+
+class _StatsNotisState extends State<StatsNotis> {
   @override
   Widget build(BuildContext context) {
     final modeController = Provider.of<ModeController>(context); //Mode provider controller that controls colors based on dark/light mode
@@ -37,7 +42,7 @@ class StatsNotis extends StatelessWidget {
 
     //Increment a mood count by 1 each time it is selected
     //Keep mood count at 0 if not selected
-    for (var entry in moodEntries) {
+    for (var entry in widget.moodEntries) {
       moodCount[entry.mood] = (moodCount[entry.mood] ?? 0) + 1;
     }
 
@@ -59,7 +64,7 @@ class StatsNotis extends StatelessWidget {
     int calmCounter = 0;
     int noMood = 0;
 
-    for (var mood in moodEntries) {
+    for (var mood in widget.moodEntries) {
       if (mood.mood == "Happy") {
         happyCounter++;
       }
@@ -142,7 +147,7 @@ class StatsNotis extends StatelessWidget {
       return Text('Start tracking your mood!');
     }
 
-    log("Notification length: ${notifications.length}");
+    log("Notification length: ${widget.notifications.length}");
 
     return Scaffold(
       appBar: AppBar(),
@@ -262,7 +267,7 @@ class StatsNotis extends StatelessWidget {
                             SizedBox(
                               height: 100,
                               width: 350,
-                              child: notifications.isEmpty
+                              child: widget.notifications.isEmpty
                                   ? Center(
                                       child: Padding(
                                         padding: const EdgeInsets.only(
@@ -278,7 +283,7 @@ class StatsNotis extends StatelessWidget {
                                       ),
                                     )
                                   : ListView.builder(
-                                      itemCount: notifications.length,
+                                      itemCount: widget.notifications.length,
                                       itemBuilder: (context, index) {
                                         return Padding(
                                           padding: const EdgeInsets.all(8.0),
@@ -297,7 +302,7 @@ class StatsNotis extends StatelessWidget {
                                               ),
                                               SizedBox(width: 10),
                                               Text(
-                                                notifications[index],
+                                                widget.notifications[index],
                                                 style: TextStyle(
                                                   fontSize: 12,
                                                   fontStyle: FontStyle.italic,
@@ -314,7 +319,7 @@ class StatsNotis extends StatelessWidget {
                             //Delete notifications and display success snackbar
                             //Show no notifications snackbar if there are no notifications to delte
                             Center(
-                              child: notifications.isEmpty
+                              child: widget.notifications.isEmpty
                                   ? IconButton(
                                       onPressed: () {
                                         ScaffoldMessenger.of(
@@ -329,21 +334,16 @@ class StatsNotis extends StatelessWidget {
                                     )
                                   : IconButton(
                                       onPressed: () {
-                                        notifications.clear();
+                                        setState(() {
+                                          widget.notifications.clear();
+                                        });
+                                        context.read<CountProvider>().getNotificationCount(widget.notifications.length);
                                         ScaffoldMessenger.of(
                                           context,
                                         ).showSnackBar(
                                           SnackBar(
                                             content: Text(
                                               'Notifications deleted.',
-                                            ),
-                                          ),
-                                        );
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => HomeScreen(
-                                              notificationCount: 0,
                                             ),
                                           ),
                                         );

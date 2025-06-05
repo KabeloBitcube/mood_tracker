@@ -6,9 +6,10 @@ import 'package:mood_tracker/Notifications/noti_service.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  //Ensure that an instance of WidgetsFlutterBinding is initialized before calling runApp()
   WidgetsFlutterBinding.ensureInitialized();
 
-  //init notifications
+  //Initialise app start up notification
   NotiService().initNotification().then((_) {
     NotiService().showNotification(
       title: 'Welcome',
@@ -19,7 +20,10 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
+        //Handles light/dark mode switching
         ChangeNotifierProvider(create: (context) => ModeController()),
+
+        //Handles highlighting mood and reason selection 
         ChangeNotifierProvider(create: (context) => BorderController())
       ],
       child: const MyApp(),
@@ -62,6 +66,7 @@ class MyApp extends StatelessWidget {
             : Brightness.light,
       ),
       debugShowCheckedModeBanner: false,
+      //Setting intial notification count to 0
       home: HomeScreen(notificationCount: 0),
     );
   }

@@ -13,8 +13,10 @@ import 'package:mood_tracker/Stats%20&%20Notis/stats_notis.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
+  //Stores notification count
   final int notificationCount;
 
+  //Notification count parameter to pass the number of notifications to the home screen 
   const HomeScreen({super.key, required this.notificationCount});
 
   @override
@@ -235,7 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.bold,
                           wordSpacing: 5,
                         ),
-                      ).animate().fade(duration: Duration(seconds: 5)).scale(),
+                      ).animate().fade(duration: Duration(seconds: 3)).scale(),
                       const SizedBox(height: 10),
                       Wrap(
                         children: [

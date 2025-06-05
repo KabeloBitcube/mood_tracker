@@ -11,5 +11,7 @@ class CountProvider extends ChangeNotifier{
     notifyListeners();
   }
 
+
+  //Stores notification count to be read
   int get notificationCount => count;
 }

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class BorderController extends ChangeNotifier {
-  // Tracks whether the app is in dark mode or light mode
+  // Tracks whether a container has been selected or not
   bool _isSelected = false;
 
-  // Getter to check the current mode (dark or light)
+  // Getter to check the current state (true or false)
   bool get isSelected => _isSelected;
 
-  // Toggles between dark mode and light mode
+  // Toggles between selected and not selected
   void toggleMode() {
     _isSelected = !_isSelected;
-    notifyListeners(); // Notifies listeners to rebuild UI with the updated mode
+    notifyListeners(); // Notifies listeners to rebuild UI with the updated state
   }
 }

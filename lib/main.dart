@@ -4,6 +4,7 @@ import 'package:mood_tracker/Home/home.dart';
 import 'package:mood_tracker/Mode/mode.dart';
 import 'package:mood_tracker/Mood/mood_border.dart';
 import 'package:mood_tracker/Notifications/noti_service.dart';
+import 'package:mood_tracker/Reason/reason_border.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -24,8 +25,11 @@ void main() {
         //Handles light/dark mode switching
         ChangeNotifierProvider(create: (context) => ModeController()),
 
-        //Handles highlighting mood and reason selection 
-        ChangeNotifierProvider(create: (context) => BorderController()),
+        //Handles highlighting mood selection 
+        ChangeNotifierProvider(create: (context) => MoodController()),
+
+        //Handles highlighting reason selection 
+        ChangeNotifierProvider(create: (context) => ReasonController()),
 
         //Handles updating the notification count after they've been deleted
         ChangeNotifierProvider(create: (context) => CountProvider())

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class MoodController extends ChangeNotifier {
+class ReasonController extends ChangeNotifier {
   // Tracks whether a container has been selected or not
   bool _isSelected = false;
 

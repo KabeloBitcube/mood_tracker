@@ -2,8 +2,8 @@
 
 class MoodEntry {
   final String mood;
-  final String reason;
-  final String description;
+  String reason;
+  String description;
   final int? timeOfDay;
   final DateTime date;
 

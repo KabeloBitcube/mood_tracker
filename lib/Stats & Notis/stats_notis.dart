@@ -9,7 +9,7 @@ import 'package:mood_tracker/Mood%20Model/moodentry.dart';
 import 'package:provider/provider.dart';
 
 class StatsNotis extends StatefulWidget {
-  //Mood entries and notifications parameters to pass to the Stats and notfications screen 
+  //Mood entries and notifications parameters to pass to the Stats and notfications screen
   final List<MoodEntry> moodEntries;
   final List<String> notifications;
 
@@ -26,7 +26,9 @@ class StatsNotis extends StatefulWidget {
 class _StatsNotisState extends State<StatsNotis> {
   @override
   Widget build(BuildContext context) {
-    final modeController = Provider.of<ModeController>(context); //Mode provider controller that controls colors based on dark/light mode
+    final modeController = Provider.of<ModeController>(
+      context,
+    ); //Mode provider controller that controls colors based on dark/light mode
 
     //Mood colors to map on chart
     final Map<String, Color> moodColorMap = {
@@ -36,16 +38,14 @@ class _StatsNotisState extends State<StatsNotis> {
       'Calm': Colors.lightGreen,
     };
 
-    //Stores the number of times a mood was selected 
+    //Stores the number of times a mood was selected
     final Map<String, int> moodCount = {};
-
 
     //Increment a mood count by 1 each time it is selected
     //Keep mood count at 0 if not selected
     for (var entry in widget.moodEntries) {
       moodCount[entry.mood] = (moodCount[entry.mood] ?? 0) + 1;
     }
-
 
     //Setting pie chart data sections
     final sections = moodCount.entries.map((entry) {
@@ -82,6 +82,8 @@ class _StatsNotisState extends State<StatsNotis> {
       }
     }
 
+    log('Mood entries length: ${widget.moodEntries.length}');
+
     String? highestValue;
 
     Map<Object?, Object?>? points = {
@@ -109,7 +111,9 @@ class _StatsNotisState extends State<StatsNotis> {
             }).key
             as String?;
 
-    log('$highestValue');
+    
+
+    log('Highest mood selected: $highestValue');
 
     //Setting mood message based on highest mood selected
     Text getMoodMessage() {
@@ -186,7 +190,7 @@ class _StatsNotisState extends State<StatsNotis> {
                       ),
                     ),
                     SizedBox(height: 80),
-                    //Mood color indicators 
+                    //Mood color indicators
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 45),
                       child: Row(
@@ -338,7 +342,11 @@ class _StatsNotisState extends State<StatsNotis> {
                                           widget.notifications.clear();
                                         });
                                         //Reading notificaton count using provider
-                                        context.read<CountProvider>().getNotificationCount(widget.notifications.length);
+                                        context
+                                            .read<CountProvider>()
+                                            .getNotificationCount(
+                                              widget.notifications.length,
+                                            );
                                         ScaffoldMessenger.of(
                                           context,
                                         ).showSnackBar(
@@ -361,7 +369,11 @@ class _StatsNotisState extends State<StatsNotis> {
               )
               .animate()
               .fadeIn(duration: 200.ms)
-              .slideX(begin: 0.2, duration: 1000.ms, curve: Curves.easeOut), //Right fade in animation
+              .slideX(
+                begin: 0.2,
+                duration: 1000.ms,
+                curve: Curves.easeOut,
+              ), //Right fade in animation
     );
   }
 }

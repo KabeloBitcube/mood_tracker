@@ -192,6 +192,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                           mood.description =
                                               descriptionController.text;
                                         });
+                                        Navigator.of(context).pop();
+                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Mood updated successfully')));
                                       }
                                       log(
                                         'Reason controller text: ${reasonController.text}',

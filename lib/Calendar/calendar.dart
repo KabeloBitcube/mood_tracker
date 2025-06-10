@@ -134,16 +134,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       ); //Mode provider controller that controls colors based on dark/light mode
 
                       reasonController = TextEditingController(
-                        text: mood.reason,
+                        
                       );
                       descriptionController = TextEditingController(
-                        text: mood.description,
+                        
                       );
 
                       log('Mood reason: ${reasonController.text}');
                       log('Mood description: ${descriptionController.text}');
 
                       //Returns card with mood entry details
+                      //Opens a modal sheet for each mood entry to be updated when clicked
                       return GestureDetector(
                         onTap: () {
                           showModalBottomSheet(

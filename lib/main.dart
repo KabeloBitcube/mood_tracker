@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mood_tracker/Count/count_provider.dart';
-import 'package:mood_tracker/Home/home.dart';
 import 'package:mood_tracker/Mode/mode.dart';
 import 'package:mood_tracker/Mood/mood_border.dart';
 import 'package:mood_tracker/Notifications/noti_service.dart';
 import 'package:mood_tracker/Reason/reason_border.dart';
+import 'package:mood_tracker/Router/router.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -25,37 +25,19 @@ void main() {
         //Handles light/dark mode switching
         ChangeNotifierProvider(create: (context) => ModeController()),
 
-        //Handles highlighting mood selection 
+        //Handles highlighting mood selection
         ChangeNotifierProvider(create: (context) => MoodController()),
 
-        //Handles highlighting reason selection 
+        //Handles highlighting reason selection
         ChangeNotifierProvider(create: (context) => ReasonController()),
 
         //Handles updating the notification count after they've been deleted
-        ChangeNotifierProvider(create: (context) => CountProvider())
+        ChangeNotifierProvider(create: (context) => CountProvider()),
       ],
       child: const MyApp(),
     ),
   );
 }
-
-// Go router navigation
-// final _router = GoRouter(
-//   routes: [
-//     GoRoute(
-//       path: '/',
-//       builder: (context, state) => HomeScreen()
-//     ),
-//     GoRoute(
-//       path: '/calendar',
-//       builder: (context, state) => CalendarScreen()
-//     ),
-//     GoRoute(
-//       path: '/stats_notis',
-//       builder: (context, state) => StatsNotis()
-//     ),
-//   ]
-// );
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -66,7 +48,7 @@ class MyApp extends StatelessWidget {
     // Access the mode controller to determine the app's theme
     final modeController = Provider.of<ModeController>(context);
 
-    return MaterialApp(
+    return MaterialApp.router(
       theme: ThemeData(
         // Dynamically applies light or dark theme based on user preference
         brightness: modeController.isDarkMode
@@ -74,8 +56,9 @@ class MyApp extends StatelessWidget {
             : Brightness.light,
       ),
       debugShowCheckedModeBanner: false,
-      //Setting intial notification count to 0
-      home: HomeScreen(notificationCount: 0),
+      routerConfig: router,
     );
   }
 }
+
+

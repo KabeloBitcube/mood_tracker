@@ -247,12 +247,6 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () {
                 Map<String, dynamic> data = {'moodEntries': _moods};
                 context.push('/calendar', extra: data);
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => CalendarScreen(moodEntries: _moods),
-                //   ),
-                // );
               },
               icon: Icon(Icons.calendar_month_outlined),
             ),
@@ -681,17 +675,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           onTap: () {
                             //Navigate to stats and notifications
                             //Pass moods and notification parameters
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => StatsNotis(
-                            //       moodEntries: _moods,
-                            //       notifications: notifications,
-                            //     ),
-                            //   ),
-                            // );
-
-                            Map<String, dynamic> data = {'moodEntries': _moods, 'notifications' : notifications};
+                            Map<String, dynamic> data = {
+                              'moodEntries': _moods,
+                              'notifications': notifications,
+                            };
                             context.push('/stats_notis', extra: data);
                           },
                           child: Image.asset(

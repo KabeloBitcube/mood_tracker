@@ -144,6 +144,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       log('Mood description: ${descriptionController.text}');
 
                       //Returns card with mood entry details
+                      //Opens a modal sheet for each mood entry to be updated when clicked
                       return GestureDetector(
                         onTap: () {
                           showModalBottomSheet(

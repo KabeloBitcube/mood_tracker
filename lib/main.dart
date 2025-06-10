@@ -28,20 +28,19 @@ void main() {
         //Handles light/dark mode switching
         ChangeNotifierProvider(create: (context) => ModeController()),
 
-        //Handles highlighting mood selection 
+        //Handles highlighting mood selection
         ChangeNotifierProvider(create: (context) => MoodController()),
 
-        //Handles highlighting reason selection 
+        //Handles highlighting reason selection
         ChangeNotifierProvider(create: (context) => ReasonController()),
 
         //Handles updating the notification count after they've been deleted
-        ChangeNotifierProvider(create: (context) => CountProvider())
+        ChangeNotifierProvider(create: (context) => CountProvider()),
       ],
       child: const MyApp(),
     ),
   );
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -60,14 +59,10 @@ class MyApp extends StatelessWidget {
             : Brightness.light,
       ),
       debugShowCheckedModeBanner: false,
-      //Setting intial notification count to 0
-      // home: HomeScreen(notificationCount: 0),
       routerConfig: _router,
     );
   }
 }
-
-
 
 //Go router navigation
 final _router = GoRouter(
@@ -75,22 +70,26 @@ final _router = GoRouter(
     GoRoute(
       path: '/',
       builder: (context, state) {
-        return HomeScreen(notificationCount: 0,);
-      }
+        //Setting intial notification count to 0
+        return HomeScreen(notificationCount: 0);
+      },
     ),
     GoRoute(
       path: '/calendar',
       builder: (context, state) {
         Map<String, dynamic> data = state.extra as Map<String, dynamic>;
-        return CalendarScreen(moodEntries: data['moodEntries'],);
+        return CalendarScreen(moodEntries: data['moodEntries']);
       },
     ),
     GoRoute(
       path: '/stats_notis',
       builder: (context, state) {
         Map<String, dynamic> data = state.extra as Map<String, dynamic>;
-        return StatsNotis(moodEntries: data['moodEntries'], notifications: data['notifications'],);
+        return StatsNotis(
+          moodEntries: data['moodEntries'],
+          notifications: data['notifications'],
+        );
       },
     ),
-  ]
+  ],
 );

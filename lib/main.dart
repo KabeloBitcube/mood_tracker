@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:mood_tracker/Calendar/calendar.dart';
 import 'package:mood_tracker/Count/count_provider.dart';
-import 'package:mood_tracker/Home/home.dart';
 import 'package:mood_tracker/Mode/mode.dart';
 import 'package:mood_tracker/Mood/mood_border.dart';
 import 'package:mood_tracker/Notifications/noti_service.dart';
 import 'package:mood_tracker/Reason/reason_border.dart';
-import 'package:mood_tracker/Stats%20&%20Notis/stats_notis.dart';
+import 'package:mood_tracker/Router/router.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -59,37 +56,9 @@ class MyApp extends StatelessWidget {
             : Brightness.light,
       ),
       debugShowCheckedModeBanner: false,
-      routerConfig: _router,
+      routerConfig: router,
     );
   }
 }
 
-//Go router navigation
-final _router = GoRouter(
-  routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) {
-        //Setting intial notification count to 0
-        return HomeScreen(notificationCount: 0);
-      },
-    ),
-    GoRoute(
-      path: '/calendar',
-      builder: (context, state) {
-        Map<String, dynamic> data = state.extra as Map<String, dynamic>;
-        return CalendarScreen(moodEntries: data['moodEntries']);
-      },
-    ),
-    GoRoute(
-      path: '/stats_notis',
-      builder: (context, state) {
-        Map<String, dynamic> data = state.extra as Map<String, dynamic>;
-        return StatsNotis(
-          moodEntries: data['moodEntries'],
-          notifications: data['notifications'],
-        );
-      },
-    ),
-  ],
-);
+

@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 
-class MoodObserver extends BlocObserver{
-  const MoodObserver();
+class Observer extends BlocObserver{
+  const Observer();
 
   @override
   void onChange(BlocBase<dynamic> bloc, Change<dynamic> change){

@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mood_tracker/Bloc/Stats_and_notifications/notifications_cubit.dart';
 import 'package:mood_tracker/Provider/Count/count_provider.dart';
 import 'package:mood_tracker/Provider/Mode/mode.dart';
 import 'package:mood_tracker/Mood_model/moodentry.dart';
@@ -153,227 +155,233 @@ class _StatsNotisState extends State<StatsNotis> {
 
     log("Notification length: ${widget.notifications.length}");
 
-    return Scaffold(
-      appBar: AppBar(),
-      body:
-          SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Center(child: Text('Average mood this week')),
-                    SizedBox(height: 80),
-                    SizedBox(
-                      height: 150,
-                      width: 150,
-                      //Pie chart
-                      //Display blank pie chart if there are no mood entries
-                      child: PieChart(
-                        duration: const Duration(milliseconds: 750),
-                        curve: Curves.easeInQuint,
-                        moodCount.isNotEmpty
-                            ? PieChartData(
-                                centerSpaceRadius: 80,
-                                sections: sections,
-                              )
-                            : PieChartData(
-                                centerSpaceRadius: 80,
-                                sections: [
-                                  PieChartSectionData(
-                                    value: 10,
-                                    color: modeController.isDarkMode
-                                        ? Colors.grey[900]
-                                        : Colors.grey[350],
-                                    showTitle: false,
-                                    radius: 40,
-                                  ),
-                                ],
-                              ),
-                      ),
-                    ),
-                    SizedBox(height: 80),
-                    //Mood color indicators
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40, right: 45),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Angry'),
-                          Text('Sad'),
-                          Text('Happy'),
-                          Text('Calm'),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 35, right: 35),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            height: 2,
-                            width: 65,
-                            decoration: BoxDecoration(color: Colors.red),
-                          ),
-                          Container(
-                            height: 2,
-                            width: 65,
-                            decoration: BoxDecoration(color: Colors.lightBlue),
-                          ),
-                          Container(
-                            height: 2,
-                            width: 65,
-                            decoration: BoxDecoration(color: Colors.amber),
-                          ),
-                          Container(
-                            height: 2,
-                            width: 65,
-                            decoration: BoxDecoration(color: Colors.lightGreen),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 30),
-                    //Display mood message
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: getMoodMessage()
-                          .animate()
-                          .fade(duration: Duration(seconds: 2))
-                          .scale(),
-                    ),
-                    //Notification container
-                    Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Container(
-                        height: 250,
-                        width: 500,
-                        decoration: BoxDecoration(
-                          color: modeController.isDarkMode
-                              ? Colors.grey[900]
-                              : Colors.grey[350],
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Center(
-                                child: Text(
-                                  'Notifications',
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 20),
-                            //Display notifications
-                            //Display message if there are no notifications
-                            SizedBox(
-                              height: 100,
-                              width: 350,
-                              child: widget.notifications.isEmpty
-                                  ? Center(
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                          left: 15,
-                                        ),
-                                        child: const Text(
-                                          'No notifications at the moment.',
-                                          style: TextStyle(
-                                            fontStyle: FontStyle.italic,
-                                            fontSize: 12,
-                                          ),
-                                        ),
+    return BlocProvider(
+      create: (_) => NotificationsCubit(),
+      child: Scaffold(
+        appBar: AppBar(),
+        body:
+            BlocBuilder<NotificationsCubit, StatsNotis>(
+              builder: (context, state) => SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Center(child: Text('Average mood this week')),
+                        SizedBox(height: 80),
+                        SizedBox(
+                          height: 150,
+                          width: 150,
+                          //Pie chart
+                          //Display blank pie chart if there are no mood entries
+                          child: PieChart(
+                            duration: const Duration(milliseconds: 750),
+                            curve: Curves.easeInQuint,
+                            moodCount.isNotEmpty
+                                ? PieChartData(
+                                    centerSpaceRadius: 80,
+                                    sections: sections,
+                                  )
+                                : PieChartData(
+                                    centerSpaceRadius: 80,
+                                    sections: [
+                                      PieChartSectionData(
+                                        value: 10,
+                                        color: modeController.isDarkMode
+                                            ? Colors.grey[900]
+                                            : Colors.grey[350],
+                                        showTitle: false,
+                                        radius: 40,
                                       ),
-                                    )
-                                  : ListView.builder(
-                                      itemCount: widget.notifications.length,
-                                      itemBuilder: (context, index) {
-                                        return Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                height: 10,
-                                                width: 10,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                        100,
-                                                      ),
-                                                ),
-                                              ),
-                                              SizedBox(width: 10),
-                                              Text(
-                                                widget.notifications[index],
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontStyle: FontStyle.italic,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                    ),
+                                    ],
+                                  ),
+                          ),
+                        ),
+                        SizedBox(height: 80),
+                        //Mood color indicators
+                        Padding(
+                          padding: const EdgeInsets.only(left: 40, right: 45),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Angry'),
+                              Text('Sad'),
+                              Text('Happy'),
+                              Text('Calm'),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 35, right: 35),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                height: 2,
+                                width: 65,
+                                decoration: BoxDecoration(color: Colors.red),
+                              ),
+                              Container(
+                                height: 2,
+                                width: 65,
+                                decoration: BoxDecoration(color: Colors.lightBlue),
+                              ),
+                              Container(
+                                height: 2,
+                                width: 65,
+                                decoration: BoxDecoration(color: Colors.amber),
+                              ),
+                              Container(
+                                height: 2,
+                                width: 65,
+                                decoration: BoxDecoration(color: Colors.lightGreen),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 30),
+                        //Display mood message
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          child: getMoodMessage()
+                              .animate()
+                              .fade(duration: Duration(seconds: 2))
+                              .scale(),
+                        ),
+                        //Notification container
+                        Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Container(
+                            height: 250,
+                            width: 500,
+                            decoration: BoxDecoration(
+                              color: modeController.isDarkMode
+                                  ? Colors.grey[900]
+                                  : Colors.grey[350],
+                              borderRadius: BorderRadius.circular(50),
                             ),
-
-                            SizedBox(height: 10),
-                            //Delete notifications and display success snackbar
-                            //Show no notifications snackbar if there are no notifications to delte
-                            Center(
-                              child: widget.notifications.isEmpty
-                                  ? IconButton(
-                                      onPressed: () {
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          SnackBar(
-                                            content: Text('No notifications.'),
-                                          ),
-                                        );
-                                      },
-                                      icon: Icon(Icons.delete_outline),
-                                    )
-                                  : IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          widget.notifications.clear();
-                                        });
-                                        //Reading notificaton count using provider
-                                        context
-                                            .read<CountProvider>()
-                                            .getNotificationCount(
-                                              widget.notifications.length,
-                                            );
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              'Notifications deleted.',
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(
+                                    child: Text(
+                                      'Notifications',
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 20),
+                                //Display notifications
+                                //Display message if there are no notifications
+                                SizedBox(
+                                  height: 100,
+                                  width: 350,
+                                  child: widget.notifications.isEmpty
+                                      ? Center(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                              left: 15,
+                                            ),
+                                            child: const Text(
+                                              'No notifications at the moment.',
+                                              style: TextStyle(
+                                                fontStyle: FontStyle.italic,
+                                                fontSize: 12,
+                                              ),
                                             ),
                                           ),
-                                        );
-                                      },
-                                      icon: Icon(Icons.delete_outline),
-                                    ),
+                                        )
+                                      : ListView.builder(
+                                          itemCount: widget.notifications.length,
+                                          itemBuilder: (context, index) {
+                                            return Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                children: [
+                                                  Container(
+                                                    height: 10,
+                                                    width: 10,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            100,
+                                                          ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 10),
+                                                  Text(
+                                                    widget.notifications[index],
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontStyle: FontStyle.italic,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                ),
+                    
+                                SizedBox(height: 10),
+                                //Delete notifications and display success snackbar
+                                //Show no notifications snackbar if there are no notifications to delete
+                                Center(
+                                  child: widget.notifications.isEmpty
+                                      ? IconButton(
+                                          onPressed: () {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                content: Text('No notifications.'),
+                                              ),
+                                            );
+                                          },
+                                          icon: Icon(Icons.delete_outline),
+                                        )
+                                      : IconButton(
+                                          onPressed: () {
+                                            //Clear notifications
+                                              widget.notifications.clear();
+                                              //Update state using the notifications cubit 
+                                              context.read<NotificationsCubit>().update();
+                                            //Reading notificaton count using provider
+                                            context
+                                                .read<CountProvider>()
+                                                .getNotificationCount(
+                                                  widget.notifications.length,
+                                                );
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  'Notifications deleted.',
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          icon: Icon(Icons.delete_outline),
+                                        ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
-              )
-              .animate()
-              .fadeIn(duration: 200.ms)
-              .slideX(
-                begin: 0.2,
-                duration: 1000.ms,
-                curve: Curves.easeOut,
-              ), //Right fade in animation
+                  )
+                  .animate()
+                  .fadeIn(duration: 200.ms)
+                  .slideX(
+                    begin: 0.2,
+                    duration: 1000.ms,
+                    curve: Curves.easeOut,
+                  ),
+            ), //Right fade in animation
+      ),
     );
   }
 }

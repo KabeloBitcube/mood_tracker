@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:mood_tracker/Bloc/Home/observer.dart';
+import 'package:mood_tracker/Bloc/observer.dart';
 import 'package:mood_tracker/Provider/Count/count_provider.dart';
 import 'package:mood_tracker/Provider/Mode/mode.dart';
 import 'package:mood_tracker/Provider/Mood/mood_border.dart';
@@ -22,7 +22,7 @@ void main() {
   });
 
   //Initilize mood observer
-  Bloc.observer = const MoodObserver();
+  Bloc.observer = const Observer();
 
   runApp(
     MultiProvider(

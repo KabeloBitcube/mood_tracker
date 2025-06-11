@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mood_tracker/Provider/Count/count_provider.dart';
 import 'package:mood_tracker/Provider/Mode/mode.dart';
-import 'package:mood_tracker/Mood%20Model/moodentry.dart';
+import 'package:mood_tracker/Mood_model/moodentry.dart';
 import 'package:provider/provider.dart';
 
 class StatsNotis extends StatefulWidget {

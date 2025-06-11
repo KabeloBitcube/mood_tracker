@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:mood_tracker/Mood%20Model/moodentry.dart';
+import 'package:mood_tracker/Mood_model/moodentry.dart';
 
 class MoodCubit extends Cubit<MoodEntry> {
   MoodCubit()

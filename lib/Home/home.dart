@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:mood_tracker/Bloc/mood_cubit.dart';
 import 'package:mood_tracker/Calendar/calendar.dart';
 import 'package:mood_tracker/Provider/Count/count_provider.dart';
 import 'package:mood_tracker/Provider/Mode/mode.dart';
@@ -59,9 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     //Adding user mood entry to _moods list
-    setState(() {
-      _moods.add(moodEntry);
-    });
+    _moods.add(moodEntry);
 
     //Passing updated _moods list to the calendar screen
     CalendarScreen(moodEntries: _moods);
@@ -148,8 +147,11 @@ class _HomeScreenState extends State<HomeScreen> {
               TextButton(
                 child: const Text('Save'),
                 onPressed: () {
+                  
                   //Function for handling submission
                   _onSave();
+
+                  context.read<MoodCubit>().update();
 
                   //If statement to log data, and display success snackbar when mood entry submission is successful
                   if (_selectedMood != null &&

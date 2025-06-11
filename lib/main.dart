@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mood_tracker/Count/count_provider.dart';
-import 'package:mood_tracker/Mode/mode.dart';
-import 'package:mood_tracker/Mood/mood_border.dart';
+import 'package:mood_tracker/Provider/Count/count_provider.dart';
+import 'package:mood_tracker/Provider/Mode/mode.dart';
+import 'package:mood_tracker/Provider/Mood/mood_border.dart';
 import 'package:mood_tracker/Notifications/noti_service.dart';
-import 'package:mood_tracker/Reason/reason_border.dart';
+import 'package:mood_tracker/Provider/Reason/reason_border.dart';
 import 'package:mood_tracker/Router/router.dart';
 import 'package:provider/provider.dart';
 

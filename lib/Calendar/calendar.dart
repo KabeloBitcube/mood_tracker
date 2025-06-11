@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:mood_tracker/Mode/mode.dart';
+import 'package:mood_tracker/Provider/Mode/mode.dart';
 import 'package:mood_tracker/Mood%20Model/moodentry.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';

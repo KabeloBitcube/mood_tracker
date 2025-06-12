@@ -2,7 +2,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:mood_tracker/Calendar/calendar.dart';
 import 'package:mood_tracker/Home/home.dart';
-import 'package:mood_tracker/Stats%20&%20Notis/stats_notis.dart' show StatsNotis;
+import 'package:mood_tracker/Stats_and_notifications/stats_notis.dart';
 
 final router = GoRouter(
   routes: [

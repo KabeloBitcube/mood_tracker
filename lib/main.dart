@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mood_tracker/Provider/Count/count_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mood_tracker/Bloc/Calendar/calendar_cubit.dart';
+import 'package:mood_tracker/Bloc/Stats_and_notifications/notifications_cubit.dart';
+import 'package:mood_tracker/Bloc/observer.dart';
 import 'package:mood_tracker/Provider/Mode/mode.dart';
 import 'package:mood_tracker/Provider/Mood/mood_border.dart';
 import 'package:mood_tracker/Notifications/noti_service.dart';
@@ -19,6 +22,9 @@ void main() {
     );
   });
 
+  //Initilize mood observer
+  Bloc.observer = const Observer();
+
   runApp(
     MultiProvider(
       providers: [
@@ -30,9 +36,6 @@ void main() {
 
         //Handles highlighting reason selection
         ChangeNotifierProvider(create: (context) => ReasonController()),
-
-        //Handles updating the notification count after they've been deleted
-        ChangeNotifierProvider(create: (context) => CountProvider()),
       ],
       child: const MyApp(),
     ),
@@ -48,15 +51,21 @@ class MyApp extends StatelessWidget {
     // Access the mode controller to determine the app's theme
     final modeController = Provider.of<ModeController>(context);
 
-    return MaterialApp.router(
-      theme: ThemeData(
-        // Dynamically applies light or dark theme based on user preference
-        brightness: modeController.isDarkMode
-            ? Brightness.dark
-            : Brightness.light,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<CalendarCubit>(create: (_) => CalendarCubit()),
+        BlocProvider<NotificationsCubit>(create: (_) => NotificationsCubit()),
+      ],
+      child: MaterialApp.router(
+        theme: ThemeData(
+          // Dynamically applies light or dark theme based on user preference
+          brightness: modeController.isDarkMode
+              ? Brightness.dark
+              : Brightness.light,
+        ),
+        debugShowCheckedModeBanner: false,
+        routerConfig: router,
       ),
-      debugShowCheckedModeBanner: false,
-      routerConfig: router,
     );
   }
 }

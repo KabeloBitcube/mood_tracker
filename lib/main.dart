@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mood_tracker/Bloc/Calendar/calendar_cubit.dart';
-import 'package:mood_tracker/Bloc/Home/home_cubit.dart';
 import 'package:mood_tracker/Bloc/Stats_and_notifications/notifications_cubit.dart';
 import 'package:mood_tracker/Bloc/observer.dart';
-import 'package:mood_tracker/Provider/Count/count_provider.dart';
 import 'package:mood_tracker/Provider/Mode/mode.dart';
 import 'package:mood_tracker/Provider/Mood/mood_border.dart';
 import 'package:mood_tracker/Notifications/noti_service.dart';
@@ -38,9 +36,6 @@ void main() {
 
         //Handles highlighting reason selection
         ChangeNotifierProvider(create: (context) => ReasonController()),
-
-        //Handles updating the notification count after they've been deleted
-        ChangeNotifierProvider(create: (context) => CountProvider()),
       ],
       child: const MyApp(),
     ),
@@ -58,7 +53,6 @@ class MyApp extends StatelessWidget {
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider<HomeCubit>(create: (_) => HomeCubit()),
         BlocProvider<CalendarCubit>(create: (_) => CalendarCubit()),
         BlocProvider<NotificationsCubit>(create: (_) => NotificationsCubit()),
       ],

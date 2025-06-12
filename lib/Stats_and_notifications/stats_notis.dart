@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mood_tracker/Bloc/Stats_and_notifications/notifications_cubit.dart';
-import 'package:mood_tracker/Provider/Count/count_provider.dart';
 import 'package:mood_tracker/Provider/Mode/mode.dart';
 import 'package:mood_tracker/Mood_model/moodentry.dart';
 import 'package:provider/provider.dart';
@@ -346,12 +345,7 @@ class _StatsNotisState extends State<StatsNotis> {
                                             //Clear notifications
                                             //Update state using the notifications cubit 
                                             context.read<NotificationsCubit>().update(widget.notifications);
-                                            //Reading notificaton count using provider
-                                            context
-                                                .read<CountProvider>()
-                                                .getNotificationCount(
-                                                  widget.notifications.length,
-                                                );
+                                            
                                             ScaffoldMessenger.of(
                                               context,
                                             ).showSnackBar(

@@ -32,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String? _selectedReason;
   final _descriptionController = TextEditingController();
 
+
   //List to store the user's mood entry
   final List<MoodEntry> _moods = [];
 
@@ -66,6 +67,144 @@ class _HomeScreenState extends State<HomeScreen> {
   //Notification list to store notifications
   List<String> notifications = [];
 
+  Future<void> showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Center(child: const Text('Enter Time of Day')),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(left: 50, right: 50),
+                  child: Divider(color: Colors.black),
+                ),
+                SizedBox(height: 10),
+                StatefulBuilder(
+                  builder: (context, setState) => Column(
+                    children: [
+                      ListTile(
+                        title: const Text('Morning'),
+                        leading: Radio<int>(
+                          value: 1,
+                          groupValue: _selectedTime,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedTime = value;
+                            });
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        title: const Text('Afternoon'),
+                        leading: Radio<int>(
+                          value: 2,
+                          groupValue: _selectedTime,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedTime = value;
+                            });
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        title: const Text('Night'),
+                        leading: Radio<int>(
+                          value: 3,
+                          groupValue: _selectedTime,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedTime = value;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            //Save button for submitting mood entry
+            TextButton(
+              child: const Text('Save'),
+              onPressed: () {
+                //Function for handling submission
+                _onSave();
+
+                //If statement to log data, and display success snackbar when mood entry submission is successful
+                if (_selectedMood != null &&
+                    _selectedReason != null &&
+                    _descriptionController.text.isNotEmpty &&
+                    _selectedTime != null) {
+                  context.read<HomeCubit>().updateCount(notifications.length);
+                  log('Selected mood: $_selectedMood');
+                  log('Selected reason: $_selectedReason');
+                  log('Description: ${_descriptionController.text}');
+                  log('Selected time: $_selectedTime');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Mood added to calendar')),
+                  );
+
+                  //If statements to set and display notifications based on time of day selected
+                  if (_selectedTime == 1) {
+                    NotiService().initNotification().then((_) {
+                      Future.delayed(const Duration(seconds: 5), () {
+                        NotiService().showNotification(
+                          title: "Reminder",
+                          body: "Remember to track your mood in the afternoon.",
+                        );
+                      });
+                    });
+                    notifications.add(
+                      "Remember to track your mood in the afternoon.",
+                    );
+                  }
+                  if (_selectedTime == 2) {
+                    NotiService().initNotification().then((_) {
+                      Future.delayed(const Duration(seconds: 5), () {
+                        NotiService().showNotification(
+                          title: "Reminder",
+                          body: "Remember to track your mood tonight.",
+                        );
+                      });
+                    });
+                    notifications.add("Remember to track your mood tonight.");
+                  }
+                  if (_selectedTime == 3) {
+                    NotiService().initNotification().then((_) {
+                      Future.delayed(const Duration(seconds: 5), () {
+                        NotiService().showNotification(
+                          title: "Reminder",
+                          body: "Remember to track your mood in the morning.",
+                        );
+                      });
+                    });
+                    notifications.add(
+                      "Remember to track your mood in the morning.",
+                    );
+                  }
+
+
+                  //Clear description text field
+                  _descriptionController.clear();
+
+                  //Pop out of dialog
+                  Navigator.of(context).pop();
+
+                  Map<String, dynamic> data = {'moodEntries': _moods};
+                  context.push('/calendar', extra: data);
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     //Mood and border provider controllers
@@ -82,7 +221,9 @@ class _HomeScreenState extends State<HomeScreen> {
     //Logging selected mood
     log('Selected mood: $_selectedMood');
 
-    return Scaffold(
+    return BlocProvider(
+      create: (_) => HomeCubit(),
+      child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
           //Light/dark mode toggle
@@ -583,144 +724,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ).animate().fadeIn(duration: 200.ms).slideY(begin: 0.2, duration: 1000.ms, curve: Curves.easeOut),
             ), //Bottom fade in animation
+      ),
     );
     //);
   }
 
   //Dialog for mood entry time of day radio button selection
-  Future<void> showMyDialog() async {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Center(child: const Text('Enter Time of Day')),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(left: 50, right: 50),
-                  child: Divider(color: Colors.black),
-                ),
-                SizedBox(height: 10),
-                StatefulBuilder(
-                  builder: (context, setState) => Column(
-                    children: [
-                      ListTile(
-                        title: const Text('Morning'),
-                        leading: Radio<int>(
-                          value: 1,
-                          groupValue: _selectedTime,
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedTime = value;
-                            });
-                          },
-                        ),
-                      ),
-                      ListTile(
-                        title: const Text('Afternoon'),
-                        leading: Radio<int>(
-                          value: 2,
-                          groupValue: _selectedTime,
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedTime = value;
-                            });
-                          },
-                        ),
-                      ),
-                      ListTile(
-                        title: const Text('Night'),
-                        leading: Radio<int>(
-                          value: 3,
-                          groupValue: _selectedTime,
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedTime = value;
-                            });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            //Save button for submitting mood entry
-            TextButton(
-              child: const Text('Save'),
-              onPressed: () {
-                //Function for handling submission
-                _onSave();
-                
-                //If statement to log data, and display success snackbar when mood entry submission is successful
-                if (_selectedMood != null &&
-                    _selectedReason != null &&
-                    _descriptionController.text.isNotEmpty &&
-                    _selectedTime != null) {
-                  context.read<HomeCubit>().updateCount(notifications.length);
-                  log('Selected mood: $_selectedMood');
-                  log('Selected reason: $_selectedReason');
-                  log('Description: ${_descriptionController.text}');
-                  log('Selected time: $_selectedTime');
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Mood added to calendar')),
-                  );
-
-                  //If statements to set and display notifications based on time of day selected
-                  if (_selectedTime == 1) {
-                    NotiService().initNotification().then((_) {
-                      Future.delayed(const Duration(seconds: 5), () {
-                        NotiService().showNotification(
-                          title: "Reminder",
-                          body: "Remember to track your mood in the afternoon.",
-                        );
-                      });
-                    });
-                    notifications.add(
-                      "Remember to track your mood in the afternoon.",
-                    );
-                  }
-                  if (_selectedTime == 2) {
-                    NotiService().initNotification().then((_) {
-                      Future.delayed(const Duration(seconds: 5), () {
-                        NotiService().showNotification(
-                          title: "Reminder",
-                          body: "Remember to track your mood tonight.",
-                        );
-                      });
-                    });
-                    notifications.add("Remember to track your mood tonight.");
-                  }
-                  if (_selectedTime == 3) {
-                    NotiService().initNotification().then((_) {
-                      Future.delayed(const Duration(seconds: 5), () {
-                        NotiService().showNotification(
-                          title: "Reminder",
-                          body: "Remember to track your mood in the morning.",
-                        );
-                      });
-                    });
-                    notifications.add(
-                      "Remember to track your mood in the morning.",
-                    );
-                  }
-
-                  //Clear description text field
-                  _descriptionController.clear();
-
-                  //Pop out of dialog
-                  Navigator.of(context).pop();
-                }
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
 }
 
 //Function to get the current date

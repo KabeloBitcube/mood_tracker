@@ -155,10 +155,12 @@ class _StatsNotisState extends State<StatsNotis> {
 
     log("Notification length: ${widget.notifications.length}");
 
-    return Scaffold(
+    return BlocProvider(
+      create: (_) => NotificationsCubit(),
+      child: Scaffold(
         appBar: AppBar(),
         body:
-            BlocBuilder<NotificationsCubit, StatsNotis>(
+            BlocBuilder<NotificationsCubit, List<String>>(
               builder: (context, state) => SingleChildScrollView(
                     child: Column(
                       children: [
@@ -342,9 +344,8 @@ class _StatsNotisState extends State<StatsNotis> {
                                       : IconButton(
                                           onPressed: () {
                                             //Clear notifications
-                                              widget.notifications.clear();
-                                              //Update state using the notifications cubit 
-                                              context.read<NotificationsCubit>().update();
+                                            //Update state using the notifications cubit 
+                                            context.read<NotificationsCubit>().update(widget.notifications);
                                             //Reading notificaton count using provider
                                             context
                                                 .read<CountProvider>()
@@ -379,6 +380,7 @@ class _StatsNotisState extends State<StatsNotis> {
                     curve: Curves.easeOut,
                   ),
             ), //Right fade in animation
+      ),
     );
   }
 }

@@ -4,6 +4,6 @@ class HomeCubit extends Cubit<int> {
   HomeCubit() : super(0);
 
   void updateCount(int notificationCount) {
-    emit(notificationCount + 1);
+    emit(notificationCount);
   }
 }

@@ -155,9 +155,7 @@ class _StatsNotisState extends State<StatsNotis> {
 
     log("Notification length: ${widget.notifications.length}");
 
-    return BlocProvider(
-      create: (_) => NotificationsCubit(),
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(),
         body:
             BlocBuilder<NotificationsCubit, StatsNotis>(
@@ -381,7 +379,6 @@ class _StatsNotisState extends State<StatsNotis> {
                     curve: Curves.easeOut,
                   ),
             ), //Right fade in animation
-      ),
     );
   }
 }

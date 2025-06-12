@@ -53,9 +53,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => CalendarCubit(),
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(),
         body: BlocBuilder<CalendarCubit, CalendarScreen>(
           builder: (context, state) => Column(
@@ -270,7 +268,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
             ],
           ).animate().fadeIn(duration: 200.ms).slideX(begin: 0.2, duration: 1000.ms, curve: Curves.easeOut),
         ), //Right fade in effect
-      ),
     );
   }
 }

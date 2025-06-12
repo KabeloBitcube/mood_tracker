@@ -6,11 +6,10 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:mood_tracker/Bloc/Home/mood_cubit.dart';
+import 'package:mood_tracker/Bloc/Home/home_cubit.dart';
 import 'package:mood_tracker/Calendar/calendar.dart';
-import 'package:mood_tracker/Provider/Count/count_provider.dart';
-import 'package:mood_tracker/Provider/Mode/mode.dart';
 import 'package:mood_tracker/Mood_model/moodentry.dart';
+import 'package:mood_tracker/Provider/Mode/mode.dart';
 import 'package:mood_tracker/Provider/Mood/mood_border.dart';
 import 'package:mood_tracker/Notifications/noti_service.dart';
 import 'package:mood_tracker/Provider/Reason/reason_border.dart';
@@ -80,147 +79,10 @@ class _HomeScreenState extends State<HomeScreen> {
       context,
     ); //Controls container borders when clicked
 
-    //Dialog for mood entry time of day radio button selection
-    Future<void> showMyDialog() async {
-      return showDialog<void>(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Center(child: const Text('Enter Time of Day')),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(left: 50, right: 50),
-                    child: Divider(color: Colors.black),
-                  ),
-                  SizedBox(height: 10),
-                  StatefulBuilder(
-                    builder: (context, state) => Column(
-                      children: [
-                        ListTile(
-                          title: const Text('Morning'),
-                          leading: Radio<int>(
-                            value: 1,
-                            groupValue: _selectedTime,
-                            onChanged: (value) {
-                              state(() {
-                                _selectedTime = value;
-                              });
-                            },
-                          ),
-                        ),
-                        ListTile(
-                          title: const Text('Afternoon'),
-                          leading: Radio<int>(
-                            value: 2,
-                            groupValue: _selectedTime,
-                            onChanged: (value) {
-                              state(() {
-                                _selectedTime = value;
-                              });
-                            },
-                          ),
-                        ),
-                        ListTile(
-                          title: const Text('Night'),
-                          leading: Radio<int>(
-                            value: 3,
-                            groupValue: _selectedTime,
-                            onChanged: (value) {
-                              state(() {
-                                _selectedTime = value;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              //Save button for submitting mood entry
-              TextButton(
-                child: const Text('Save'),
-                onPressed: () {
-                  //Function for handling submission
-                  _onSave();
-
-                  //If statement to log data, and display success snackbar when mood entry submission is successful
-                  if (_selectedMood != null &&
-                      _selectedReason != null &&
-                      _descriptionController.text.isNotEmpty &&
-                      _selectedTime != null) {
-                    log('Selected mood: $_selectedMood');
-                    log('Selected reason: $_selectedReason');
-                    log('Description: ${_descriptionController.text}');
-                    log('Selected time: $_selectedTime');
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Mood added to calendar')),
-                    );
-
-                    //If statements to set and display notifications based on time of day selected
-                    if (_selectedTime == 1) {
-                      NotiService().initNotification().then((_) {
-                        Future.delayed(const Duration(seconds: 5), () {
-                          NotiService().showNotification(
-                            title: "Reminder",
-                            body:
-                                "Remember to track your mood in the afternoon.",
-                          );
-                        });
-                      });
-                      notifications.add(
-                        "Remember to track your mood in the afternoon.",
-                      );
-                    }
-                    if (_selectedTime == 2) {
-                      NotiService().initNotification().then((_) {
-                        Future.delayed(const Duration(seconds: 5), () {
-                          NotiService().showNotification(
-                            title: "Reminder",
-                            body: "Remember to track your mood tonight.",
-                          );
-                        });
-                      });
-                      notifications.add("Remember to track your mood tonight.");
-                    }
-                    if (_selectedTime == 3) {
-                      NotiService().initNotification().then((_) {
-                        Future.delayed(const Duration(seconds: 5), () {
-                          NotiService().showNotification(
-                            title: "Reminder",
-                            body: "Remember to track your mood in the morning.",
-                          );
-                        });
-                      });
-                      notifications.add(
-                        "Remember to track your mood in the morning.",
-                      );
-                    }
-
-                    //Clear description text field
-                    _descriptionController.clear();
-
-                    //Pop out of dialog
-                    Navigator.of(context).pop();
-                  }
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-
     //Logging selected mood
     log('Selected mood: $_selectedMood');
 
-    return BlocProvider(
-      create: (_) => MoodCubit(),
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           centerTitle: true,
           //Light/dark mode toggle
@@ -252,568 +114,611 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body:
             //Consumer to update notification count state
-            //Bloc builder to update MoodEntry
-            BlocBuilder<MoodCubit, MoodEntry>(
-              builder: (context, state) => Consumer<CountProvider>(
-                builder: (context, value, child) =>
-                    SingleChildScrollView(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                Text(
-                                      'How Are You Feeling Today?',
-                                      style: TextStyle(
-                                        fontSize: 50,
-                                        fontWeight: FontWeight.bold,
-                                        wordSpacing: 5,
-                                      ),
-                                    )
-                                    .animate()
-                                    .fade(duration: Duration(seconds: 3))
-                                    .scale(), //Scaling animation for home message on app launch
-                                const SizedBox(height: 10),
-                                Wrap(
-                                  children: [
-                                    //Carousel slider for mood containers
-                                    //Each container has a gesture detector to set mood and highlight mood when selected
-                                    CarouselSlider(
-                                      options: CarouselOptions(height: 250.0),
-                                      items: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            _selectedMood = "Happy";
-                                            moodController.toggleMode();
-                                          },
-                                          child: Container(
-                                            width:
-                                                MediaQuery.of(
-                                                  context,
-                                                ).size.width *
-                                                0.6,
-                                            decoration: BoxDecoration(
-                                              color: Colors.amber,
-                                              borderRadius:
-                                                  BorderRadius.circular(250),
-                                              border:
-                                                  moodController.isSelected &&
-                                                      _selectedMood == "Happy"
-                                                  ? Border.all(
-                                                      width: 10,
-                                                      color: Colors.grey,
-                                                    )
-                                                  : null,
-                                            ),
-                                            child: Center(
-                                              child: Image.asset(
-                                                'assets/images/Happy.webp',
-                                                width: 170,
-                                                height: 170,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            _selectedMood = "Sad";
-                                            moodController.toggleMode();
-                                          },
-                                          child: Container(
-                                            width:
-                                                MediaQuery.of(
-                                                  context,
-                                                ).size.width *
-                                                0.6,
-                                            decoration: BoxDecoration(
-                                              color: Colors.lightBlueAccent,
-                                              borderRadius:
-                                                  BorderRadius.circular(250),
-                                              border:
-                                                  moodController.isSelected &&
-                                                      _selectedMood == "Sad"
-                                                  ? Border.all(
-                                                      width: 10,
-                                                      color: Colors.grey,
-                                                    )
-                                                  : null,
-                                            ),
-                                            child: Center(
-                                              child: Image.asset(
-                                                'assets/images/Sad.webp',
-                                                width: 170,
-                                                height: 170,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            _selectedMood = "Angry";
-                                            moodController.toggleMode();
-                                          },
-                                          child: Container(
-                                            width:
-                                                MediaQuery.of(
-                                                  context,
-                                                ).size.width *
-                                                0.6,
-                                            decoration: BoxDecoration(
-                                              color: Colors.red,
-                                              borderRadius:
-                                                  BorderRadius.circular(250),
-                                              border:
-                                                  moodController.isSelected &&
-                                                      _selectedMood == "Angry"
-                                                  ? Border.all(
-                                                      width: 10,
-                                                      color: Colors.grey,
-                                                    )
-                                                  : null,
-                                            ),
-                                            child: Center(
-                                              child: Image.asset(
-                                                'assets/images/Angry.png',
-                                                width: 150,
-                                                height: 150,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            _selectedMood = "Calm";
-                                            moodController.toggleMode();
-                                          },
-                                          child: Container(
-                                            width:
-                                                MediaQuery.of(
-                                                  context,
-                                                ).size.width *
-                                                0.6,
-                                            decoration: BoxDecoration(
-                                              color: Colors.green,
-                                              borderRadius:
-                                                  BorderRadius.circular(250),
-                                              border:
-                                                  moodController.isSelected &&
-                                                      _selectedMood == "Calm"
-                                                  ? Border.all(
-                                                      width: 10,
-                                                      color: Colors.grey,
-                                                    )
-                                                  : null,
-                                            ),
-                                            child: Center(
-                                              child: Image.asset(
-                                                'assets/images/Calm.webp',
-                                                width: 160,
-                                                height: 160,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 35),
-                                const Text('What\'s the reason?'),
-                                const SizedBox(height: 20),
-                                SizedBox(
-                                  height: 50,
-                                  width: MediaQuery.of(context).size.width,
-                                  //Horizontal list view for reason containers
-                                  //Each container has a gesture detector that sets the reason and highlights to selected reason
-                                  child: ListView(
-                                    scrollDirection: Axis.horizontal,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          _selectedReason = "Work";
-                                          reasonController.toggleMode();
-                                        },
-                                        child: Container(
-                                          height: 30,
-                                          width: 100,
-                                          decoration: BoxDecoration(
-                                            color: Colors.black,
-                                            borderRadius: BorderRadius.circular(
-                                              200,
-                                            ),
-                                            border:
-                                                reasonController.isSelected &&
-                                                    _selectedReason == "Work"
-                                                ? Border.all(
-                                                    width: 5,
-                                                    color: Colors.grey,
-                                                  )
-                                                : null,
-                                          ),
-                                          child: Center(
-                                            child: const Text(
-                                              'Work',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 20),
-                                      GestureDetector(
-                                        onTap: () {
-                                          _selectedReason = "School";
-                                          reasonController.toggleMode();
-                                        },
-                                        child: Container(
-                                          height: 30,
-                                          width: 100,
-                                          decoration: BoxDecoration(
-                                            color: Colors.black,
-                                            borderRadius: BorderRadius.circular(
-                                              200,
-                                            ),
-                                            border:
-                                                reasonController.isSelected &&
-                                                    _selectedReason == "School"
-                                                ? Border.all(
-                                                    width: 5,
-                                                    color: Colors.grey,
-                                                  )
-                                                : null,
-                                          ),
-                                          child: Center(
-                                            child: const Text(
-                                              'School',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 20),
-                                      GestureDetector(
-                                        onTap: () {
-                                          _selectedReason = "Friends";
-                                          reasonController.toggleMode();
-                                        },
-                                        child: Container(
-                                          height: 30,
-                                          width: 100,
-                                          decoration: BoxDecoration(
-                                            color: Colors.black,
-                                            borderRadius: BorderRadius.circular(
-                                              200,
-                                            ),
-                                            border:
-                                                reasonController.isSelected &&
-                                                    _selectedReason == "Friends"
-                                                ? Border.all(
-                                                    width: 5,
-                                                    color: Colors.grey,
-                                                  )
-                                                : null,
-                                          ),
-                                          child: Center(
-                                            child: const Text(
-                                              'Friends',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 20),
-                                      GestureDetector(
-                                        onTap: () {
-                                          _selectedReason = "Family";
-                                          reasonController.toggleMode();
-                                        },
-                                        child: Container(
-                                          height: 30,
-                                          width: 100,
-                                          decoration: BoxDecoration(
-                                            color: Colors.black,
-                                            borderRadius: BorderRadius.circular(
-                                              200,
-                                            ),
-                                            border:
-                                                reasonController.isSelected &&
-                                                    _selectedReason == "Family"
-                                                ? Border.all(
-                                                    width: 5,
-                                                    color: Colors.grey,
-                                                  )
-                                                : null,
-                                          ),
-                                          child: Center(
-                                            child: const Text(
-                                              'Family',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 20),
-                                      GestureDetector(
-                                        onTap: () {
-                                          _selectedReason = "Hobby";
-                                          reasonController.toggleMode();
-                                        },
-                                        child: Container(
-                                          height: 30,
-                                          width: 100,
-                                          decoration: BoxDecoration(
-                                            color: Colors.black,
-                                            borderRadius: BorderRadius.circular(
-                                              200,
-                                            ),
-                                            border:
-                                                reasonController.isSelected &&
-                                                    _selectedReason == "Hobby"
-                                                ? Border.all(
-                                                    width: 5,
-                                                    color: Colors.grey,
-                                                  )
-                                                : null,
-                                          ),
-                                          child: Center(
-                                            child: const Text(
-                                              'Hobby',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(width: 20),
-                                      GestureDetector(
-                                        onTap: () {
-                                          _selectedReason = "Health";
-                                          reasonController.toggleMode();
-                                        },
-                                        child: Container(
-                                          height: 30,
-                                          width: 100,
-                                          decoration: BoxDecoration(
-                                            color: Colors.black,
-                                            borderRadius: BorderRadius.circular(
-                                              200,
-                                            ),
-                                            border:
-                                                reasonController.isSelected &&
-                                                    _selectedReason == "Health"
-                                                ? Border.all(
-                                                    width: 5,
-                                                    color: Colors.grey,
-                                                  )
-                                                : null,
-                                          ),
-                                          child: Center(
-                                            child: const Text(
-                                              'Health',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(width: 20),
-                                      GestureDetector(
-                                        onTap: () {
-                                          _selectedReason = "Relationship";
-                                          reasonController.toggleMode();
-                                        },
-                                        child: Container(
-                                          height: 30,
-                                          width: 100,
-                                          decoration: BoxDecoration(
-                                            color: Colors.black,
-                                            borderRadius: BorderRadius.circular(
-                                              200,
-                                            ),
-                                            border:
-                                                reasonController.isSelected &&
-                                                    _selectedReason ==
-                                                        "Relationship"
-                                                ? Border.all(
-                                                    width: 5,
-                                                    color: Colors.grey,
-                                                  )
-                                                : null,
-                                          ),
-                                          child: Center(
-                                            child: const Text(
-                                              'Relationship',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(width: 20),
-                                      GestureDetector(
-                                        onTap: () {
-                                          _selectedReason = "Money";
-                                          reasonController.toggleMode();
-                                        },
-                                        child: Container(
-                                          height: 30,
-                                          width: 100,
-                                          decoration: BoxDecoration(
-                                            color: Colors.black,
-                                            borderRadius: BorderRadius.circular(
-                                              200,
-                                            ),
-                                            border:
-                                                reasonController.isSelected &&
-                                                    _selectedReason == "Money"
-                                                ? Border.all(
-                                                    width: 5,
-                                                    color: Colors.grey,
-                                                  )
-                                                : null,
-                                          ),
-                                          child: Center(
-                                            child: const Text(
-                                              'Money',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(width: 5),
-                                    ],
+            // Consumer<CountProvider>(
+            //   builder: (context, value, child) =>
+            BlocBuilder<HomeCubit, int>(
+              builder: (context, state) => SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text(
+                            'How Are You Feeling Today?',
+                            style: TextStyle(
+                              fontSize: 50,
+                              fontWeight: FontWeight.bold,
+                              wordSpacing: 5,
+                            ),
+                          )
+                          .animate()
+                          .fade(duration: Duration(seconds: 3))
+                          .scale(), //Scaling animation for home message on app launch
+                      const SizedBox(height: 10),
+                      Wrap(
+                        children: [
+                          //Carousel slider for mood containers
+                          //Each container has a gesture detector to set mood and highlight mood when selected
+                          CarouselSlider(
+                            options: CarouselOptions(height: 250.0),
+                            items: [
+                              GestureDetector(
+                                onTap: () {
+                                  _selectedMood = "Happy";
+                                  moodController.toggleMode();
+                                },
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.6,
+                                  decoration: BoxDecoration(
+                                    color: Colors.amber,
+                                    borderRadius: BorderRadius.circular(250),
+                                    border:
+                                        moodController.isSelected &&
+                                            _selectedMood == "Happy"
+                                        ? Border.all(
+                                            width: 10,
+                                            color: Colors.grey,
+                                          )
+                                        : null,
                                   ),
-                                ),
-                                const SizedBox(height: 30),
-                                const Text('Wanna write about it?'),
-                                const SizedBox(height: 20),
-                                //,Mood description text field
-                                TextField(
-                                  controller: _descriptionController,
-                                  keyboardType: TextInputType.text,
-                                  decoration: InputDecoration(
-                                    hintText: 'Describe how you feel...',
-                                    hintStyle: TextStyle(fontSize: 16),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      borderSide: BorderSide(
-                                        width: 0,
-                                        style: BorderStyle.none,
-                                      ),
-                                    ),
-                                    filled: true,
-                                    contentPadding: EdgeInsets.all(16),
-                                    fillColor: Colors.grey[450],
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                //Add to calendar button that displays a dialog to select time of day and save button submit mood entry
-                                GestureDetector(
-                                  onTap: () {
-                                    showMyDialog();
-                                    //Mood Cubit function call
-                                    context.read<MoodCubit>().update();
-                                  },
-                                  child: Container(
-                                    height: 30,
-                                    width: 150,
-                                    decoration: BoxDecoration(
-                                      color: Colors.blueGrey,
-                                      borderRadius: BorderRadius.circular(50),
-                                    ),
-                                    child: Center(
-                                      child: const Text(
-                                        'Add to calendar',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
+                                  child: Center(
+                                    child: Image.asset(
+                                      'assets/images/Happy.webp',
+                                      width: 170,
+                                      height: 170,
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 30),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 50,
-                                    right: 50,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  _selectedMood = "Sad";
+                                  moodController.toggleMode();
+                                },
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.6,
+                                  decoration: BoxDecoration(
+                                    color: Colors.lightBlueAccent,
+                                    borderRadius: BorderRadius.circular(250),
+                                    border:
+                                        moodController.isSelected &&
+                                            _selectedMood == "Sad"
+                                        ? Border.all(
+                                            width: 10,
+                                            color: Colors.grey,
+                                          )
+                                        : null,
                                   ),
-                                  child: const Divider(
-                                    color: Color.fromARGB(255, 7, 7, 7),
+                                  child: Center(
+                                    child: Image.asset(
+                                      'assets/images/Sad.webp',
+                                      width: 170,
+                                      height: 170,
+                                    ),
                                   ),
                                 ),
-                                //Bottom stats and notifications nav image button with notification count
-                                Stack(
-                                  clipBehavior: Clip.none,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        //Navigate to stats and notifications
-                                        //Pass moods and notification parameters
-                                        Map<String, dynamic> data = {
-                                          'moodEntries': _moods,
-                                          'notifications': notifications,
-                                        };
-                                        context.push(
-                                          '/stats_notis',
-                                          extra: data,
-                                        );
-                                      },
-                                      child: Image.asset(
-                                        'assets/images/Moods.webp',
-                                        height: 50,
-                                        width: 50,
-                                      ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  _selectedMood = "Angry";
+                                  moodController.toggleMode();
+                                },
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.6,
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(250),
+                                    border:
+                                        moodController.isSelected &&
+                                            _selectedMood == "Angry"
+                                        ? Border.all(
+                                            width: 10,
+                                            color: Colors.grey,
+                                          )
+                                        : null,
+                                  ),
+                                  child: Center(
+                                    child: Image.asset(
+                                      'assets/images/Angry.png',
+                                      width: 150,
+                                      height: 150,
                                     ),
-                                    Positioned(
-                                      top: 35,
-                                      left: 30,
-                                      child: Container(
-                                        height: 15,
-                                        width: 15,
-                                        decoration: BoxDecoration(
-                                          color: Colors.red,
-                                          borderRadius: BorderRadius.circular(
-                                            100,
-                                          ),
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            '${notifications.length}',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 10,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ],
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  _selectedMood = "Calm";
+                                  moodController.toggleMode();
+                                },
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.6,
+                                  decoration: BoxDecoration(
+                                    color: Colors.green,
+                                    borderRadius: BorderRadius.circular(250),
+                                    border:
+                                        moodController.isSelected &&
+                                            _selectedMood == "Calm"
+                                        ? Border.all(
+                                            width: 10,
+                                            color: Colors.grey,
+                                          )
+                                        : null,
+                                  ),
+                                  child: Center(
+                                    child: Image.asset(
+                                      'assets/images/Calm.webp',
+                                      width: 160,
+                                      height: 160,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 35),
+                      const Text('What\'s the reason?'),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        height: 50,
+                        width: MediaQuery.of(context).size.width,
+                        //Horizontal list view for reason containers
+                        //Each container has a gesture detector that sets the reason and highlights to selected reason
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                _selectedReason = "Work";
+                                reasonController.toggleMode();
+                              },
+                              child: Container(
+                                height: 30,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(200),
+                                  border:
+                                      reasonController.isSelected &&
+                                          _selectedReason == "Work"
+                                      ? Border.all(width: 5, color: Colors.grey)
+                                      : null,
+                                ),
+                                child: Center(
+                                  child: const Text(
+                                    'Work',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            GestureDetector(
+                              onTap: () {
+                                _selectedReason = "School";
+                                reasonController.toggleMode();
+                              },
+                              child: Container(
+                                height: 30,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(200),
+                                  border:
+                                      reasonController.isSelected &&
+                                          _selectedReason == "School"
+                                      ? Border.all(width: 5, color: Colors.grey)
+                                      : null,
+                                ),
+                                child: Center(
+                                  child: const Text(
+                                    'School',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            GestureDetector(
+                              onTap: () {
+                                _selectedReason = "Friends";
+                                reasonController.toggleMode();
+                              },
+                              child: Container(
+                                height: 30,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(200),
+                                  border:
+                                      reasonController.isSelected &&
+                                          _selectedReason == "Friends"
+                                      ? Border.all(width: 5, color: Colors.grey)
+                                      : null,
+                                ),
+                                child: Center(
+                                  child: const Text(
+                                    'Friends',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            GestureDetector(
+                              onTap: () {
+                                _selectedReason = "Family";
+                                reasonController.toggleMode();
+                              },
+                              child: Container(
+                                height: 30,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(200),
+                                  border:
+                                      reasonController.isSelected &&
+                                          _selectedReason == "Family"
+                                      ? Border.all(width: 5, color: Colors.grey)
+                                      : null,
+                                ),
+                                child: Center(
+                                  child: const Text(
+                                    'Family',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            GestureDetector(
+                              onTap: () {
+                                _selectedReason = "Hobby";
+                                reasonController.toggleMode();
+                              },
+                              child: Container(
+                                height: 30,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(200),
+                                  border:
+                                      reasonController.isSelected &&
+                                          _selectedReason == "Hobby"
+                                      ? Border.all(width: 5, color: Colors.grey)
+                                      : null,
+                                ),
+                                child: Center(
+                                  child: const Text(
+                                    'Hobby',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 20),
+                            GestureDetector(
+                              onTap: () {
+                                _selectedReason = "Health";
+                                reasonController.toggleMode();
+                              },
+                              child: Container(
+                                height: 30,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(200),
+                                  border:
+                                      reasonController.isSelected &&
+                                          _selectedReason == "Health"
+                                      ? Border.all(width: 5, color: Colors.grey)
+                                      : null,
+                                ),
+                                child: Center(
+                                  child: const Text(
+                                    'Health',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 20),
+                            GestureDetector(
+                              onTap: () {
+                                _selectedReason = "Relationship";
+                                reasonController.toggleMode();
+                              },
+                              child: Container(
+                                height: 30,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(200),
+                                  border:
+                                      reasonController.isSelected &&
+                                          _selectedReason == "Relationship"
+                                      ? Border.all(width: 5, color: Colors.grey)
+                                      : null,
+                                ),
+                                child: Center(
+                                  child: const Text(
+                                    'Relationship',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 20),
+                            GestureDetector(
+                              onTap: () {
+                                _selectedReason = "Money";
+                                reasonController.toggleMode();
+                              },
+                              child: Container(
+                                height: 30,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(200),
+                                  border:
+                                      reasonController.isSelected &&
+                                          _selectedReason == "Money"
+                                      ? Border.all(width: 5, color: Colors.grey)
+                                      : null,
+                                ),
+                                child: Center(
+                                  child: const Text(
+                                    'Money',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 5),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      const Text('Wanna write about it?'),
+                      const SizedBox(height: 20),
+                      //,Mood description text field
+                      TextField(
+                        controller: _descriptionController,
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                          hintText: 'Describe how you feel...',
+                          hintStyle: TextStyle(fontSize: 16),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(
+                              width: 0,
+                              style: BorderStyle.none,
                             ),
                           ),
-                        )
-                        .animate()
-                        .fadeIn(duration: 200.ms)
-                        .slideY(
-                          begin: 0.2,
-                          duration: 1000.ms,
-                          curve: Curves.easeOut,
-                        ), //Bottom fade in animation
-              ),
+                          filled: true,
+                          contentPadding: EdgeInsets.all(16),
+                          fillColor: Colors.grey[450],
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      //Add to calendar button that displays a dialog to select time of day and save button submit mood entry
+                      GestureDetector(
+                        onTap: () {
+                          showMyDialog();
+                        },
+                        child: Container(
+                          height: 30,
+                          width: 150,
+                          decoration: BoxDecoration(
+                            color: Colors.blueGrey,
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Center(
+                            child: const Text(
+                              'Add to calendar',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 50, right: 50),
+                        child: const Divider(
+                          color: Color.fromARGB(255, 7, 7, 7),
+                        ),
+                      ),
+                      //Bottom stats and notifications nav image button with notification count
+                      Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              //Navigate to stats and notifications
+                              //Pass moods and notification parameters
+                              Map<String, dynamic> data = {
+                                'moodEntries': _moods,
+                                'notifications': notifications,
+                              };
+                              context.push('/stats_notis', extra: data);
+                            },
+                            child: Image.asset(
+                              'assets/images/Moods.webp',
+                              height: 50,
+                              width: 50,
+                            ),
+                          ),
+                          Positioned(
+                            top: 35,
+                            left: 30,
+                            child: Container(
+                              height: 15,
+                              width: 15,
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '${notifications.length}',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ).animate().fadeIn(duration: 200.ms).slideY(begin: 0.2, duration: 1000.ms, curve: Curves.easeOut),
+            ), //Bottom fade in animation
+    );
+    //);
+  }
+
+  //Dialog for mood entry time of day radio button selection
+  Future<void> showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Center(child: const Text('Enter Time of Day')),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(left: 50, right: 50),
+                  child: Divider(color: Colors.black),
+                ),
+                SizedBox(height: 10),
+                StatefulBuilder(
+                  builder: (context, setState) => Column(
+                    children: [
+                      ListTile(
+                        title: const Text('Morning'),
+                        leading: Radio<int>(
+                          value: 1,
+                          groupValue: _selectedTime,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedTime = value;
+                            });
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        title: const Text('Afternoon'),
+                        leading: Radio<int>(
+                          value: 2,
+                          groupValue: _selectedTime,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedTime = value;
+                            });
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        title: const Text('Night'),
+                        leading: Radio<int>(
+                          value: 3,
+                          groupValue: _selectedTime,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedTime = value;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-      ),
+          ),
+          actions: <Widget>[
+            //Save button for submitting mood entry
+            TextButton(
+              child: const Text('Save'),
+              onPressed: () {
+                //Function for handling submission
+                _onSave();
+                
+                //If statement to log data, and display success snackbar when mood entry submission is successful
+                if (_selectedMood != null &&
+                    _selectedReason != null &&
+                    _descriptionController.text.isNotEmpty &&
+                    _selectedTime != null) {
+                  context.read<HomeCubit>().updateCount(notifications.length);
+                  log('Selected mood: $_selectedMood');
+                  log('Selected reason: $_selectedReason');
+                  log('Description: ${_descriptionController.text}');
+                  log('Selected time: $_selectedTime');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Mood added to calendar')),
+                  );
+
+                  //If statements to set and display notifications based on time of day selected
+                  if (_selectedTime == 1) {
+                    NotiService().initNotification().then((_) {
+                      Future.delayed(const Duration(seconds: 5), () {
+                        NotiService().showNotification(
+                          title: "Reminder",
+                          body: "Remember to track your mood in the afternoon.",
+                        );
+                      });
+                    });
+                    notifications.add(
+                      "Remember to track your mood in the afternoon.",
+                    );
+                  }
+                  if (_selectedTime == 2) {
+                    NotiService().initNotification().then((_) {
+                      Future.delayed(const Duration(seconds: 5), () {
+                        NotiService().showNotification(
+                          title: "Reminder",
+                          body: "Remember to track your mood tonight.",
+                        );
+                      });
+                    });
+                    notifications.add("Remember to track your mood tonight.");
+                  }
+                  if (_selectedTime == 3) {
+                    NotiService().initNotification().then((_) {
+                      Future.delayed(const Duration(seconds: 5), () {
+                        NotiService().showNotification(
+                          title: "Reminder",
+                          body: "Remember to track your mood in the morning.",
+                        );
+                      });
+                    });
+                    notifications.add(
+                      "Remember to track your mood in the morning.",
+                    );
+                  }
+
+                  //Clear description text field
+                  _descriptionController.clear();
+
+                  //Pop out of dialog
+                  Navigator.of(context).pop();
+                }
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

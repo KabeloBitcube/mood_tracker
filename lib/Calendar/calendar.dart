@@ -147,7 +147,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               child: Column(
                                 children: [
                                   Text(
-                                    'Update $time Mood',
+                                    'Update Mood',
                                     style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold,
@@ -181,10 +181,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                           descriptionController
                                               .text
                                               .isNotEmpty) {
-                                          mood.reason = reasonController.text;
-                                          mood.description =
-                                              descriptionController.text;
-                                        context.read<CalendarCubit>().update(mood);
+                                        mood.reason = reasonController.text;
+                                        mood.description =
+                                            descriptionController.text;
+                                        //Update mood entry
+                                        context.read<CalendarCubit>().update(
+                                          mood,
+                                        );
                                         Navigator.of(context).pop();
                                         ScaffoldMessenger.of(
                                           context,
@@ -219,24 +222,26 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           },
                           child: Slidable(
                             startActionPane: ActionPane(
-                              motion: BehindMotion(), 
+                              motion: BehindMotion(),
                               children: [
-                                SizedBox(height: 5,),
+                                SizedBox(height: 5),
                                 SlidableAction(
                                   borderRadius: BorderRadius.circular(5),
                                   backgroundColor: modeController.isDarkMode
-                                            ? Colors.black12
-                                            : Colors.white,
-                                  onPressed: ((context){
+                                      ? Colors.black12
+                                      : Colors.white,
+                                  onPressed: ((context) {
                                     //Delete mood entry
                                     _selectedMoods.removeAt(index);
                                     context.read<CalendarCubit>().delete(mood);
-                                    log('Mood entry lenth: ${_selectedMoods.length}');
+                                    log(
+                                      'Mood entry lenth: ${_selectedMoods.length}',
+                                    );
                                   }),
                                   icon: Icons.delete,
                                 ),
-                              ]
-                              ),
+                              ],
+                            ),
                             child: Card(
                               color: getCardColor(mood.mood),
                               margin: EdgeInsets.all(8),

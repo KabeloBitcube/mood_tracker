@@ -274,21 +274,24 @@ class _StatsNotisState extends State<StatsNotis> {
                                 //Display message if there are no notifications
                                 SizedBox(
                                   height: 100,
-                                  width: 350,
+                                  width: 500,
                                   child: widget.notifications.isEmpty
-                                      ? Center(
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                              left: 15,
-                                            ),
-                                            child: const Text(
-                                              'No notifications at the moment.',
-                                              style: TextStyle(
-                                                fontStyle: FontStyle.italic,
-                                                fontSize: 12,
+                                      ? Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                
+                                              ),
+                                              child: const Text(
+                                                'No notifications at the moment.',
+                                                style: TextStyle(
+                                                  fontStyle: FontStyle.italic,
+                                                  fontSize: 12,
+                                                ),
                                               ),
                                             ),
-                                          ),
+                                          ],
                                         )
                                       : ListView.builder(
                                           itemCount: widget.notifications.length,

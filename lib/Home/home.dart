@@ -645,48 +645,51 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: const Divider(color: Color.fromARGB(255, 7, 7, 7)),
               ),
               //Bottom stats and notifications nav image button with notification count
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      //Navigate to stats and notifications
-                      //Pass moods and notification parameters
-                      Map<String, dynamic> data = {
-                        'moodEntries': _moods,
-                        'notifications': notifications,
-                      };
-                      context.push('/stats_notis', extra: data);
-                    },
-                    child: Image.asset(
-                      'assets/images/Moods.webp',
-                      height: 50,
-                      width: 50,
-                    ),
-                  ),
-                  Positioned(
-                    top: 35,
-                    left: 30,
-                    child: Container(
-                      height: 15,
-                      width: 15,
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(100),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        //Navigate to stats and notifications
+                        //Pass moods and notification parameters
+                        Map<String, dynamic> data = {
+                          'moodEntries': _moods,
+                          'notifications': notifications,
+                        };
+                        context.push('/stats_notis', extra: data);
+                      },
+                      child: Image.asset(
+                        'assets/images/Moods.webp',
+                        height: 50,
+                        width: 50,
                       ),
-                      child: Center(
-                        child: Text(
-                          '${notifications.length}',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 10,
+                    ),
+                    Positioned(
+                      top: 35,
+                      left: 30,
+                      child: Container(
+                        height: 15,
+                        width: 15,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: Center(
+                          child: Text(
+                            '${notifications.length}',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 10,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),

@@ -16,4 +16,8 @@ class CalendarCubit extends Cubit<MoodEntry> {
   void update (MoodEntry entry) {
     emit(entry);
   }
+
+  void delete (MoodEntry entry){
+    emit(entry);
+  }
 }

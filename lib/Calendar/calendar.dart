@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mood_tracker/Bloc/Calendar/calendar_cubit.dart';
 import 'package:mood_tracker/Provider/Mode/mode.dart';
 import 'package:mood_tracker/Mood_model/moodentry.dart';
@@ -216,44 +217,65 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           onTap: () {
                             sheet();
                           },
-                          child: Card(
-                            color: getCardColor(mood.mood),
-                            margin: EdgeInsets.all(8),
-                            child: ListTile(
-                              title: Text(
-                                time,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: modeController.isDarkMode
-                                      ? Colors.white
-                                      : Colors.black,
+                          child: Slidable(
+                            startActionPane: ActionPane(
+                              motion: BehindMotion(), 
+                              children: [
+                                SizedBox(height: 5,),
+                                SlidableAction(
+                                  borderRadius: BorderRadius.circular(5),
+                                  backgroundColor: modeController.isDarkMode
+                                            ? Colors.black12
+                                            : Colors.white,
+                                  onPressed: ((context){
+                                    //Delete mood entry
+                                    _selectedMoods.removeAt(index);
+                                    context.read<CalendarCubit>().delete(mood);
+                                    log('Mood entry lenth: ${_selectedMoods.length}');
+                                  }),
+                                  icon: Icons.delete,
                                 ),
+                              ]
                               ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    mood.reason,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: modeController.isDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
-                                    ),
+                            child: Card(
+                              color: getCardColor(mood.mood),
+                              margin: EdgeInsets.all(8),
+                              child: ListTile(
+                                title: Text(
+                                  time,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    color: modeController.isDarkMode
+                                        ? Colors.white
+                                        : Colors.black,
                                   ),
-                                  Text(
-                                    mood.description,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: modeController.isDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      mood.reason,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: modeController.isDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                    Text(
+                                      mood.description,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: modeController.isDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                trailing: Image.asset(getMoodImage(mood.mood)),
                               ),
-                              trailing: Image.asset(getMoodImage(mood.mood)),
                             ),
                           ),
                         );

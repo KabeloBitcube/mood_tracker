@@ -144,69 +144,74 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             context: context,
                             builder: (context) => Padding(
                               padding: EdgeInsets.all(20),
-                              child: Column(
+                              child: ListView(
+                                scrollDirection: Axis.vertical,
                                 children: [
-                                  Text(
-                                    'Update Mood',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(height: 50),
-                                  SizedBox(height: 30),
-                                  TextField(
-                                    controller: reasonController,
-                                    decoration: InputDecoration(
-                                      labelText: 'Reason',
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
+                                  Column(
+                                    children: [
+                                      Text(
+                                        'Update Mood',
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 50),
-                                  TextField(
-                                    controller: descriptionController,
-                                    decoration: InputDecoration(
-                                      labelText: 'Description',
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 100),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      if (reasonController.text.isNotEmpty &&
-                                          descriptionController
-                                              .text
-                                              .isNotEmpty) {
-                                        mood.reason = reasonController.text;
-                                        mood.description =
-                                            descriptionController.text;
-                                        //Update mood entry
-                                        context.read<CalendarCubit>().update(
-                                          mood,
-                                        );
-                                        Navigator.of(context).pop();
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              'Mood updated successfully',
-                                            ),
+                                      SizedBox(height: 50),
+                                      SizedBox(height: 30),
+                                      TextField(
+                                        controller: reasonController,
+                                        decoration: InputDecoration(
+                                          labelText: 'Reason',
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(10),
                                           ),
-                                        );
-                                      }
-                                      log(
-                                        'Reason controller text: ${reasonController.text}',
-                                      );
-                                      log(
-                                        'Description controller text: ${descriptionController.text}',
-                                      );
-                                    },
-                                    child: Text('Save'),
+                                        ),
+                                      ),
+                                      SizedBox(height: 50),
+                                      TextField(
+                                        controller: descriptionController,
+                                        decoration: InputDecoration(
+                                          labelText: 'Description',
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 100),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          if (reasonController.text.isNotEmpty &&
+                                              descriptionController
+                                                  .text
+                                                  .isNotEmpty) {
+                                            mood.reason = reasonController.text;
+                                            mood.description =
+                                                descriptionController.text;
+                                            //Update mood entry
+                                            context.read<CalendarCubit>().update(
+                                              mood,
+                                            );
+                                            Navigator.of(context).pop();
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  'Mood updated successfully',
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                          log(
+                                            'Reason controller text: ${reasonController.text}',
+                                          );
+                                          log(
+                                            'Description controller text: ${descriptionController.text}',
+                                          );
+                                        },
+                                        child: Text('Save'),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),

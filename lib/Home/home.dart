@@ -3,11 +3,9 @@ import 'dart:developer';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:mood_tracker/Bloc/Home/home_cubit.dart';
-import 'package:mood_tracker/Calendar/calendar.dart';
 import 'package:mood_tracker/Mood_model/moodentry.dart';
 import 'package:mood_tracker/Provider/Mode/mode.dart';
 import 'package:mood_tracker/Provider/Mood/mood_border.dart';
@@ -57,13 +55,15 @@ class _HomeScreenState extends State<HomeScreen> {
       date: DateTime.now(),
     );
 
+   
+
 
     context.read<HomeCubit>().addMood(moodEntry);
 
     //Adding user mood entry to _moods list
-    // setState(() {
-    //   _moods.add(moodEntry);
-    // });
+    setState(() {
+      _moods.add(moodEntry);
+    });
 
 
     // context.read<HomeCubit>().add(moodEntry);

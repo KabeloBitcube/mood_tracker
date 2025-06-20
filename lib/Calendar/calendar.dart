@@ -5,7 +5,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mood_tracker/Bloc/Calendar/calendar_cubit.dart';
-import 'package:mood_tracker/Bloc/Home/home_cubit.dart';
 import 'package:mood_tracker/Provider/Mode/mode.dart';
 import 'package:mood_tracker/Mood_model/moodentry.dart';
 import 'package:provider/provider.dart';
@@ -34,8 +33,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
   void initState() {
     super.initState();
     _selectedDay = _focusedDay; //Set focused day as the day selected
-    final moods = context.read<HomeCubit>().state;
-    context.read<CalendarCubit>().setMoods(moods);
+    // final moods = context.read<HomeCubit>().state;
+    // context.read<CalendarCubit>().setMoods(moods);
     _updateMoodsForSelectedDay(
       _focusedDay,
     ); //Call function to display mood entries on the selected day
@@ -64,6 +63,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       body: BlocBuilder<CalendarCubit, List<MoodEntry>>(
         builder: (context, state) {
           _selectedMoods = state.where((moods) => isSameDay(moods.date, _selectedDay)).toList();
+          context.read<CalendarCubit>().setMoods(state);
           return SingleChildScrollView(
             child: Column(
               children: [
@@ -210,9 +210,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                                       descriptionController
                                                           .text;
                                                   //Update mood entry
-                                                  // context
-                                                  //     .read<CalendarCubit>()
-                                                  //     .update(mood);
+                                                  context
+                                                      .read<CalendarCubit>()
+                                                      .updateMood(mood);
+                                                      context.read<CalendarCubit>().setMoods(state);
                                                   Navigator.of(context).pop();
                                                   ScaffoldMessenger.of(
                                                     context,

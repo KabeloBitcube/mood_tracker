@@ -12,7 +12,7 @@ class CalendarCubit extends HydratedCubit<List<MoodEntry>> {
     final updatedList = state.map((mood) {
       return mood;
     }).toList();
-
+    setMoods(updatedList);
     emit(updatedList);
   }
 

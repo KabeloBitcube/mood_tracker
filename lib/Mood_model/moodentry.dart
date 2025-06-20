@@ -38,7 +38,7 @@ class MoodEntry {
     );
   }
 
-  // String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMap());
 
-  // factory MoodEntry.fromJson(String source) => MoodEntry.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory MoodEntry.fromJson(String source) => MoodEntry.fromMap(json.decode(source) as Map<String, dynamic>);
 }

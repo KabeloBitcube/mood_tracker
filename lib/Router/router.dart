@@ -16,8 +16,9 @@ final router = GoRouter(
     GoRoute(
       path: '/calendar',
       builder: (context, state) {
-        Map<String, dynamic> data = state.extra as Map<String, dynamic>;
-        return CalendarScreen(moodEntries: data['moodEntries']);
+        // Map<String, dynamic> data = state.extra as Map<String, dynamic>;
+        return CalendarScreen();
+        // return CalendarScreen(moodEntries: data['moodEntries']);
       },
     ),
     GoRoute(

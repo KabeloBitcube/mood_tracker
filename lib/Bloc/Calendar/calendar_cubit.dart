@@ -1,23 +1,29 @@
-import 'package:bloc/bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:mood_tracker/Mood_model/moodentry.dart';
 
-class CalendarCubit extends Cubit<MoodEntry> {
-  CalendarCubit()
-    : super(
-        MoodEntry(
-          mood: '',
-          reason: '',
-          description: '',
-          timeOfDay: 0,
-          date: DateTime.now(),
-        ),
-      );
+class CalendarCubit extends HydratedCubit<List<MoodEntry>> {
+  CalendarCubit() : super([]);
 
-  void update (MoodEntry entry) {
-    emit(entry);
+  void setMoods(List<MoodEntry> moods){
+    emit(moods);
   }
 
-  void delete (MoodEntry entry){
-    emit(entry);
+  void updateMood (MoodEntry mood){
+    final updatedList = state.map((mood) {
+      return mood;
+    }).toList();
+
+    emit(updatedList);
+  }
+
+  @override
+  List<MoodEntry> fromJson(Map<String, dynamic> json) {
+    final list = json['moods'] as List<dynamic>;
+    return list.map((item) => MoodEntry.fromMap(item)).toList();
+  }
+
+  @override
+  Map<String, dynamic>? toJson(List<MoodEntry> state) {
+    return {'moods': state.map((m) => m.toMap()).toList()};
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mood_tracker/Bloc/Calendar/calendar_cubit.dart';
+import 'package:mood_tracker/Bloc/Home/home_cubit.dart';
 import 'package:mood_tracker/Provider/Mode/mode.dart';
 import 'package:mood_tracker/Mood_model/moodentry.dart';
 import 'package:provider/provider.dart';
@@ -12,9 +13,9 @@ import 'package:table_calendar/table_calendar.dart';
 
 class CalendarScreen extends StatefulWidget {
   //Mood Entries list to pass to the calendar screen
-  final List<MoodEntry> moodEntries;
+  // final List<MoodEntry> moodEntries;
 
-  const CalendarScreen({super.key, required this.moodEntries});
+  const CalendarScreen({super.key});
 
   @override
   State<CalendarScreen> createState() => _CalendarScreenState();
@@ -26,13 +27,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
   List<MoodEntry> _selectedMoods =
       []; //List to display moods on the selected day
 
-  late TextEditingController reasonController;
-  late TextEditingController descriptionController;
+  TextEditingController reasonController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _selectedDay = _focusedDay; //Set focused day as the day selected
+    final moods = context.read<HomeCubit>().state;
+    context.read<CalendarCubit>().setMoods(moods);
     _updateMoodsForSelectedDay(
       _focusedDay,
     ); //Call function to display mood entries on the selected day
@@ -40,64 +43,70 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   //Function to display mood entries on the selected day
   void _updateMoodsForSelectedDay(DateTime day) {
-    final dateOnly = DateTime(day.year, day.month, day.day);
+    // final dateOnly = DateTime(day.year, day.month, day.day);
 
-    _selectedMoods = widget.moodEntries
-        .where(
-          (entry) =>
-              entry.date.year == dateOnly.year &&
-              entry.date.month == dateOnly.month &&
-              entry.date.day == dateOnly.day,
-        )
-        .toList();
+    // _selectedMoods = widget.moodEntries
+    //     .where(
+    //       (entry) =>
+    //           entry.date.year.toString() == dateOnly.year.toString() &&
+    //           entry.date.month.toString() == dateOnly.month.toString() &&
+    //           entry.date.day.toString() == dateOnly.day.toString(),
+    //     )
+    //     .toList();
+
+    //     log('Date format: ${dateOnly.year.toString()} | ${dateOnly.month.toString()} | ${dateOnly.day.toString()} ');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: BlocBuilder<CalendarCubit, MoodEntry>(
-        builder: (context, state) => SingleChildScrollView(
-          child: Column(
-            children: [
-              //Calendar
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20),
-                child: TableCalendar(
-                  firstDay: DateTime.utc(2010, 10, 16),
-                  lastDay: DateTime.utc(2030, 3, 14),
-                  focusedDay: _focusedDay,
-                  selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                  onDaySelected: (selectedDay, focusedDay) {
-                    setState(() {
-                      _selectedDay = selectedDay;
-                      _focusedDay = focusedDay;
-                    });
-                    _updateMoodsForSelectedDay(selectedDay);
-                  },
-                  headerStyle: HeaderStyle(
-                    titleCentered: true,
-                    formatButtonVisible: false,
+      body: BlocBuilder<CalendarCubit, List<MoodEntry>>(
+        builder: (context, state) {
+          _selectedMoods = state.where((moods) => isSameDay(moods.date, _selectedDay)).toList();
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                //Calendar
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: TableCalendar(
+                    firstDay: DateTime.utc(2010, 10, 16),
+                    lastDay: DateTime.utc(2030, 3, 14),
+                    focusedDay: _focusedDay,
+                    selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                    onDaySelected: (selectedDay, focusedDay) {
+                      setState(() {
+                        _selectedDay = selectedDay;
+                        _focusedDay = focusedDay;
+                      });
+                      // _updateMoodsForSelectedDay(selectedDay);
+                    },
+                    headerStyle: HeaderStyle(
+                      titleCentered: true,
+                      formatButtonVisible: false,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              //Display mood entries or show a message if there are no mood entries on the selected day
-              _selectedMoods.isEmpty
+                const SizedBox(height: 20),
+                //Display mood entries or show a message if there are no mood entries on the selected day
+                _selectedMoods.isEmpty
                     ? Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: Center(child: const Text('No mood entries for this day.')),
-                    )
-                    : SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.5,
-                      child: Padding(
                         padding: const EdgeInsets.only(bottom: 20),
-                        child: ListView.builder(
+                        child: Center(
+                          child: const Text('No mood entries for this day.'),
+                        ),
+                      )
+                    : SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.5,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 20),
+                          child: ListView.builder(
                             itemCount: _selectedMoods.length,
                             itemBuilder: (context, index) {
                               final mood = _selectedMoods[index];
                               final String? time;
-                                  
+
                               //If statement to set time of day based on time of day value
                               if (mood.timeOfDay == 1) {
                                 time = "Morning";
@@ -106,7 +115,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               } else {
                                 time = "Night";
                               }
-                                  
+
                               //Color function to set card color based on mood parameter
                               Color getCardColor(String mood) {
                                 if (mood == "Sad") {
@@ -123,7 +132,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 }
                                 return Colors.grey;
                               }
-                                  
+
                               //String function to set card mood image based on mood parameter
                               String getMoodImage(String mood) {
                                 if (mood == "Sad") {
@@ -140,14 +149,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 }
                                 return 'assets/images/Happy.webp';
                               }
-                                  
+
                               final modeController = Provider.of<ModeController>(
                                 context,
                               ); //Mode provider controller that controls colors based on dark/light mode
-                                  
-                              reasonController = TextEditingController();
-                              descriptionController = TextEditingController();
-                                  
+
                               //Mood entry update sheet
                               void sheet() async {
                                 await showModalBottomSheet(
@@ -173,7 +179,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                               decoration: InputDecoration(
                                                 labelText: 'Reason',
                                                 border: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(10),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
                                                 ),
                                               ),
                                             ),
@@ -183,24 +190,29 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                               decoration: InputDecoration(
                                                 labelText: 'Description',
                                                 border: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(10),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
                                                 ),
                                               ),
                                             ),
                                             SizedBox(height: 100),
                                             ElevatedButton(
                                               onPressed: () {
-                                                if (reasonController.text.isNotEmpty &&
+                                                if (reasonController
+                                                        .text
+                                                        .isNotEmpty &&
                                                     descriptionController
                                                         .text
                                                         .isNotEmpty) {
-                                                  mood.reason = reasonController.text;
+                                                  mood.reason =
+                                                      reasonController.text;
                                                   mood.description =
-                                                      descriptionController.text;
+                                                      descriptionController
+                                                          .text;
                                                   //Update mood entry
-                                                  context.read<CalendarCubit>().update(
-                                                    mood,
-                                                  );
+                                                  // context
+                                                  //     .read<CalendarCubit>()
+                                                  //     .update(mood);
                                                   Navigator.of(context).pop();
                                                   ScaffoldMessenger.of(
                                                     context,
@@ -228,7 +240,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   ),
                                 );
                               }
-                                  
+
                               //Returns card with mood entry details
                               //Opens a modal sheet for each mood entry to be updated when clicked
                               return GestureDetector(
@@ -242,13 +254,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                       SizedBox(height: 5),
                                       SlidableAction(
                                         borderRadius: BorderRadius.circular(5),
-                                        backgroundColor: modeController.isDarkMode
+                                        backgroundColor:
+                                            modeController.isDarkMode
                                             ? Colors.black12
                                             : Colors.white,
                                         onPressed: ((context) {
                                           //Delete mood entry
-                                          _selectedMoods.removeAt(index);
-                                          context.read<CalendarCubit>().delete(mood);
+                                          // _selectedMoods.removeAt(index);
+                                          // context.read<CalendarCubit>().delete(
+                                          //   mood,
+                                          // );
                                           log(
                                             'Mood entry lenth: ${_selectedMoods.length}',
                                           );
@@ -272,7 +287,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                         ),
                                       ),
                                       subtitle: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             mood.reason,
@@ -294,18 +310,21 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                           ),
                                         ],
                                       ),
-                                      trailing: Image.asset(getMoodImage(mood.mood)),
+                                      trailing: Image.asset(
+                                        getMoodImage(mood.mood),
+                                      ),
                                     ),
                                   ),
                                 ),
                               );
                             },
                           ),
+                        ),
                       ),
-                    ),
-            ],
-          ).animate().fadeIn(duration: 200.ms).slideX(begin: 0.2, duration: 1000.ms, curve: Curves.easeOut),
-        ),
+              ],
+            ).animate().fadeIn(duration: 200.ms).slideX(begin: 0.2, duration: 1000.ms, curve: Curves.easeOut),
+          );
+        },
       ), //Right fade in effect
     );
   }

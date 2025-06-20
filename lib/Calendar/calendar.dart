@@ -33,12 +33,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
   void initState() {
     super.initState();
     _selectedDay = _focusedDay; //Set focused day as the day selected
-    // final moods = context.read<HomeCubit>().state;
-    // context.read<CalendarCubit>().setMoods(moods);
+    // initializeMoods();
     _updateMoodsForSelectedDay(
       _focusedDay,
     ); //Call function to display mood entries on the selected day
   }
+
+  // void initializeMoods() {
+  //   final moods = context.read<HomeCubit>().state;
+  //   context.read<CalendarCubit>().setMoods(moods);
+  // }
 
   //Function to display mood entries on the selected day
   void _updateMoodsForSelectedDay(DateTime day) {
@@ -62,6 +66,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       appBar: AppBar(),
       body: BlocBuilder<CalendarCubit, List<MoodEntry>>(
         builder: (context, state) {
+          context.read<CalendarCubit>().setMoods(state);
           _selectedMoods = state
               .where((moods) => isSameDay(moods.date, _selectedDay))
               .toList();

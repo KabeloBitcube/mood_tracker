@@ -51,9 +51,12 @@ class MyApp extends StatelessWidget {
     // Access the mode controller to determine the app's theme
     final modeController = Provider.of<ModeController>(context);
 
+    // Bloc providers initiliazation 
     return MultiBlocProvider(
       providers: [
+        // Handles mood state management 
         BlocProvider<MoodCubit>(create: (_) => MoodCubit()),
+        // Handles notifications state management
         BlocProvider<NotificationsCubit>(create: (_) => NotificationsCubit()),
       ],
       child: MaterialApp.router(

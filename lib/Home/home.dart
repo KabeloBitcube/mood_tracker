@@ -55,26 +55,23 @@ class _HomeScreenState extends State<HomeScreen> {
       date: DateTime.now(),
     );
 
-   
+    // Log new mood entry 
     log('New mood created: ${moodEntry.toJson()}');
 
+    // Read new mood entry using the home cubit
     context.read<MoodCubit>().addMood(moodEntry);
 
-    //Adding user mood entry to _moods list
+    //Adding user mood entry to _moods list to update notification count
     setState(() {
       _moods.add(moodEntry);
     });
-
-
-    // context.read<HomeCubit>().add(moodEntry);
-
-    //Passing updated _moods list to the calendar screen
-    // CalendarScreen(moodEntries: _moods);
   }
 
   //Notification list to store notifications
   List<String> notifications = [];
 
+
+  // Time of day selection dialog
   Future<void> showMyDialog() async {
     return showDialog<void>(
       context: context,
@@ -202,9 +199,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   //Pop out of dialog
                   Navigator.of(context).pop();
-
-                  // Map<String, dynamic> data = {'moodEntries': _moods};
-                  // context.push('/calendar', extra: data);
                 }
               },
             ),
@@ -615,7 +609,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 30),
                 const Text('Let\'s talk about it'),
                 const SizedBox(height: 20),
-                //,Mood description text field
+                // Mood description text field
                 TextField(
                   controller: _descriptionController,
                   keyboardType: TextInputType.text,

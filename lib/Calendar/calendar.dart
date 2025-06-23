@@ -11,9 +11,6 @@ import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarScreen extends StatefulWidget {
-  //Mood Entries list to pass to the calendar screen
-  // final List<MoodEntry> moodEntries;
-
   const CalendarScreen({super.key});
 
   @override
@@ -33,32 +30,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
   void initState() {
     super.initState();
     _selectedDay = _focusedDay; //Set focused day as the day selected
-    // initializeMoods();
-    _updateMoodsForSelectedDay(
-      _focusedDay,
-    ); //Call function to display mood entries on the selected day
+  
   }
 
-  // void initializeMoods() {
-  //   final moods = context.read<HomeCubit>().state;
-  //   context.read<CalendarCubit>().setMoods(moods);
-  // }
-
-  //Function to display mood entries on the selected day
-  void _updateMoodsForSelectedDay(DateTime day) {
-    // final dateOnly = DateTime(day.year, day.month, day.day);
-
-    // _selectedMoods = widget.moodEntries
-    //     .where(
-    //       (entry) =>
-    //           entry.date.year.toString() == dateOnly.year.toString() &&
-    //           entry.date.month.toString() == dateOnly.month.toString() &&
-    //           entry.date.day.toString() == dateOnly.day.toString(),
-    //     )
-    //     .toList();
-
-    //     log('Date format: ${dateOnly.year.toString()} | ${dateOnly.month.toString()} | ${dateOnly.day.toString()} ');
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +60,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         _selectedDay = selectedDay;
                         _focusedDay = focusedDay;
                       });
-                      // _updateMoodsForSelectedDay(selectedDay);
                     },
                     headerStyle: HeaderStyle(
                       titleCentered: true,

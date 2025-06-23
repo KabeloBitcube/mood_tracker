@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mood_tracker/Bloc/Home/home_cubit.dart';
+import 'package:mood_tracker/Bloc/Home/mood_cubit.dart';
 import 'package:mood_tracker/Bloc/Stats_and_notifications/notifications_cubit.dart';
 import 'package:mood_tracker/Bloc/observer.dart';
 import 'package:mood_tracker/Provider/Mode/mode.dart';

@@ -1,5 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
+// import 'dart:convert';
 
 //Mood entry class
 
@@ -18,7 +18,7 @@ class MoodEntry {
     required this.date,
   });
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'mood': mood,
       'reason': reason,
@@ -28,17 +28,13 @@ class MoodEntry {
     };
   }
 
-  factory MoodEntry.fromMap(Map<String, dynamic> map) {
+  factory MoodEntry.fromJson(Map<String, dynamic> json) {
     return MoodEntry(
-      mood: map['mood'],
-      reason: map['reason'],
-      description: map['description'],
-      timeOfDay: map['timeOfDay'],
-      date: DateTime.parse(map['date']),
+      mood: json['mood'],
+      reason: json['reason'],
+      description: json['description'],
+      timeOfDay: json['timeOfDay'],
+      date: DateTime.parse(json['date']),
     );
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory MoodEntry.fromJson(String source) => MoodEntry.fromMap(json.decode(source) as Map<String, dynamic>);
 }

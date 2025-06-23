@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:mood_tracker/Bloc/Home/home_cubit.dart';
+import 'package:mood_tracker/Bloc/Home/mood_cubit.dart';
 import 'package:mood_tracker/Provider/Mode/mode.dart';
 import 'package:mood_tracker/Mood_model/moodentry.dart';
 import 'package:provider/provider.dart';
@@ -66,7 +66,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       appBar: AppBar(),
       body: BlocBuilder<MoodCubit, List<MoodEntry>>(
         builder: (context, state) {
-          context.read<MoodCubit>().setMoods(state);
+          context.read<MoodCubit>().state;
           _selectedMoods = state
               .where((moods) => isSameDay(moods.date, _selectedDay))
               .toList();
@@ -219,9 +219,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                                   context
                                                       .read<MoodCubit>()
                                                       .updateMood(mood);
-                                                  context
-                                                      .read<MoodCubit>()
-                                                      .setMoods(state);
                                                   Navigator.of(context).pop();
                                                   ScaffoldMessenger.of(
                                                     context,
@@ -269,17 +266,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                             : Colors.white,
                                         onPressed: ((context) {
                                           //Delete mood entry
-                                          // state.removeAt(index);
-                                          // _selectedMoods.removeAt(index);
                                           context
                                               .read<MoodCubit>()
                                               .deleteMood(mood, state, index);
-                                          // context
-                                          //     .read<CalendarCubit>()
-                                          //     .updateMood(mood);
-                                          context
-                                              .read<MoodCubit>()
-                                              .setMoods(state);
                                           log(
                                             'Mood entry lenth: ${_selectedMoods.length}',
                                           );

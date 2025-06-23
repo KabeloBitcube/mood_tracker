@@ -27,11 +27,11 @@ class MoodCubit extends Cubit<List<MoodEntry>> {
     _saveMoods(updatedList);
   }
 
-  Future<void> deleteMood (MoodEntry mood,List<MoodEntry> moods, int index) async{
+  Future<void> deleteMood (MoodEntry mood, int index) async{
     final updatedList = state.map((mood) {
       return mood;
     }).toList();
-    moods.removeAt(index);
+    updatedList.removeAt(index);
     emit(updatedList);
     _saveMoods(updatedList);
   }

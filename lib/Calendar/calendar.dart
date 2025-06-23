@@ -268,7 +268,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                           //Delete mood entry
                                           context
                                               .read<MoodCubit>()
-                                              .deleteMood(mood, state, index);
+                                              .deleteMood(mood, index);
                                           log(
                                             'Mood entry lenth: ${_selectedMoods.length}',
                                           );

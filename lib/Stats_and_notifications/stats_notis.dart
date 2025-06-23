@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mood_tracker/Bloc/Stats_and_notifications/notifications_cubit.dart';
+import 'package:mood_tracker/Home/home.dart';
 import 'package:mood_tracker/Provider/Mode/mode.dart';
 import 'package:mood_tracker/Mood_model/moodentry.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,7 @@ class StatsNotis extends StatefulWidget {
   const StatsNotis({
     super.key,
     required this.moodEntries,
-    required this.notifications,
+    required this.notifications
   });
 
   @override
@@ -152,7 +153,8 @@ class _StatsNotisState extends State<StatsNotis> {
       return Text('Start tracking your mood!');
     }
 
-    log("Notification length: ${widget.notifications.length}");
+    
+
 
     return BlocProvider(
       create: (_) => NotificationsCubit(),
@@ -160,7 +162,10 @@ class _StatsNotisState extends State<StatsNotis> {
         appBar: AppBar(),
         body:
             BlocBuilder<NotificationsCubit, List<String>>(
-              builder: (context, state) => SingleChildScrollView(
+              builder: (context, state) { 
+                // context.read<NotificationsCubit>().state;
+                log('Notification length: ${state.length}');
+                return SingleChildScrollView(
                     child: Column(
                       children: [
                         Center(child: Text('Average mood this week')),
@@ -275,7 +280,7 @@ class _StatsNotisState extends State<StatsNotis> {
                                 SizedBox(
                                   height: 100,
                                   width: 500,
-                                  child: widget.notifications.isEmpty
+                                  child: state.isEmpty
                                       ? Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
@@ -294,7 +299,7 @@ class _StatsNotisState extends State<StatsNotis> {
                                           ],
                                         )
                                       : ListView.builder(
-                                          itemCount: widget.notifications.length,
+                                          itemCount: state.length,
                                           itemBuilder: (context, index) {
                                             return Padding(
                                               padding: const EdgeInsets.all(8.0),
@@ -313,7 +318,7 @@ class _StatsNotisState extends State<StatsNotis> {
                                                   ),
                                                   SizedBox(width: 10),
                                                   Text(
-                                                    widget.notifications[index],
+                                                    state[index],
                                                     style: TextStyle(
                                                       fontSize: 12,
                                                       fontStyle: FontStyle.italic,
@@ -330,7 +335,7 @@ class _StatsNotisState extends State<StatsNotis> {
                                 //Delete notifications and display success snackbar
                                 //Show no notifications snackbar if there are no notifications to delete
                                 Center(
-                                  child: widget.notifications.isEmpty
+                                  child: state.isEmpty
                                       ? IconButton(
                                           onPressed: () {
                                             ScaffoldMessenger.of(
@@ -347,8 +352,8 @@ class _StatsNotisState extends State<StatsNotis> {
                                           onPressed: () {
                                             //Clear notifications
                                             //Update state using the notifications cubit 
-                                            context.read<NotificationsCubit>().deleteNotifications(widget.notifications);
-                                            
+                                            context.read<NotificationsCubit>().deleteNotifications(state);
+                                            HomeScreen(notificationCount: 0,);
                                             ScaffoldMessenger.of(
                                               context,
                                             ).showSnackBar(
@@ -375,7 +380,8 @@ class _StatsNotisState extends State<StatsNotis> {
                     begin: 0.2,
                     duration: 1000.ms,
                     curve: Curves.easeOut,
-                  ),
+                  );
+              }
             ), //Right fade in animation
       ),
     );

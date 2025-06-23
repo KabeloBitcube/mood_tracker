@@ -27,7 +27,7 @@ final router = GoRouter(
         Map<String, dynamic> data = state.extra as Map<String, dynamic>;
         return StatsNotis(
           moodEntries: data['moodEntries'],
-          notifications: data['notifications'],
+          notifications: ['notifications'],
         );
       },
     ),

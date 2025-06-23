@@ -22,7 +22,7 @@ void main() async {
     );
   });
 
-  //Initilize mood observer
+  //Initilize BLoC observer
   Bloc.observer = const Observer();
 
   runApp(

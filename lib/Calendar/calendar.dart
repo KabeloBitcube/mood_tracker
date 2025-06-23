@@ -219,6 +219,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                                   context
                                                       .read<MoodCubit>()
                                                       .updateMood(mood);
+                                                      reasonController.clear();
+                                                      descriptionController.clear();
                                                   Navigator.of(context).pop();
                                                   ScaffoldMessenger.of(
                                                     context,

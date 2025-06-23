@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
    
 
 
-    context.read<HomeCubit>().addMood(moodEntry);
+    context.read<MoodCubit>().addMood(moodEntry);
 
     //Adding user mood entry to _moods list
     setState(() {

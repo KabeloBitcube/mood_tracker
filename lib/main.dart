@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:mood_tracker/Bloc/Calendar/calendar_cubit.dart';
 import 'package:mood_tracker/Bloc/Home/home_cubit.dart';
 import 'package:mood_tracker/Bloc/Stats_and_notifications/notifications_cubit.dart';
 import 'package:mood_tracker/Bloc/observer.dart';
@@ -10,7 +8,6 @@ import 'package:mood_tracker/Provider/Mood/mood_border.dart';
 import 'package:mood_tracker/Notifications/noti_service.dart';
 import 'package:mood_tracker/Provider/Reason/reason_border.dart';
 import 'package:mood_tracker/Router/router.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -27,11 +24,6 @@ void main() async {
 
   //Initilize mood observer
   Bloc.observer = const Observer();
-
-  // Initiliaze hydrated bloc
-  HydratedBloc.storage = await HydratedStorage.build(
-    storageDirectory: HydratedStorageDirectory((await getApplicationDocumentsDirectory()).path),
-  );
 
   runApp(
     MultiProvider(
@@ -61,8 +53,7 @@ class MyApp extends StatelessWidget {
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider<HomeCubit>(create: (_) => HomeCubit()),
-        BlocProvider<CalendarCubit>(create: (_) => CalendarCubit()),
+        BlocProvider<MoodCubit>(create: (_) => MoodCubit()),
         BlocProvider<NotificationsCubit>(create: (_) => NotificationsCubit()),
       ],
       child: MaterialApp.router(

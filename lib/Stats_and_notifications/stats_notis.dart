@@ -347,7 +347,7 @@ class _StatsNotisState extends State<StatsNotis> {
                                           onPressed: () {
                                             //Clear notifications
                                             //Update state using the notifications cubit 
-                                            context.read<NotificationsCubit>().update(widget.notifications);
+                                            context.read<NotificationsCubit>().deleteNotifications(widget.notifications);
                                             
                                             ScaffoldMessenger.of(
                                               context,

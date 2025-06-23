@@ -1,8 +1,12 @@
-import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:bloc/bloc.dart';
 import 'package:mood_tracker/Mood_model/moodentry.dart';
 
-class HomeCubit extends HydratedCubit<List<MoodEntry>> {
-  HomeCubit() : super([]);
+class MoodCubit extends Cubit<List<MoodEntry>> {
+  MoodCubit() : super([]);
+
+  void setMoods(List<MoodEntry> moods){
+    emit(moods);
+  }
 
   void addMood(MoodEntry newMood) {
     final updatedList = List<MoodEntry>.from(state);
@@ -10,14 +14,20 @@ class HomeCubit extends HydratedCubit<List<MoodEntry>> {
     emit(updatedList);
   }
 
-  @override
-  List<MoodEntry> fromJson(Map<String, dynamic> json) {
-    final rawList = json['moods'] as List<dynamic>;
-    return rawList.map((item) => MoodEntry.fromMap(item)).toList();
+  void updateMood (MoodEntry mood){
+    final updatedList = state.map((mood) {
+      return mood;
+    }).toList();
+    setMoods(updatedList);
+    emit(updatedList);
   }
 
-  @override
-  Map<String, dynamic> toJson(List<MoodEntry> state) {
-    return {'moods': state.map((m) => m.toMap()).toList()};
+  void deleteMood (MoodEntry mood,List<MoodEntry> moods, int index){
+    final updatedList = state.map((mood) {
+      return mood;
+    }).toList();
+    moods.removeAt(index);
+    setMoods(updatedList);
+    emit(updatedList);
   }
 }

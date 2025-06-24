@@ -1,4 +1,4 @@
-//Final version - Mood Tracker 
+//Final version - Mood Tracker 2.0
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

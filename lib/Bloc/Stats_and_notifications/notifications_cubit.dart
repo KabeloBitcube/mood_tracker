@@ -5,8 +5,8 @@ import 'package:bloc/bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationsCubit extends Cubit<List<String>> {
-  static const _storageKey ='notification__count';
-  NotificationsCubit() : super(['']){
+  static const _storageKey ='notification_entries';
+  NotificationsCubit() : super([]){
     _loadNotifications();
   }
 
@@ -14,14 +14,14 @@ class NotificationsCubit extends Cubit<List<String>> {
     final updatedList = List<String>.from(state);
     updatedList.add(newNotification);
     emit(updatedList);
-    _saveNotifications(updatedList);
+    await _saveNotifications(updatedList);
   }
 
   Future<void> deleteNotifications(List<String> notifications) async {
     notifications.clear();
     emit(notifications);
-    _saveNotifications(notifications);
-    _loadNotifications();
+    await _saveNotifications(notifications);
+    await _loadNotifications();
   }
 
   Future<void> _saveNotifications(List<String> notifications) async {
@@ -32,9 +32,11 @@ class NotificationsCubit extends Cubit<List<String>> {
 
   Future<void> _loadNotifications() async {
     final prefs = await SharedPreferences.getInstance();
-    final notifications = prefs.getStringList(_storageKey);
-    if (notifications != null) {
-      emit(notifications);
+    final jsonList = prefs.getStringList(_storageKey);
+    if (jsonList != null) {
+      emit(jsonList
+          .map((notificationStr) => jsonDecode(notificationStr) as String)
+          .toList());
     }
   }
 }

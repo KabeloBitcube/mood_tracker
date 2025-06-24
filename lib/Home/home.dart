@@ -232,6 +232,8 @@ class _HomeScreenState extends State<HomeScreen> {
     //Logging selected mood
     log('Selected mood: $_selectedMood');
 
+    log('Home notification count: ${context.watch<NotificationsCubit>().state.length}');
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -669,9 +671,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         //Pass moods and notification parameters
                         Map<String, dynamic> data = {
                           'moodEntries': context.read<MoodCubit>().state,
-                          'notifications': context
-                              .read<NotificationsCubit>()
-                              .state,
+                          // 'notifications': context
+                          //     .read<NotificationsCubit>()
+                          //     .state,
                         };
                         context.push('/stats_notis', extra: data);
                       },
@@ -692,8 +694,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           borderRadius: BorderRadius.circular(100),
                         ),
                         child: Center(
+                          //Notification count
                           child: Text(
-                            '0',
+                            '${context.watch<NotificationsCubit>().state.length}',
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -712,8 +715,6 @@ class _HomeScreenState extends State<HomeScreen> {
         //Bottom fade in animation
       ).animate().fadeIn(duration: 200.ms).slideY(begin: 0.2, duration: 1000.ms, curve: Curves.easeOut),
     );
-
-    //Dialog for mood entry time of day radio button selection
   }
 
   //Function to get the current date

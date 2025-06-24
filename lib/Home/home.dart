@@ -31,7 +31,6 @@ class _HomeScreenState extends State<HomeScreen> {
   String? _selectedReason;
   final TextEditingController _descriptionController = TextEditingController();
 
-
   //Function called when user submits mood entry
   void _onSave() {
     //Mood entry validation
@@ -59,7 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
     // Read new mood entry using the home cubit
     context.read<MoodCubit>().addMood(moodEntry);
   }
-
 
   // Time of day selection dialog
   Future<void> showMyDialog() async {
@@ -216,7 +214,9 @@ class _HomeScreenState extends State<HomeScreen> {
     //Logging selected mood
     log('Selected mood: $_selectedMood');
 
-    log('Home notification count: ${context.watch<NotificationsCubit>().state.length}');
+    log(
+      'Home notification count: ${context.watch<NotificationsCubit>().state.length}',
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -281,9 +281,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           decoration: BoxDecoration(
                             color: Colors.amber,
                             borderRadius: BorderRadius.circular(250),
-                            border:
-                                moodController.isSelected &&
-                                    _selectedMood == "Happy"
+                            border: _selectedMood == "Happy"
                                 ? Border.all(width: 10, color: Colors.grey)
                                 : null,
                           ),
@@ -306,9 +304,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           decoration: BoxDecoration(
                             color: Colors.lightBlueAccent,
                             borderRadius: BorderRadius.circular(250),
-                            border:
-                                moodController.isSelected &&
-                                    _selectedMood == "Sad"
+                            border: _selectedMood == "Sad"
                                 ? Border.all(width: 10, color: Colors.grey)
                                 : null,
                           ),
@@ -331,9 +327,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           decoration: BoxDecoration(
                             color: Colors.red,
                             borderRadius: BorderRadius.circular(250),
-                            border:
-                                moodController.isSelected &&
-                                    _selectedMood == "Angry"
+                            border: _selectedMood == "Angry"
                                 ? Border.all(width: 10, color: Colors.grey)
                                 : null,
                           ),
@@ -356,9 +350,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           decoration: BoxDecoration(
                             color: Colors.green,
                             borderRadius: BorderRadius.circular(250),
-                            border:
-                                moodController.isSelected &&
-                                    _selectedMood == "Calm"
+                            border: _selectedMood == "Calm"
                                 ? Border.all(width: 10, color: Colors.grey)
                                 : null,
                           ),
@@ -398,9 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         decoration: BoxDecoration(
                           color: Colors.black,
                           borderRadius: BorderRadius.circular(200),
-                          border:
-                              reasonController.isSelected &&
-                                  _selectedReason == "Work"
+                          border: _selectedReason == "Work"
                               ? Border.all(width: 5, color: Colors.grey)
                               : null,
                         ),
@@ -424,9 +414,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         decoration: BoxDecoration(
                           color: Colors.black,
                           borderRadius: BorderRadius.circular(200),
-                          border:
-                              reasonController.isSelected &&
-                                  _selectedReason == "School"
+                          border: _selectedReason == "School"
                               ? Border.all(width: 5, color: Colors.grey)
                               : null,
                         ),
@@ -450,9 +438,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         decoration: BoxDecoration(
                           color: Colors.black,
                           borderRadius: BorderRadius.circular(200),
-                          border:
-                              reasonController.isSelected &&
-                                  _selectedReason == "Friends"
+                          border: _selectedReason == "Friends"
                               ? Border.all(width: 5, color: Colors.grey)
                               : null,
                         ),
@@ -476,9 +462,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         decoration: BoxDecoration(
                           color: Colors.black,
                           borderRadius: BorderRadius.circular(200),
-                          border:
-                              reasonController.isSelected &&
-                                  _selectedReason == "Family"
+                          border: _selectedReason == "Family"
                               ? Border.all(width: 5, color: Colors.grey)
                               : null,
                         ),
@@ -502,9 +486,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         decoration: BoxDecoration(
                           color: Colors.black,
                           borderRadius: BorderRadius.circular(200),
-                          border:
-                              reasonController.isSelected &&
-                                  _selectedReason == "Hobby"
+                          border: _selectedReason == "Hobby"
                               ? Border.all(width: 5, color: Colors.grey)
                               : null,
                         ),
@@ -528,9 +510,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         decoration: BoxDecoration(
                           color: Colors.black,
                           borderRadius: BorderRadius.circular(200),
-                          border:
-                              reasonController.isSelected &&
-                                  _selectedReason == "Health"
+                          border: _selectedReason == "Health"
                               ? Border.all(width: 5, color: Colors.grey)
                               : null,
                         ),
@@ -554,9 +534,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         decoration: BoxDecoration(
                           color: Colors.black,
                           borderRadius: BorderRadius.circular(200),
-                          border:
-                              reasonController.isSelected &&
-                                  _selectedReason == "Relationship"
+                          border: _selectedReason == "Relationship"
                               ? Border.all(width: 5, color: Colors.grey)
                               : null,
                         ),
@@ -580,9 +558,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         decoration: BoxDecoration(
                           color: Colors.black,
                           borderRadius: BorderRadius.circular(200),
-                          border:
-                              reasonController.isSelected &&
-                                  _selectedReason == "Money"
+                          border: _selectedReason == "Money"
                               ? Border.all(width: 5, color: Colors.grey)
                               : null,
                         ),
@@ -652,7 +628,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     GestureDetector(
                       onTap: () {
                         //Navigate to stats and notifications
-                        //Pass moods parameter 
+                        //Pass moods parameter
                         Map<String, dynamic> data = {
                           'moodEntries': context.read<MoodCubit>().state,
                         };

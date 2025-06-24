@@ -1,6 +1,8 @@
+//Final version
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mood_tracker/Bloc/Calendar/calendar_cubit.dart';
+import 'package:mood_tracker/Bloc/Home/mood_cubit.dart';
 import 'package:mood_tracker/Bloc/Stats_and_notifications/notifications_cubit.dart';
 import 'package:mood_tracker/Bloc/observer.dart';
 import 'package:mood_tracker/Provider/Mode/mode.dart';
@@ -10,7 +12,7 @@ import 'package:mood_tracker/Provider/Reason/reason_border.dart';
 import 'package:mood_tracker/Router/router.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
   //Ensure that an instance of WidgetsFlutterBinding is initialized before calling runApp()
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -22,7 +24,7 @@ void main() {
     );
   });
 
-  //Initilize mood observer
+  //Initilize BLoC observer
   Bloc.observer = const Observer();
 
   runApp(
@@ -45,15 +47,15 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // Access the mode controller to determine the app's theme
     final modeController = Provider.of<ModeController>(context);
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider<CalendarCubit>(create: (_) => CalendarCubit()),
+        // Handles mood state management 
+        BlocProvider<MoodCubit>(create: (_) => MoodCubit()),
+        // Handles notifications state management
         BlocProvider<NotificationsCubit>(create: (_) => NotificationsCubit()),
       ],
       child: MaterialApp.router(

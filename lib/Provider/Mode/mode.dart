@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ModeController extends ChangeNotifier {
-  // Tracks whether the app is in dark mode or light mode
+  static const _storageKey = 'mode';
   bool _isDarkMode = false;
 
-  // Getter to check the current mode (dark or light)
   bool get isDarkMode => _isDarkMode;
 
-  // Toggles between dark mode and light mode
-  void toggleMode() {
+  ModeController() {
+    _loadMode(); 
+  }
+
+  void toggleMode() async {
     _isDarkMode = !_isDarkMode;
-    notifyListeners(); // Notifies listeners to rebuild UI with the updated mode
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool(_storageKey, _isDarkMode);
+  }
+
+  void _loadMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    _isDarkMode = prefs.getBool(_storageKey) ?? false; 
+    notifyListeners();
   }
 }

@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:mood_tracker/Calendar/calendar.dart';
+import 'package:mood_tracker/Bloc/Home/mood_cubit.dart';
+import 'package:mood_tracker/Bloc/Stats_and_notifications/notifications_cubit.dart';
 import 'package:mood_tracker/Mood_model/moodentry.dart';
 import 'package:mood_tracker/Provider/Mode/mode.dart';
 import 'package:mood_tracker/Provider/Mood/mood_border.dart';
@@ -28,10 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String? _selectedMood;
   int? _selectedTime = 1;
   String? _selectedReason;
-  final _descriptionController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
-  //List to store the user's mood entry
-  final List<MoodEntry> _moods = [];
 
   //Function called when user submits mood entry
   void _onSave() {
@@ -54,18 +53,15 @@ class _HomeScreenState extends State<HomeScreen> {
       date: DateTime.now(),
     );
 
-    //Adding user mood entry to _moods list
-    setState(() {
-      _moods.add(moodEntry);
-    });
+    // Log new mood entry
+    log('New mood created: ${moodEntry.toJson()}');
 
-    //Passing updated _moods list to the calendar screen
-    CalendarScreen(moodEntries: _moods);
+    // Read new mood entry using the home cubit
+    context.read<MoodCubit>().addMood(moodEntry);
   }
 
-  //Notification list to store notifications
-  List<String> notifications = [];
 
+  // Time of day selection dialog
   Future<void> showMyDialog() async {
     return showDialog<void>(
       context: context,
@@ -143,7 +139,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   log('Description: ${_descriptionController.text}');
                   log('Selected time: $_selectedTime');
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Mood added to calendar'), duration: const Duration(seconds: 1),),
+                    SnackBar(
+                      content: Text('Mood added to calendar'),
+                      duration: const Duration(seconds: 1),
+                    ),
                   );
 
                   //If statements to set and display notifications based on time of day selected
@@ -156,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       });
                     });
-                    notifications.add(
+                    context.read<NotificationsCubit>().addNotifaction(
                       "Remember to track your mood in the afternoon.",
                     );
                   }
@@ -169,7 +168,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       });
                     });
-                    notifications.add("Remember to track your mood tonight.");
+                    context.read<NotificationsCubit>().addNotifaction(
+                      "Remember to track your mood tonight.",
+                    );
                   }
                   if (_selectedTime == 3) {
                     NotiService().initNotification().then((_) {
@@ -180,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       });
                     });
-                    notifications.add(
+                    context.read<NotificationsCubit>().addNotifaction(
                       "Remember to track your mood in the morning.",
                     );
                   }
@@ -190,9 +191,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   //Pop out of dialog
                   Navigator.of(context).pop();
-
-                  // Map<String, dynamic> data = {'moodEntries': _moods};
-                  // context.push('/calendar', extra: data);
                 }
               },
             ),
@@ -218,6 +216,8 @@ class _HomeScreenState extends State<HomeScreen> {
     //Logging selected mood
     log('Selected mood: $_selectedMood');
 
+    log('Home notification count: ${context.watch<NotificationsCubit>().state.length}');
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -240,8 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
               onPressed: () {
-                Map<String, dynamic> data = {'moodEntries': _moods};
-                context.push('/calendar', extra: data);
+                context.push('/calendar');
               },
               icon: Icon(Icons.calendar_month_outlined),
             ),
@@ -275,7 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       GestureDetector(
                         onTap: () {
                           _selectedMood = "Happy";
-                          moodController.toggleMode();
+                          moodController.toggleMood();
                         },
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.6,
@@ -300,7 +299,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       GestureDetector(
                         onTap: () {
                           _selectedMood = "Sad";
-                          moodController.toggleMode();
+                          moodController.toggleMood();
                         },
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.6,
@@ -325,7 +324,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       GestureDetector(
                         onTap: () {
                           _selectedMood = "Angry";
-                          moodController.toggleMode();
+                          moodController.toggleMood();
                         },
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.6,
@@ -350,7 +349,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       GestureDetector(
                         onTap: () {
                           _selectedMood = "Calm";
-                          moodController.toggleMode();
+                          moodController.toggleMood();
                         },
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.6,
@@ -391,7 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     GestureDetector(
                       onTap: () {
                         _selectedReason = "Work";
-                        reasonController.toggleMode();
+                        reasonController.toggleReason();
                       },
                       child: Container(
                         height: 30,
@@ -417,7 +416,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     GestureDetector(
                       onTap: () {
                         _selectedReason = "School";
-                        reasonController.toggleMode();
+                        reasonController.toggleReason();
                       },
                       child: Container(
                         height: 30,
@@ -443,7 +442,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     GestureDetector(
                       onTap: () {
                         _selectedReason = "Friends";
-                        reasonController.toggleMode();
+                        reasonController.toggleReason();
                       },
                       child: Container(
                         height: 30,
@@ -469,7 +468,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     GestureDetector(
                       onTap: () {
                         _selectedReason = "Family";
-                        reasonController.toggleMode();
+                        reasonController.toggleReason();
                       },
                       child: Container(
                         height: 30,
@@ -495,7 +494,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     GestureDetector(
                       onTap: () {
                         _selectedReason = "Hobby";
-                        reasonController.toggleMode();
+                        reasonController.toggleReason();
                       },
                       child: Container(
                         height: 30,
@@ -521,7 +520,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     GestureDetector(
                       onTap: () {
                         _selectedReason = "Health";
-                        reasonController.toggleMode();
+                        reasonController.toggleReason();
                       },
                       child: Container(
                         height: 30,
@@ -547,7 +546,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     GestureDetector(
                       onTap: () {
                         _selectedReason = "Relationship";
-                        reasonController.toggleMode();
+                        reasonController.toggleReason();
                       },
                       child: Container(
                         height: 30,
@@ -573,7 +572,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     GestureDetector(
                       onTap: () {
                         _selectedReason = "Money";
-                        reasonController.toggleMode();
+                        reasonController.toggleReason();
                       },
                       child: Container(
                         height: 30,
@@ -600,9 +599,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 30),
-              const Text('Wanna write about it?'),
+              const Text('Let\'s talk about it'),
               const SizedBox(height: 20),
-              //,Mood description text field
+              // Mood description text field
               TextField(
                 controller: _descriptionController,
                 keyboardType: TextInputType.text,
@@ -645,48 +644,51 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: const Divider(color: Color.fromARGB(255, 7, 7, 7)),
               ),
               //Bottom stats and notifications nav image button with notification count
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      //Navigate to stats and notifications
-                      //Pass moods and notification parameters
-                      Map<String, dynamic> data = {
-                        'moodEntries': _moods,
-                        'notifications': notifications,
-                      };
-                      context.push('/stats_notis', extra: data);
-                    },
-                    child: Image.asset(
-                      'assets/images/Moods.webp',
-                      height: 50,
-                      width: 50,
-                    ),
-                  ),
-                  Positioned(
-                    top: 35,
-                    left: 30,
-                    child: Container(
-                      height: 15,
-                      width: 15,
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(100),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        //Navigate to stats and notifications
+                        //Pass moods parameter 
+                        Map<String, dynamic> data = {
+                          'moodEntries': context.read<MoodCubit>().state,
+                        };
+                        context.push('/stats_notis', extra: data);
+                      },
+                      child: Image.asset(
+                        'assets/images/Moods.webp',
+                        height: 50,
+                        width: 50,
                       ),
-                      child: Center(
-                        child: Text(
-                          '${notifications.length}',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 10,
+                    ),
+                    Positioned(
+                      top: 35,
+                      left: 30,
+                      child: Container(
+                        height: 15,
+                        width: 15,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: Center(
+                          //Notification count
+                          child: Text(
+                            '${context.watch<NotificationsCubit>().state.length}',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 10,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
@@ -694,8 +696,6 @@ class _HomeScreenState extends State<HomeScreen> {
         //Bottom fade in animation
       ).animate().fadeIn(duration: 200.ms).slideY(begin: 0.2, duration: 1000.ms, curve: Curves.easeOut),
     );
-
-    //Dialog for mood entry time of day radio button selection
   }
 
   //Function to get the current date

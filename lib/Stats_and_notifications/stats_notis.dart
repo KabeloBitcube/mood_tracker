@@ -10,14 +10,12 @@ import 'package:mood_tracker/Mood_model/moodentry.dart';
 import 'package:provider/provider.dart';
 
 class StatsNotis extends StatefulWidget {
-  //Mood entries and notifications parameters to pass to the Stats and notfications screen
+  //Mood entries and parameter to pass to the Stats and notfications screen
   final List<MoodEntry> moodEntries;
-  // final List<String> notifications;
 
   const StatsNotis({
     super.key,
     required this.moodEntries,
-    // required this.notifications
   });
 
   @override
@@ -154,8 +152,8 @@ class _StatsNotisState extends State<StatsNotis> {
       appBar: AppBar(),
       body: BlocBuilder<NotificationsCubit, List<String>>(
         builder: (context, state) {
-          // context.read<NotificationsCubit>().state;
           log('Notification length: ${state.length}');
+          
           return SingleChildScrollView(
                 child: Column(
                   children: [

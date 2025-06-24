@@ -31,8 +31,6 @@ class _HomeScreenState extends State<HomeScreen> {
   String? _selectedReason;
   final TextEditingController _descriptionController = TextEditingController();
 
-  //List to store the user's mood entry
-  // final List<MoodEntry> _moods = [];
 
   //Function called when user submits mood entry
   void _onSave() {
@@ -60,15 +58,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // Read new mood entry using the home cubit
     context.read<MoodCubit>().addMood(moodEntry);
-
-    //Adding user mood entry to _moods list to update notification count
-    // setState(() {
-    //   _moods.add(moodEntry);
-    // });
   }
 
-  //Notification list to store notifications
-  // List<String> notifications = [];
 
   // Time of day selection dialog
   Future<void> showMyDialog() async {
@@ -164,9 +155,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       });
                     });
-                    // notifications.add(
-                    //   "Remember to track your mood in the afternoon.",
-                    // );
                     context.read<NotificationsCubit>().addNotifaction(
                       "Remember to track your mood in the afternoon.",
                     );
@@ -180,7 +168,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       });
                     });
-                    // notifications.add("Remember to track your mood tonight.");
                     context.read<NotificationsCubit>().addNotifaction(
                       "Remember to track your mood tonight.",
                     );
@@ -194,9 +181,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       });
                     });
-                    // notifications.add(
-                    //   "Remember to track your mood in the morning.",
-                    // );
                     context.read<NotificationsCubit>().addNotifaction(
                       "Remember to track your mood in the morning.",
                     );
@@ -290,7 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       GestureDetector(
                         onTap: () {
                           _selectedMood = "Happy";
-                          moodController.toggleMode();
+                          moodController.toggleMood();
                         },
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.6,
@@ -315,7 +299,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       GestureDetector(
                         onTap: () {
                           _selectedMood = "Sad";
-                          moodController.toggleMode();
+                          moodController.toggleMood();
                         },
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.6,
@@ -340,7 +324,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       GestureDetector(
                         onTap: () {
                           _selectedMood = "Angry";
-                          moodController.toggleMode();
+                          moodController.toggleMood();
                         },
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.6,
@@ -365,7 +349,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       GestureDetector(
                         onTap: () {
                           _selectedMood = "Calm";
-                          moodController.toggleMode();
+                          moodController.toggleMood();
                         },
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.6,
@@ -406,7 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     GestureDetector(
                       onTap: () {
                         _selectedReason = "Work";
-                        reasonController.toggleMode();
+                        reasonController.toggleReason();
                       },
                       child: Container(
                         height: 30,
@@ -432,7 +416,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     GestureDetector(
                       onTap: () {
                         _selectedReason = "School";
-                        reasonController.toggleMode();
+                        reasonController.toggleReason();
                       },
                       child: Container(
                         height: 30,
@@ -458,7 +442,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     GestureDetector(
                       onTap: () {
                         _selectedReason = "Friends";
-                        reasonController.toggleMode();
+                        reasonController.toggleReason();
                       },
                       child: Container(
                         height: 30,
@@ -484,7 +468,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     GestureDetector(
                       onTap: () {
                         _selectedReason = "Family";
-                        reasonController.toggleMode();
+                        reasonController.toggleReason();
                       },
                       child: Container(
                         height: 30,
@@ -510,7 +494,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     GestureDetector(
                       onTap: () {
                         _selectedReason = "Hobby";
-                        reasonController.toggleMode();
+                        reasonController.toggleReason();
                       },
                       child: Container(
                         height: 30,
@@ -536,7 +520,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     GestureDetector(
                       onTap: () {
                         _selectedReason = "Health";
-                        reasonController.toggleMode();
+                        reasonController.toggleReason();
                       },
                       child: Container(
                         height: 30,
@@ -562,7 +546,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     GestureDetector(
                       onTap: () {
                         _selectedReason = "Relationship";
-                        reasonController.toggleMode();
+                        reasonController.toggleReason();
                       },
                       child: Container(
                         height: 30,
@@ -588,7 +572,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     GestureDetector(
                       onTap: () {
                         _selectedReason = "Money";
-                        reasonController.toggleMode();
+                        reasonController.toggleReason();
                       },
                       child: Container(
                         height: 30,
@@ -668,12 +652,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     GestureDetector(
                       onTap: () {
                         //Navigate to stats and notifications
-                        //Pass moods and notification parameters
+                        //Pass moods parameter 
                         Map<String, dynamic> data = {
                           'moodEntries': context.read<MoodCubit>().state,
-                          // 'notifications': context
-                          //     .read<NotificationsCubit>()
-                          //     .state,
                         };
                         context.push('/stats_notis', extra: data);
                       },

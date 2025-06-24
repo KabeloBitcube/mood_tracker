@@ -45,13 +45,10 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // Access the mode controller to determine the app's theme
     final modeController = Provider.of<ModeController>(context);
 
-    // Bloc providers initiliazation 
     return MultiBlocProvider(
       providers: [
         // Handles mood state management 

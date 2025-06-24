@@ -8,7 +8,7 @@ class ReasonController extends ChangeNotifier {
   bool get isSelected => _isSelected;
 
   // Toggles between selected and not selected
-  void toggleMode() {
+  void toggleReason() {
     _isSelected = !_isSelected;
     notifyListeners(); // Notifies listeners to rebuild UI with the updated state
   }

@@ -20,7 +20,7 @@ class ModeController extends ChangeNotifier {
 
   void _loadMode() async {
     final prefs = await SharedPreferences.getInstance();
-    _isDarkMode = prefs.getBool(_storageKey) ?? true; 
+    _isDarkMode = prefs.getBool(_storageKey) ?? false; 
     notifyListeners();
   }
 }

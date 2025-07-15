@@ -682,6 +682,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     String day = DateFormat('EEEE').format(DateTime.now());
 
+    // Month removed
+
 
     var formattedDate = "$day, ${dateParse.day}";
 

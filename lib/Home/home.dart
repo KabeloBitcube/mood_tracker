@@ -682,17 +682,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     String day = DateFormat('EEEE').format(DateTime.now());
 
-    String? month;
 
-    if (dateParse.month == 5) {
-      month = "May";
-    }
-
-    if (dateParse.month == 6) {
-      month = "June";
-    }
-
-    var formattedDate = "$day, $month ${dateParse.day}";
+    var formattedDate = "$day, ${dateParse.day}";
 
     return formattedDate;
   }
